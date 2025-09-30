@@ -68,4 +68,7 @@ class TenancyPermissionConstants
     public const PERMISSION_MANAGE_CONFIGURATION = 'tenancy: manage configuration';
     public const PERMISSION_VIEW_DASHBOARD_STATS = 'tenancy: view dashboard stats';
     public const PERMISSION_IMPORT_LEADS = 'tenancy: import leads';
+    
+    // Combined permissions for API
+    public const PERMISSION_MANAGE_LEADS = 'tenancy: manage leads'; // Includes create, update, delete
 }

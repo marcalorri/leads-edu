@@ -21,6 +21,9 @@ return Illuminate\Foundation\Application::configure(basePath: dirname(__DIR__))
             'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
             'crm.subscription' => \App\Http\Middleware\RequireCrmSubscription::class,
+            'tenant.api' => \App\Http\Middleware\TenantApiMiddleware::class,
+            'api.permission' => \App\Http\Middleware\ApiPermissionMiddleware::class,
+            'api.rate_limit' => \App\Http\Middleware\ApiRateLimitMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {})->create();

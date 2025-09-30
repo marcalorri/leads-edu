@@ -180,6 +180,32 @@ class User extends Authenticatable implements FilamentUser, HasTenants, MustVeri
     }
 
     /**
+     * Check if user can manage leads (create, update, delete)
+     */
+    public function canManageLeads(?Tenant $tenant = null): bool
+    {
+        $tenant = $tenant ?? filament()->getTenant();
+        if (!$tenant) {
+            return false;
+        }
+
+        if ($this->isTenantAdmin($tenant)) {
+            return true;
+        }
+
+        // Check if the TenantUser pivot has the permission
+        $tenantUser = $this->tenants()->where('tenant_id', $tenant->id)->first();
+        if (!$tenantUser) {
+            return false;
+        }
+
+        // User can manage leads if they have create, update, or delete permissions
+        return $tenantUser->pivot->hasPermissionTo(\App\Constants\TenancyPermissionConstants::PERMISSION_CREATE_LEADS) ||
+               $tenantUser->pivot->hasPermissionTo(\App\Constants\TenancyPermissionConstants::PERMISSION_UPDATE_LEADS) ||
+               $tenantUser->pivot->hasPermissionTo(\App\Constants\TenancyPermissionConstants::PERMISSION_DELETE_LEADS);
+    }
+
+    /**
      * Check if user can view all contacts in tenant (admin permission)
      */
     public function canViewAllContacts(?Tenant $tenant = null): bool

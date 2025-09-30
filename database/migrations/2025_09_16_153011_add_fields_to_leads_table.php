@@ -15,10 +15,8 @@ return new class extends Migration
             // Modificar enum de estado
             $table->enum('estado', ['abierto', 'ganado', 'perdido'])->change();
             
-            // Añadir nuevos campos
-            $table->string('pais', 100)->nullable()->after('email');
-            $table->timestamp('fecha_ganado')->nullable()->after('utm_campaign');
-            $table->timestamp('fecha_perdido')->nullable()->after('fecha_ganado');
+            // Nota: Los campos pais, fecha_ganado y fecha_perdido ya existen en create_leads_table
+            // Esta migración solo modifica el enum de estado
         });
     }
 
@@ -31,8 +29,7 @@ return new class extends Migration
             // Revertir enum de estado
             $table->enum('estado', ['nuevo', 'contactado', 'interesado', 'matriculado', 'perdido'])->change();
             
-            // Eliminar campos añadidos
-            $table->dropColumn(['pais', 'fecha_ganado', 'fecha_perdido']);
+            // Nota: No se eliminan campos porque ya existían en create_leads_table
         });
     }
 };
