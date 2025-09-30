@@ -121,6 +121,26 @@ class RolesAndPermissionsSeeder extends Seeder
             TenancyPermissionConstants::PERMISSION_CREATE_ROLES,
             TenancyPermissionConstants::PERMISSION_UPDATE_ROLES,
             TenancyPermissionConstants::PERMISSION_DELETE_ROLES,
+            // CRM Permissions
+            TenancyPermissionConstants::PERMISSION_VIEW_ALL_LEADS,
+            TenancyPermissionConstants::PERMISSION_CREATE_LEADS,
+            TenancyPermissionConstants::PERMISSION_UPDATE_LEADS,
+            TenancyPermissionConstants::PERMISSION_DELETE_LEADS,
+            TenancyPermissionConstants::PERMISSION_VIEW_ALL_CONTACTS,
+            TenancyPermissionConstants::PERMISSION_CREATE_CONTACTS,
+            TenancyPermissionConstants::PERMISSION_UPDATE_CONTACTS,
+            TenancyPermissionConstants::PERMISSION_DELETE_CONTACTS,
+            TenancyPermissionConstants::PERMISSION_VIEW_ALL_EVENTS,
+            TenancyPermissionConstants::PERMISSION_CREATE_EVENTS,
+            TenancyPermissionConstants::PERMISSION_UPDATE_EVENTS,
+            TenancyPermissionConstants::PERMISSION_DELETE_EVENTS,
+            TenancyPermissionConstants::PERMISSION_VIEW_ALL_NOTES,
+            TenancyPermissionConstants::PERMISSION_CREATE_NOTES,
+            TenancyPermissionConstants::PERMISSION_UPDATE_NOTES,
+            TenancyPermissionConstants::PERMISSION_DELETE_NOTES,
+            TenancyPermissionConstants::PERMISSION_MANAGE_CONFIGURATION,
+            TenancyPermissionConstants::PERMISSION_VIEW_DASHBOARD_STATS,
+            TenancyPermissionConstants::PERMISSION_IMPORT_LEADS,
         ];
 
         $tenancyPermissions = [];
@@ -144,6 +164,25 @@ class RolesAndPermissionsSeeder extends Seeder
             'guard_name' => 'web',
         ]);
 
-        // assign any permissions that the user role should have here
+        // Permisos para usuarios regulares (solo sus propios leads/contactos/eventos/notas)
+        $userPermissions = [
+            TenancyPermissionConstants::PERMISSION_CREATE_LEADS,
+            TenancyPermissionConstants::PERMISSION_UPDATE_LEADS,
+            TenancyPermissionConstants::PERMISSION_DELETE_LEADS,
+            TenancyPermissionConstants::PERMISSION_CREATE_CONTACTS,
+            TenancyPermissionConstants::PERMISSION_UPDATE_CONTACTS,
+            TenancyPermissionConstants::PERMISSION_DELETE_CONTACTS,
+            TenancyPermissionConstants::PERMISSION_CREATE_EVENTS,
+            TenancyPermissionConstants::PERMISSION_UPDATE_EVENTS,
+            TenancyPermissionConstants::PERMISSION_DELETE_EVENTS,
+            TenancyPermissionConstants::PERMISSION_CREATE_NOTES,
+            TenancyPermissionConstants::PERMISSION_UPDATE_NOTES,
+            TenancyPermissionConstants::PERMISSION_DELETE_NOTES,
+            TenancyPermissionConstants::PERMISSION_IMPORT_LEADS,
+        ];
+
+        foreach ($userPermissions as $permission) {
+            $userRole->givePermissionTo($permission);
+        }
     }
 }

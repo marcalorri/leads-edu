@@ -1,6 +1,9 @@
 @import '../../../../vendor/filament/filament/resources/css/theme.css';
 @import '../../colors.css';
 
+/* Guava Calendar CSS */
+@import '../../../../vendor/guava/calendar/resources/css/theme.css';
+
 @plugin "daisyui" {
     themes: light --default;
 }
@@ -11,3 +14,6 @@
 @source '../../../../resources/views/components';
 @source '../../../../app/Livewire';
 @source '../../../../vendor/**/*.blade.php';
+
+/* Guava Calendar Sources */
+@source '../../../../vendor/guava/calendar/resources/**/*';

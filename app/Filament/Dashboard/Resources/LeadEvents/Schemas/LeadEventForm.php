@@ -3,10 +3,13 @@
 namespace App\Filament\Dashboard\Resources\LeadEvents\Schemas;
 
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
+use Filament\Forms\Get;
 use Filament\Schemas\Schema;
 
 class LeadEventForm
@@ -15,54 +18,111 @@ class LeadEventForm
     {
         return $schema
             ->components([
-                Select::make('tenant_id')
-                    ->relationship('tenant', 'name')
-                    ->required(),
-                Select::make('lead_id')
-                    ->relationship('lead', 'id')
-                    ->required(),
-                Select::make('usuario_id')
-                    ->relationship('usuario', 'name')
-                    ->required(),
-                TextInput::make('titulo')
-                    ->required(),
-                Textarea::make('descripcion')
-                    ->columnSpanFull(),
-                Select::make('tipo')
-                    ->options([
-            'llamada' => 'Llamada',
-            'email' => 'Email',
-            'reunion' => 'Reunion',
-            'whatsapp' => 'Whatsapp',
-            'visita' => 'Visita',
-            'seguimiento' => 'Seguimiento',
-            'otro' => 'Otro',
-        ])
-                    ->required(),
-                Select::make('estado')
-                    ->options([
-            'pendiente' => 'Pendiente',
-            'en_progreso' => 'En progreso',
-            'completada' => 'Completada',
-            'cancelada' => 'Cancelada',
-        ])
-                    ->required(),
-                Select::make('prioridad')
-                    ->options(['baja' => 'Baja', 'media' => 'Media', 'alta' => 'Alta', 'urgente' => 'Urgente'])
-                    ->required(),
-                DateTimePicker::make('fecha_programada')
-                    ->required(),
-                DateTimePicker::make('fecha_completada'),
-                TextInput::make('duracion_estimada')
-                    ->numeric(),
-                Textarea::make('resultado')
-                    ->columnSpanFull(),
-                Toggle::make('requiere_recordatorio')
-                    ->required(),
-                TextInput::make('minutos_recordatorio')
-                    ->required()
-                    ->numeric()
-                    ->default(15),
+                Section::make('Información del Evento')
+                    ->schema([
+                        Hidden::make('tenant_id')
+                            ->default(fn () => filament()->getTenant()?->id),
+                        
+                        Select::make('lead_id')
+                            ->label('Lead')
+                            ->relationship('lead', 'nombre')
+                            ->searchable()
+                            ->preload()
+                            ->required(),
+                        
+                        Hidden::make('usuario_id')
+                            ->default(fn () => auth()->id()),
+                        
+                        TextInput::make('titulo')
+                            ->label('Título')
+                            ->required()
+                            ->maxLength(255)
+                            ->columnSpanFull(),
+                        
+                        Select::make('tipo')
+                            ->label('Tipo')
+                            ->options([
+                                'llamada' => 'Llamada',
+                                'email' => 'Email',
+                                'reunion' => 'Reunión',
+                                'whatsapp' => 'WhatsApp',
+                                'visita' => 'Visita',
+                                'seguimiento' => 'Seguimiento',
+                                'otro' => 'Otro',
+                            ])
+                            ->required()
+                            ->default('llamada'),
+                        
+                        Select::make('estado')
+                            ->label('Estado')
+                            ->options([
+                                'pendiente' => 'Pendiente',
+                                'en_progreso' => 'En Progreso',
+                                'completada' => 'Completada',
+                                'cancelada' => 'Cancelada',
+                            ])
+                            ->required()
+                            ->default('pendiente')
+                            ->live(),
+                        
+                        Select::make('prioridad')
+                            ->label('Prioridad')
+                            ->options([
+                                'baja' => 'Baja',
+                                'media' => 'Media',
+                                'alta' => 'Alta',
+                                'urgente' => 'Urgente'
+                            ])
+                            ->required()
+                            ->default('media'),
+                        
+                        DateTimePicker::make('fecha_programada')
+                            ->label('Fecha programada')
+                            ->required()
+                            ->default(now()->addHour()),
+                        
+                        TextInput::make('duracion_estimada')
+                            ->label('Duración estimada (minutos)')
+                            ->numeric()
+                            ->suffix('min')
+                            ->default(30),
+                        
+                        Textarea::make('descripcion')
+                            ->label('Descripción')
+                            ->rows(3)
+                            ->columnSpanFull(),
+                    ])
+                    ->columns(2),
+
+                Section::make('Recordatorios')
+                    ->schema([
+                        Toggle::make('requiere_recordatorio')
+                            ->label('Activar recordatorio')
+                            ->default(true)
+                            ->live(),
+                        
+                        TextInput::make('minutos_recordatorio')
+                            ->label('Minutos antes del evento')
+                            ->numeric()
+                            ->default(15)
+                            ->suffix('min')
+                            ->visible(fn (Get $get): bool => $get('requiere_recordatorio')),
+                    ])
+                    ->columns(2),
+
+                Section::make('Resultado')
+                    ->schema([
+                        DateTimePicker::make('fecha_completada')
+                            ->label('Fecha de finalización')
+                            ->visible(fn (Get $get): bool => in_array($get('estado'), ['completada', 'cancelada'])),
+                        
+                        Textarea::make('resultado')
+                            ->label('Resultado/Notas')
+                            ->rows(4)
+                            ->columnSpanFull()
+                            ->visible(fn (Get $get): bool => in_array($get('estado'), ['completada', 'cancelada'])),
+                    ])
+                    ->visible(fn (Get $get): bool => in_array($get('estado'), ['completada', 'cancelada'])),
             ]);
     }
 }

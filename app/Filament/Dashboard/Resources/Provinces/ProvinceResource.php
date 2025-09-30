@@ -2,6 +2,8 @@
 
 namespace App\Filament\Dashboard\Resources\Provinces;
 
+use App\Filament\Dashboard\Clusters\Configuration;
+
 use App\Filament\Dashboard\Resources\Provinces\Pages\CreateProvince;
 use App\Filament\Dashboard\Resources\Provinces\Pages\EditProvince;
 use App\Filament\Dashboard\Resources\Provinces\Pages\ListProvinces;
@@ -20,7 +22,9 @@ class ProvinceResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedMapPin;
 
-    protected static bool $isScopedToTenant = true;
+    protected static bool $isScopedToTenant = false;
+
+    protected static ?string $cluster = Configuration::class;
 
     public static function getModelLabel(): string
     {

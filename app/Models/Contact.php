@@ -46,6 +46,20 @@ class Contact extends Model
             }
         });
 
+        // Scope para filtrar contactos por usuario (solo si no puede ver todos los contactos)
+        static::addGlobalScope('user_access', function ($query) {
+            if (Auth::check()) {
+                $user = Auth::user();
+                // Si no puede ver todos los contactos, solo ve los de sus leads
+                if (!$user->canViewAllContacts()) {
+                    // Solo mostrar contactos que tienen leads asignados al usuario
+                    $query->whereHas('leads', function ($leadQuery) use ($user) {
+                        $leadQuery->where('asesor_id', $user->id);
+                    });
+                }
+            }
+        });
+
         static::creating(function ($model) {
             if (!$model->tenant_id && filament()->getTenant()) {
                 $model->tenant_id = filament()->getTenant()->id;
@@ -61,7 +75,7 @@ class Contact extends Model
 
     public function leads(): HasMany
     {
-        return $this->hasMany(Lead::class);
+        return $this->hasMany(Lead::class, 'contact_id');
     }
 
     public function province(): BelongsTo

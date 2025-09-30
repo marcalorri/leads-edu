@@ -23,6 +23,10 @@ class ContactResource extends Resource
     protected static ?string $model = Contact::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserCircle;
+    
+    protected static string|\UnitEnum|null $navigationGroup = 'CRM Principal';
+    
+    protected static ?int $navigationSort = 2;
 
     protected static bool $isScopedToTenant = true;
 
@@ -44,6 +48,32 @@ class ContactResource extends Resource
     public static function getNavigationSort(): ?int
     {
         return 2;
+    }
+
+    public static function getRouteMiddleware(\Filament\Panel $panel): string|array
+    {
+        return [
+            'crm.subscription',
+        ];
+    }
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        $user = auth()->user();
+        $tenant = filament()->getTenant();
+        
+        if (!$tenant || !$user) {
+            return false;
+        }
+        
+        // Admins globales siempre ven la navegación
+        if ($user->is_admin) {
+            return true;
+        }
+        
+        // Solo mostrar en navegación si tiene suscripción CRM
+        return $user->isSubscribed('crm-plan', $tenant) || 
+               $user->isTrialing('crm-plan', $tenant);
     }
 
     public static function form(Schema $schema): Schema

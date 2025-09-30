@@ -2,6 +2,8 @@
 
 namespace App\Filament\Dashboard\Resources\NullReasons;
 
+use App\Filament\Dashboard\Clusters\Configuration;
+
 use App\Filament\Dashboard\Resources\NullReasons\Pages\CreateNullReason;
 use App\Filament\Dashboard\Resources\NullReasons\Pages\EditNullReason;
 use App\Filament\Dashboard\Resources\NullReasons\Pages\ListNullReasons;
@@ -22,7 +24,9 @@ class NullReasonResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedXCircle;
 
-    protected static bool $isScopedToTenant = true;
+    protected static bool $isScopedToTenant = false;
+
+    protected static ?string $cluster = Configuration::class;
 
     public static function getModelLabel(): string
     {

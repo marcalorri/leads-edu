@@ -40,6 +40,32 @@ class CourseResource extends Resource
         return 1;
     }
 
+    public static function getRouteMiddleware(\Filament\Panel $panel): string|array
+    {
+        return [
+            'crm.subscription',
+        ];
+    }
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        $user = auth()->user();
+        $tenant = filament()->getTenant();
+        
+        if (!$tenant || !$user) {
+            return false;
+        }
+        
+        // Admins globales siempre ven la navegación
+        if ($user->is_admin) {
+            return true;
+        }
+        
+        // Solo mostrar en navegación si tiene suscripción CRM
+        return $user->isSubscribed('crm-plan', $tenant) || 
+               $user->isTrialing('crm-plan', $tenant);
+    }
+
     public static function form(Schema $schema): Schema
     {
         return CourseForm::configure($schema);

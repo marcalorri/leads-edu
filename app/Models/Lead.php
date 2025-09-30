@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class Lead extends Model
 {
@@ -48,8 +49,26 @@ class Lead extends Model
     protected static function booted()
     {
         static::addGlobalScope('tenant', function (Builder $builder) {
-            if (filament()->getTenant()) {
-                $builder->where('tenant_id', filament()->getTenant()->id);
+            try {
+                $tenant = filament()->getTenant();
+                if ($tenant) {
+                    $builder->where('tenant_id', $tenant->id);
+                }
+            } catch (\Exception $e) {
+                // Durante importaciones u otros contextos, el tenant puede no estar disponible
+                // En estos casos, no aplicamos el scope automáticamente
+                Log::debug('Lead model - Global scope tenant no aplicado: ' . $e->getMessage());
+            }
+        });
+
+        // Scope para filtrar por usuario (solo si no puede ver todos los leads)
+        static::addGlobalScope('user_access', function (Builder $builder) {
+            if (Auth::check()) {
+                $user = Auth::user();
+                // Si no puede ver todos los leads, solo ve los suyos
+                if (!$user->canViewAllLeads()) {
+                    $builder->where('asesor_id', $user->id);
+                }
             }
         });
 
@@ -125,5 +144,16 @@ class Lead extends Model
     public function scopeByEstado(Builder $query, string $estado): Builder
     {
         return $query->where('estado', $estado);
+    }
+
+    public function scopeForUser(Builder $query, User $user): Builder
+    {
+        // Si es admin, puede ver todos los leads
+        if ($user->isAdmin()) {
+            return $query;
+        }
+        
+        // Si no es admin, solo puede ver sus leads asignados
+        return $query->where('asesor_id', $user->id);
     }
 }

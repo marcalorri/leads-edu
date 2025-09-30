@@ -2,6 +2,7 @@
 
 namespace App\Filament\Dashboard\Resources\Areas;
 
+use App\Filament\Dashboard\Clusters\Configuration;
 use App\Filament\Dashboard\Resources\Areas\Pages\CreateArea;
 use App\Filament\Dashboard\Resources\Areas\Pages\EditArea;
 use App\Filament\Dashboard\Resources\Areas\Pages\ListAreas;
@@ -25,8 +26,15 @@ class AreaResource extends Resource
     protected static ?string $pluralModelLabel = 'Áreas';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
-
+    
     protected static bool $isScopedToTenant = false;
+
+    protected static ?string $cluster = Configuration::class;
+
+    public static function canViewAny(): bool
+    {
+        return auth()->check() && auth()->user()->isAdmin();
+    }
 
     public static function getNavigationGroup(): ?string
     {

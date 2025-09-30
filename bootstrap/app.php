@@ -20,6 +20,7 @@ return Illuminate\Foundation\Application::configure(basePath: dirname(__DIR__))
             'sitemapped' => \App\Http\Middleware\Sitemapped::class,
             'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
+            'crm.subscription' => \App\Http\Middleware\RequireCrmSubscription::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {})->create();

@@ -6,6 +6,7 @@ use App\Filament\Dashboard\Resources\LeadEvents\Pages\CreateLeadEvent;
 use App\Filament\Dashboard\Resources\LeadEvents\Pages\EditLeadEvent;
 use App\Filament\Dashboard\Resources\LeadEvents\Pages\ListLeadEvents;
 use App\Filament\Dashboard\Resources\LeadEvents\Pages\ViewLeadEvent;
+use App\Filament\Dashboard\Resources\LeadEvents\Pages\CalendarView;
 use App\Filament\Dashboard\Resources\LeadEvents\Schemas\LeadEventForm;
 use App\Filament\Dashboard\Resources\LeadEvents\Schemas\LeadEventInfolist;
 use App\Filament\Dashboard\Resources\LeadEvents\Tables\LeadEventsTable;
@@ -46,6 +47,32 @@ class LeadEventResource extends Resource
         return 4;
     }
 
+    public static function getRouteMiddleware(\Filament\Panel $panel): string|array
+    {
+        return [
+            'crm.subscription',
+        ];
+    }
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        $user = auth()->user();
+        $tenant = filament()->getTenant();
+        
+        if (!$tenant || !$user) {
+            return false;
+        }
+        
+        // Admins globales siempre ven la navegación
+        if ($user->is_admin) {
+            return true;
+        }
+        
+        // Solo mostrar en navegación si tiene suscripción CRM
+        return $user->isSubscribed('crm-plan', $tenant) || 
+               $user->isTrialing('crm-plan', $tenant);
+    }
+
     public static function form(Schema $schema): Schema
     {
         return LeadEventForm::configure($schema);
@@ -75,6 +102,7 @@ class LeadEventResource extends Resource
             'create' => CreateLeadEvent::route('/create'),
             'view' => ViewLeadEvent::route('/{record}'),
             'edit' => EditLeadEvent::route('/{record}/edit'),
+            'calendar' => CalendarView::route('/calendar'),
         ];
     }
 

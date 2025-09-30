@@ -22,3 +22,9 @@ Schedule::command('app:local-subscription-expiring-soon-reminder')->dailyAt('00:
 Schedule::command('app:cleanup-local-subscription-statuses')->hourly();
 
 Schedule::command('app:sync-seat-based-subscription-quantities')->hourly();
+
+// Limpiar datos de Telescope más antiguos de 48 horas
+Schedule::command('telescope:prune --hours=96')->daily();
+
+// Enviar recordatorios de seguimiento de leads
+Schedule::command('leads:send-reminders')->everyFiveMinutes();

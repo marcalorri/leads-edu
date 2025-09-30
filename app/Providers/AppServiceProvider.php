@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Lead;
+use App\Observers\LeadObserver;
 use App\Services\PaymentProviders\LemonSqueezy\LemonSqueezyProvider;
 use App\Services\PaymentProviders\Offline\OfflineProvider;
 use App\Services\PaymentProviders\Paddle\PaddleProvider;
@@ -52,6 +54,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Registrar Observer para Lead
+        Lead::observe(LeadObserver::class);
+        
         FilamentAsset::register([
             Js::make('components-script', __DIR__.'/../../resources/js/components.js'),
         ]);

@@ -25,6 +25,10 @@ class OrderResource extends Resource
     protected static ?string $model = Order::class;
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
+    
+    protected static string|\UnitEnum|null $navigationGroup = 'Gestión';
+    
+    protected static ?int $navigationSort = 30;
 
     public static function form(Schema $schema): Schema
     {

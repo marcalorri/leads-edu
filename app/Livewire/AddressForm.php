@@ -38,24 +38,28 @@ class AddressForm extends MyProfileComponent
         return $schema
             ->components([
                 TextInput::make('address_line_1')
-                    ->label(__('Address Line 1'))
-                    ->helperText(__('Street address, company name, c/o')),
+                    ->label(__('Dirección Línea 1'))
+                    ->helperText(__('Dirección, nombre de empresa, c/o'))
+                    ->columnSpanFull(),
                 TextInput::make('address_line_2')
-                    ->label(__('Address Line 2'))
-                    ->helperText(__('Apartment, suite, unit, building, floor, etc.')),
+                    ->label(__('Dirección Línea 2'))
+                    ->helperText(__('Apartamento, suite, unidad, edificio, piso, etc.'))
+                    ->columnSpanFull(),
                 TextInput::make('city')
-                    ->label(__('City')),
+                    ->label(__('Ciudad')),
                 TextInput::make('state')
-                    ->label(__('State')),
+                    ->label(__('Provincia/Estado')),
                 TextInput::make('zip')
-                    ->label(__('Zip')),
+                    ->label(__('Código Postal')),
                 Country::make('country_code')
-                    ->label(__('Country')),
+                    ->label(__('País')),
                 TextInput::make('phone')
-                    ->label(__('Phone')),
+                    ->label(__('Teléfono'))
+                    ->tel(),
                 TextInput::make('tax_number')
-                    ->label(__('Tax Number')),
+                    ->label(__('Número de Identificación Fiscal')),
             ])
+            ->columns(2)
             ->statePath('data');
     }
 

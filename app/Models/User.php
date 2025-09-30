@@ -34,6 +34,7 @@ class User extends Authenticatable implements FilamentUser, HasTenants, MustVeri
     protected $fillable = [
         'name',
         'email',
+        'avatar',
         'password',
         'is_admin',
         'public_name',
@@ -130,6 +131,123 @@ class User extends Authenticatable implements FilamentUser, HasTenants, MustVeri
         return $this->is_admin;
     }
 
+    /**
+     * Check if user is admin of a specific tenant
+     */
+    public function isTenantAdmin(?Tenant $tenant = null): bool
+    {
+        // Global admins are always tenant admins
+        if ($this->is_admin) {
+            return true;
+        }
+
+        $tenant = $tenant ?? filament()->getTenant();
+        if (!$tenant) {
+            return false;
+        }
+
+        // Get the pivot record for this tenant
+        $tenantUser = $this->tenants()->where('tenant_id', $tenant->id)->first();
+        if (!$tenantUser) {
+            return false;
+        }
+
+        // Check if the pivot (TenantUser) has admin role
+        return $tenantUser->pivot->hasRole(\App\Constants\TenancyPermissionConstants::ROLE_ADMIN);
+    }
+
+    /**
+     * Check if user can view all leads in tenant (admin permission)
+     */
+    public function canViewAllLeads(?Tenant $tenant = null): bool
+    {
+        $tenant = $tenant ?? filament()->getTenant();
+        if (!$tenant) {
+            return false;
+        }
+
+        if ($this->isTenantAdmin($tenant)) {
+            return true;
+        }
+
+        // Check if the TenantUser pivot has the permission
+        $tenantUser = $this->tenants()->where('tenant_id', $tenant->id)->first();
+        if (!$tenantUser) {
+            return false;
+        }
+
+        return $tenantUser->pivot->hasPermissionTo(\App\Constants\TenancyPermissionConstants::PERMISSION_VIEW_ALL_LEADS);
+    }
+
+    /**
+     * Check if user can view all contacts in tenant (admin permission)
+     */
+    public function canViewAllContacts(?Tenant $tenant = null): bool
+    {
+        $tenant = $tenant ?? filament()->getTenant();
+        if (!$tenant) {
+            return false;
+        }
+
+        if ($this->isTenantAdmin($tenant)) {
+            return true;
+        }
+
+        // Check if the TenantUser pivot has the permission
+        $tenantUser = $this->tenants()->where('tenant_id', $tenant->id)->first();
+        if (!$tenantUser) {
+            return false;
+        }
+
+        return $tenantUser->pivot->hasPermissionTo(\App\Constants\TenancyPermissionConstants::PERMISSION_VIEW_ALL_CONTACTS);
+    }
+
+    /**
+     * Check if user can manage configuration (admin only)
+     */
+    public function canManageConfiguration(?Tenant $tenant = null): bool
+    {
+        $tenant = $tenant ?? filament()->getTenant();
+        if (!$tenant) {
+            return false;
+        }
+
+        if ($this->isTenantAdmin($tenant)) {
+            return true;
+        }
+
+        // Check if the TenantUser pivot has the permission
+        $tenantUser = $this->tenants()->where('tenant_id', $tenant->id)->first();
+        if (!$tenantUser) {
+            return false;
+        }
+
+        return $tenantUser->pivot->hasPermissionTo(\App\Constants\TenancyPermissionConstants::PERMISSION_MANAGE_CONFIGURATION);
+    }
+
+    /**
+     * Check if user can view dashboard stats (admin sees all, users see filtered)
+     */
+    public function canViewDashboardStats(?Tenant $tenant = null): bool
+    {
+        $tenant = $tenant ?? filament()->getTenant();
+        if (!$tenant) {
+            return false;
+        }
+
+        if ($this->isTenantAdmin($tenant)) {
+            return true;
+        }
+
+        // Check if the TenantUser pivot has the permission
+        $tenantUser = $this->tenants()->where('tenant_id', $tenant->id)->first();
+        if (!$tenantUser) {
+            return false;
+        }
+
+        return $tenantUser->pivot->hasPermissionTo(\App\Constants\TenancyPermissionConstants::PERMISSION_VIEW_DASHBOARD_STATS);
+    }
+
     public function isPhoneNumberVerified()
     {
         return $this->phone_number_verified_at !== null;
@@ -187,5 +305,34 @@ class User extends Authenticatable implements FilamentUser, HasTenants, MustVeri
     public function canAccessTenant(Model $tenant): bool
     {
         return $this->tenants()->whereKey($tenant)->exists();
+    }
+
+    /**
+     * Get the avatar URL or generate initials avatar
+     */
+    public function getAvatarUrlAttribute(): string
+    {
+        if ($this->avatar) {
+            return asset('storage/' . $this->avatar);
+        }
+        
+        return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&color=7F9CF5&background=EBF4FF&size=40';
+    }
+
+    /**
+     * Get user initials
+     */
+    public function getInitialsAttribute(): string
+    {
+        $names = explode(' ', $this->name);
+        $initials = '';
+        
+        foreach ($names as $name) {
+            if (!empty($name)) {
+                $initials .= strtoupper(substr($name, 0, 1));
+            }
+        }
+        
+        return substr($initials, 0, 2);
     }
 }

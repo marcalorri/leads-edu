@@ -2,6 +2,7 @@
 
 namespace App\Filament\Dashboard\Resources\BusinessUnits;
 
+use App\Filament\Dashboard\Clusters\Configuration;
 use App\Filament\Dashboard\Resources\BusinessUnits\Pages\CreateBusinessUnit;
 use App\Filament\Dashboard\Resources\BusinessUnits\Pages\EditBusinessUnit;
 use App\Filament\Dashboard\Resources\BusinessUnits\Pages\ListBusinessUnits;
@@ -27,6 +28,8 @@ class BusinessUnitResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBuildingOffice2;
 
     protected static bool $isScopedToTenant = false;
+
+    protected static ?string $cluster = Configuration::class;
 
     public static function getNavigationGroup(): ?string
     {

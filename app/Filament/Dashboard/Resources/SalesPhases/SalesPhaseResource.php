@@ -2,6 +2,8 @@
 
 namespace App\Filament\Dashboard\Resources\SalesPhases;
 
+use App\Filament\Dashboard\Clusters\Configuration;
+
 use App\Filament\Dashboard\Resources\SalesPhases\Pages\CreateSalesPhase;
 use App\Filament\Dashboard\Resources\SalesPhases\Pages\EditSalesPhase;
 use App\Filament\Dashboard\Resources\SalesPhases\Pages\ListSalesPhases;
@@ -22,7 +24,9 @@ class SalesPhaseResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedChartBar;
 
-    protected static bool $isScopedToTenant = true;
+    protected static bool $isScopedToTenant = false;
+
+    protected static ?string $cluster = Configuration::class;
 
     public static function getModelLabel(): string
     {

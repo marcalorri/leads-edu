@@ -27,6 +27,10 @@ class TransactionResource extends Resource
     protected static ?string $model = Transaction::class;
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-currency-dollar';
+    
+    protected static string|\UnitEnum|null $navigationGroup = 'Gestión';
+    
+    protected static ?int $navigationSort = 32;
 
     public static function form(Schema $schema): Schema
     {
@@ -155,6 +159,7 @@ class TransactionResource extends Resource
     {
         return __('Payments');
     }
+
 
     public static function isDiscovered(): bool
     {

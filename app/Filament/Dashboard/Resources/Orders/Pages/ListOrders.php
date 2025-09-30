@@ -15,7 +15,7 @@ class ListOrders extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-
+            // Aquí irían las acciones normales como CreateAction, etc.
         ];
     }
 

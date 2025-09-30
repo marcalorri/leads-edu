@@ -2,6 +2,8 @@
 
 namespace App\Filament\Dashboard\Resources\Modalities;
 
+use App\Filament\Dashboard\Clusters\Configuration;
+
 use App\Filament\Dashboard\Resources\Modalities\Pages\CreateModality;
 use App\Filament\Dashboard\Resources\Modalities\Pages\EditModality;
 use App\Filament\Dashboard\Resources\Modalities\Pages\ListModalities;
@@ -22,7 +24,9 @@ class ModalityResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedComputerDesktop;
 
-    protected static bool $isScopedToTenant = true;
+    protected static bool $isScopedToTenant = false;
+
+    protected static ?string $cluster = Configuration::class;
 
     public static function getModelLabel(): string
     {

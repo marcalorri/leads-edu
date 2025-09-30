@@ -13,13 +13,15 @@ class Team extends Page
 
     public static function getNavigationGroup(): ?string
     {
-        return __('Team');
+        return 'Team';
     }
 
     public static function getNavigationLabel(): string
     {
         return __('Team Members');
     }
+    
+    protected static ?int $navigationSort = 20;
 
     public static function canAccess(): bool
     {

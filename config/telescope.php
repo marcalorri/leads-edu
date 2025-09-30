@@ -158,7 +158,7 @@ return [
         Watchers\MailWatcher::class => env('TELESCOPE_MAIL_WATCHER', true),
 
         Watchers\ModelWatcher::class => [
-            'enabled' => env('TELESCOPE_MODEL_WATCHER', true),
+            'enabled' => env('TELESCOPE_MODEL_WATCHER', false), // Muy pesado en producción
             'events' => ['eloquent.*'],
             'hydrations' => true,
         ],
@@ -166,7 +166,7 @@ return [
         Watchers\NotificationWatcher::class => env('TELESCOPE_NOTIFICATION_WATCHER', true),
 
         Watchers\QueryWatcher::class => [
-            'enabled' => env('TELESCOPE_QUERY_WATCHER', true),
+            'enabled' => env('TELESCOPE_QUERY_WATCHER', false), // Muy pesado en producción
             'ignore_packages' => true,
             'ignore_paths' => [],
             'slow' => 100,

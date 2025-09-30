@@ -2,6 +2,7 @@
 
 namespace App\Filament\Dashboard\Resources\Durations;
 
+use App\Filament\Dashboard\Clusters\Configuration;
 use App\Filament\Dashboard\Resources\Durations\Pages\CreateDuration;
 use App\Filament\Dashboard\Resources\Durations\Pages\EditDuration;
 use App\Filament\Dashboard\Resources\Durations\Pages\ListDurations;
@@ -27,6 +28,8 @@ class DurationResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClock;
 
     protected static bool $isScopedToTenant = false;
+
+    protected static ?string $cluster = Configuration::class;
 
     public static function getNavigationGroup(): ?string
     {

@@ -4,11 +4,14 @@ namespace App\Filament\Dashboard\Resources\Leads\Tables;
 
 use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
+use Filament\Actions\ViewAction;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class LeadsTable
 {
@@ -16,21 +19,35 @@ class LeadsTable
     {
         return $table
             ->columns([
-                TextColumn::make('asesor.name')
+                ImageColumn::make('asesor.avatar')
                     ->label('Asesor')
-                    ->searchable()
-                    ->sortable(),
-                SelectColumn::make('estado')
-                    ->options([
+                    ->circular()
+                    ->size(40)
+                    ->getStateUsing(function ($record) {
+                        return $record->asesor?->avatar_url ?? 'https://ui-avatars.com/api/?name=Sin+Asesor&color=9CA3AF&background=F3F4F6&size=40';
+                    })
+                    ->tooltip(fn ($record) => $record->asesor?->name ?? 'Sin asesor asignado'),
+                TextColumn::make('estado')
+                    ->label('Estado')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'abierto' => 'warning',
+                        'ganado' => 'success',
+                        'perdido' => 'danger',
+                        default => 'gray',
+                    })
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
                         'abierto' => 'Abierto',
                         'ganado' => 'Ganado',
                         'perdido' => 'Perdido',
-                    ])
-                    ->label('Estado'),
+                        default => $state,
+                    }),
                 TextColumn::make('course.codigo_curso')
                     ->label('Curso')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->badge()
+                    ->color('primary'),
                 TextColumn::make('campus.nombre')
                     ->label('Sede')
                     ->searchable()
@@ -38,11 +55,13 @@ class LeadsTable
                 TextColumn::make('modality.nombre')
                     ->label('Modalidad')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('province.nombre')
                     ->label('Provincia')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('nombre')
                     ->label('Nombre')
                     ->searchable()
@@ -57,7 +76,11 @@ class LeadsTable
                 TextColumn::make('email')
                     ->label('Email')
                     ->searchable()
-                    ->limit(25),
+                    ->limit(20)
+                    ->tooltip(fn ($record) => $record->email)
+                    ->copyable()
+                    ->copyMessage('Email copiado')
+                    ->icon('heroicon-m-envelope'),
                 TextColumn::make('origin.nombre')
                     ->label('Origen')
                     ->searchable()
@@ -88,9 +111,17 @@ class LeadsTable
                     ->label('Curso'),
             ])
             ->recordActions([
-                EditAction::make(),
-                DeleteAction::make(),
+                ViewAction::make()
+                    ->label(''),
+                EditAction::make()
+                    ->label(''),
+                DeleteAction::make()
+                    ->label(''),
             ])
+            ->recordUrl(fn ($record) => route('filament.dashboard.resources.leads.edit', [
+                'tenant' => filament()->getTenant(),
+                'record' => $record
+            ]))
             ->defaultSort('created_at', 'desc');
     }
 }

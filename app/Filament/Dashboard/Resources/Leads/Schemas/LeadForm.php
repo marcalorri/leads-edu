@@ -5,6 +5,7 @@ namespace App\Filament\Dashboard\Resources\Leads\Schemas;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Schema;
 
 class LeadForm
@@ -12,66 +13,131 @@ class LeadForm
     public static function configure(Schema $schema): Schema
     {
         return $schema
+            ->columns(4)
             ->components([
-                Section::make('Información Personal')
-                    ->schema([
-                        TextInput::make('nombre')
-                            ->required()
-                            ->maxLength(100)
-                            ->label('Nombre'),
-                        TextInput::make('apellidos')
-                            ->required()
-                            ->maxLength(150)
-                            ->label('Apellidos'),
-                        TextInput::make('telefono')
-                            ->tel()
-                            ->required()
-                            ->maxLength(20)
-                            ->label('Teléfono'),
-                        TextInput::make('email')
-                            ->email()
-                            ->required()
-                            ->maxLength(255)
-                            ->label('Email'),
-                        TextInput::make('pais')
-                            ->maxLength(100)
-                            ->label('País'),
-                        Select::make('provincia_id')
-                            ->relationship('province', 'nombre')
-                            ->searchable()
-                            ->preload()
-                            ->required()
-                            ->label('Provincia'),
-                    ])->columns(2),
+                // Área principal con tabs (3/4 del ancho)
+                Tabs::make('Lead Information')
+                    ->columnSpan(3)
+                    ->tabs([
+                        Tabs\Tab::make('Información Personal')
+                            ->icon('heroicon-o-user')
+                            ->schema([
+                                Section::make('Datos Personales')
+                                    ->schema([
+                                        TextInput::make('nombre')
+                                            ->required()
+                                            ->maxLength(100)
+                                            ->label('Nombre'),
+                                        TextInput::make('apellidos')
+                                            ->required()
+                                            ->maxLength(150)
+                                            ->label('Apellidos'),
+                                        TextInput::make('telefono')
+                                            ->tel()
+                                            ->required()
+                                            ->maxLength(20)
+                                            ->label('Teléfono'),
+                                        TextInput::make('email')
+                                            ->email()
+                                            ->required()
+                                            ->maxLength(255)
+                                            ->label('Email'),
+                                        TextInput::make('pais')
+                                            ->maxLength(100)
+                                            ->label('País'),
+                                        Select::make('provincia_id')
+                                            ->relationship('province', 'nombre')
+                                            ->searchable()
+                                            ->preload()
+                                            ->required()
+                                            ->label('Provincia'),
+                                    ])->columns(3),
+                                
+                                Section::make('Información Académica')
+                                    ->schema([
+                                        Select::make('curso_id')
+                                            ->relationship('course', 'titulacion')
+                                            ->searchable()
+                                            ->preload()
+                                            ->required()
+                                            ->label('Curso')
+                                            ->columnSpanFull(),
+                                        Select::make('sede_id')
+                                            ->relationship('campus', 'nombre')
+                                            ->searchable()
+                                            ->preload()
+                                            ->required()
+                                            ->label('Sede'),
+                                        Select::make('modalidad_id')
+                                            ->relationship('modality', 'nombre')
+                                            ->searchable()
+                                            ->preload()
+                                            ->label('Modalidad'),
+                                        TextInput::make('convocatoria')
+                                            ->maxLength(100)
+                                            ->label('Convocatoria'),
+                                        TextInput::make('horario')
+                                            ->maxLength(100)
+                                            ->label('Horario'),
+                                    ])->columns(2),
+                            ]),
+                        
+                        Tabs\Tab::make('Contacto')
+                            ->icon('heroicon-o-phone')
+                            ->schema([
+                                Section::make('Contacto Asociado')
+                                    ->schema([
+                                        Select::make('contact_id')
+                                            ->relationship('contact', 'nombre_completo')
+                                            ->searchable()
+                                            ->preload()
+                                            ->label('Contacto')
+                                            ->placeholder('Seleccionar contacto')
+                                            ->createOptionForm([
+                                                TextInput::make('nombre_completo')
+                                                    ->required()
+                                                    ->label('Nombre Completo'),
+                                                TextInput::make('telefono_principal')
+                                                    ->required()
+                                                    ->label('Teléfono Principal'),
+                                                TextInput::make('email_principal')
+                                                    ->email()
+                                                    ->required()
+                                                    ->label('Email Principal'),
+                                            ])
+                                            ->createOptionUsing(function (array $data) {
+                                                $data['tenant_id'] = filament()->getTenant()->id;
+                                                return \App\Models\Contact::create($data);
+                                            }),
+                                    ])->columns(1),
+                            ]),
+                        
+                        Tabs\Tab::make('Origen y Tracking')
+                            ->icon('heroicon-o-chart-pie')
+                            ->schema([
+                                Section::make('Origen del Lead')
+                                    ->schema([
+                                        Select::make('origen_id')
+                                            ->relationship('origin', 'nombre')
+                                            ->searchable()
+                                            ->preload()
+                                            ->label('Origen'),
+                                        TextInput::make('utm_source')
+                                            ->maxLength(255)
+                                            ->label('UTM Source'),
+                                        TextInput::make('utm_medium')
+                                            ->maxLength(255)
+                                            ->label('UTM Medium'),
+                                        TextInput::make('utm_campaign')
+                                            ->maxLength(255)
+                                            ->label('UTM Campaign'),
+                                    ])->columns(2),
+                            ]),
+                    ]),
                 
-                Section::make('Información Académica')
-                    ->schema([
-                        Select::make('curso_id')
-                            ->relationship('course', 'titulacion')
-                            ->searchable()
-                            ->preload()
-                            ->required()
-                            ->label('Curso'),
-                        Select::make('sede_id')
-                            ->relationship('campus', 'nombre')
-                            ->searchable()
-                            ->preload()
-                            ->required()
-                            ->label('Sede'),
-                        Select::make('modalidad_id')
-                            ->relationship('modality', 'nombre')
-                            ->searchable()
-                            ->preload()
-                            ->label('Modalidad'),
-                        TextInput::make('convocatoria')
-                            ->maxLength(100)
-                            ->label('Convocatoria'),
-                        TextInput::make('horario')
-                            ->maxLength(100)
-                            ->label('Horario'),
-                    ])->columns(2),
-                
+                // Columna lateral fija (1/4 del ancho)
                 Section::make('Estado y Seguimiento')
+                    ->columnSpan(1)
                     ->schema([
                         Select::make('estado')
                             ->options([
@@ -106,25 +172,7 @@ class LeadForm
                             ->type('datetime-local')
                             ->label('Fecha Perdido')
                             ->visible(fn ($get) => $get('estado') === 'perdido'),
-                    ])->columns(2),
-                
-                Section::make('Origen y Tracking')
-                    ->schema([
-                        Select::make('origen_id')
-                            ->relationship('origin', 'nombre')
-                            ->searchable()
-                            ->preload()
-                            ->label('Origen'),
-                        TextInput::make('utm_source')
-                            ->maxLength(255)
-                            ->label('UTM Source'),
-                        TextInput::make('utm_medium')
-                            ->maxLength(255)
-                            ->label('UTM Medium'),
-                        TextInput::make('utm_campaign')
-                            ->maxLength(255)
-                            ->label('UTM Campaign'),
-                    ])->columns(2),
+                    ])->columns(1),
             ]);
     }
 }

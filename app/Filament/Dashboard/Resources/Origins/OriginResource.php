@@ -2,6 +2,8 @@
 
 namespace App\Filament\Dashboard\Resources\Origins;
 
+use App\Filament\Dashboard\Clusters\Configuration;
+
 use App\Filament\Dashboard\Resources\Origins\Pages\CreateOrigin;
 use App\Filament\Dashboard\Resources\Origins\Pages\EditOrigin;
 use App\Filament\Dashboard\Resources\Origins\Pages\ListOrigins;
@@ -22,7 +24,9 @@ class OriginResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedGlobeAlt;
 
-    protected static bool $isScopedToTenant = true;
+    protected static bool $isScopedToTenant = false;
+
+    protected static ?string $cluster = Configuration::class;
 
     public static function getModelLabel(): string
     {

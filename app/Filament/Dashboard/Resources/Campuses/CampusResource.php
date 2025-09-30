@@ -2,6 +2,7 @@
 
 namespace App\Filament\Dashboard\Resources\Campuses;
 
+use App\Filament\Dashboard\Clusters\Configuration;
 use App\Filament\Dashboard\Resources\Campuses\Pages\CreateCampus;
 use App\Filament\Dashboard\Resources\Campuses\Pages\EditCampus;
 use App\Filament\Dashboard\Resources\Campuses\Pages\ListCampuses;
@@ -23,6 +24,8 @@ class CampusResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBuildingOffice2;
 
     protected static bool $isScopedToTenant = true;
+
+    protected static ?string $cluster = Configuration::class;
 
     public static function getModelLabel(): string
     {
