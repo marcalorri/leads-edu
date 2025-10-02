@@ -35,10 +35,12 @@ class ApiPermissionMiddleware
         }
 
         // Verificar permisos específicos del usuario en el tenant
+        // Para API, simplificamos: si el token tiene el scope y el usuario pertenece al tenant, permitimos
+        // La validación de permisos específicos se hace en el controller según el rol
         $hasPermission = match($scope) {
-            'leads:read' => $user->canViewAllLeads($tenant),
-            'leads:write' => $user->canManageLeads($tenant),
-            'leads:delete' => $user->canManageLeads($tenant),
+            'leads:read' => true, // Cualquier usuario con el scope puede leer
+            'leads:write' => $user->canManageLeads($tenant) || $user->isTenantAdmin($tenant),
+            'leads:delete' => $user->canManageLeads($tenant) || $user->isTenantAdmin($tenant),
             'leads:admin' => $user->isTenantAdmin($tenant),
             default => false
         };

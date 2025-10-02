@@ -63,7 +63,7 @@ class TenantApiMiddleware
             ], 404);
         }
 
-        // Verificar que el usuario pertenezca al tenant
+        // Verificer que el usuario pertenezca al tenant
         if (!$request->user()->tenants()->where('tenant_id', $tenant->id)->exists()) {
             return response()->json([
                 'error' => [
@@ -73,10 +73,8 @@ class TenantApiMiddleware
             ], 403);
         }
 
-        // Establecer el tenant en el contexto de Filament
-        filament()->setTenant($tenant);
-        
         // Agregar tenant al request para uso posterior
+        // No usamos filament()->setTenant() porque estamos en contexto API, no web
         $request->merge(['current_tenant' => $tenant]);
 
         return $next($request);
