@@ -28,13 +28,17 @@ class LeadApiController extends Controller
             ->with(['course', 'asesor', 'campus', 'modality', 'province', 'salesPhase', 'origin']);
 
         // Aplicar filtros de usuario (si no puede ver todos los leads)
-        $canViewAll = $user->canViewAllLeads($tenant);
+        // Para API: si el token tiene scope 'leads:admin', puede ver todos los leads
+        $token = $user->currentAccessToken();
+        $hasAdminScope = $token && $token->can('leads:admin');
+        $canViewAll = $hasAdminScope || $user->canViewAllLeads($tenant);
         
         // Log para debug (temporal)
         Log::info('API Leads Index', [
             'user_id' => $user->id,
             'user_name' => $user->name,
             'tenant_id' => $tenant->id,
+            'has_admin_scope' => $hasAdminScope,
             'can_view_all' => $canViewAll,
             'is_admin' => $user->isTenantAdmin($tenant),
         ]);
