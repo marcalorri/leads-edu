@@ -10,6 +10,7 @@ use App\Models\Lead;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Log;
 
 class LeadApiController extends Controller
 {
@@ -27,7 +28,18 @@ class LeadApiController extends Controller
             ->with(['course', 'asesor', 'campus', 'modality', 'province', 'salesPhase', 'origin']);
 
         // Aplicar filtros de usuario (si no puede ver todos los leads)
-        if (!$user->canViewAllLeads($tenant)) {
+        $canViewAll = $user->canViewAllLeads($tenant);
+        
+        // Log para debug (temporal)
+        Log::info('API Leads Index', [
+            'user_id' => $user->id,
+            'user_name' => $user->name,
+            'tenant_id' => $tenant->id,
+            'can_view_all' => $canViewAll,
+            'is_admin' => $user->isTenantAdmin($tenant),
+        ]);
+        
+        if (!$canViewAll) {
             $query->where('asesor_id', $user->id);
         }
 
