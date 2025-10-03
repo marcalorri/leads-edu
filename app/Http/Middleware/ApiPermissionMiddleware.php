@@ -23,7 +23,10 @@ class ApiPermissionMiddleware
         $tenant = $request->current_tenant;
 
         // Verificar que el token tenga el scope requerido
-        if (!$token->can($scope)) {
+        // Si el token tiene 'leads:admin', tiene acceso a todo
+        $hasScope = $token->can($scope) || $token->can('leads:admin');
+        
+        if (!$hasScope) {
             return response()->json([
                 'error' => [
                     'code' => 'INSUFFICIENT_SCOPE',
