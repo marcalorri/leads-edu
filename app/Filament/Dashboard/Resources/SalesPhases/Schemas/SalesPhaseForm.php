@@ -26,11 +26,13 @@ class SalesPhaseForm
                             ->label('Descripción'),
                         TextInput::make('orden')
                             ->numeric()
-                            ->label('Orden')
-                            ->helperText('Orden de visualización (opcional)'),
-                        ColorPicker::make('color')
+                            ->default(0)
                             ->required()
+                            ->label('Orden')
+                            ->helperText('Orden de visualización'),
+                        ColorPicker::make('color')
                             ->label('Color')
+                            ->default('#3b82f6')
                             ->helperText('Color para identificar la fase'),
                         Toggle::make('activo')
                             ->default(true)

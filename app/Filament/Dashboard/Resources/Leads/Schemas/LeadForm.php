@@ -49,7 +49,6 @@ class LeadForm
                                             ->relationship('province', 'nombre')
                                             ->searchable()
                                             ->preload()
-                                            ->required()
                                             ->label('Provincia'),
                                     ])->columns(3),
                                 
@@ -59,14 +58,12 @@ class LeadForm
                                             ->relationship('course', 'titulacion')
                                             ->searchable()
                                             ->preload()
-                                            ->required()
                                             ->label('Curso')
                                             ->columnSpanFull(),
                                         Select::make('sede_id')
                                             ->relationship('campus', 'nombre')
                                             ->searchable()
                                             ->preload()
-                                            ->required()
                                             ->label('Sede'),
                                         Select::make('modalidad_id')
                                             ->relationship('modality', 'nombre')
@@ -147,6 +144,14 @@ class LeadForm
                             ])
                             ->required()
                             ->default('abierto')
+                            ->live()
+                            ->afterStateUpdated(function ($state, $set) {
+                                if ($state === 'perdido') {
+                                    $set('fecha_perdido', now()->format('Y-m-d\TH:i'));
+                                } elseif ($state === 'ganado') {
+                                    $set('fecha_ganado', now()->format('Y-m-d\TH:i'));
+                                }
+                            })
                             ->label('Estado'),
                         Select::make('fase_venta_id')
                             ->relationship('salesPhase', 'nombre')
@@ -162,15 +167,19 @@ class LeadForm
                             ->relationship('nullReason', 'nombre')
                             ->searchable()
                             ->preload()
+                            ->required(fn ($get) => $get('estado') === 'perdido')
                             ->label('Motivo Nulo')
+                            ->helperText('Obligatorio cuando el estado es "Perdido"')
                             ->visible(fn ($get) => $get('estado') === 'perdido'),
                         TextInput::make('fecha_ganado')
                             ->type('datetime-local')
                             ->label('Fecha Ganado')
+                            ->helperText('Se establece automáticamente al marcar como ganado')
                             ->visible(fn ($get) => $get('estado') === 'ganado'),
                         TextInput::make('fecha_perdido')
                             ->type('datetime-local')
                             ->label('Fecha Perdido')
+                            ->helperText('Se establece automáticamente al marcar como perdido')
                             ->visible(fn ($get) => $get('estado') === 'perdido'),
                     ])->columns(1),
             ]);

@@ -7,9 +7,7 @@ use App\Filament\Dashboard\Clusters\Configuration;
 use App\Filament\Dashboard\Resources\SalesPhases\Pages\CreateSalesPhase;
 use App\Filament\Dashboard\Resources\SalesPhases\Pages\EditSalesPhase;
 use App\Filament\Dashboard\Resources\SalesPhases\Pages\ListSalesPhases;
-use App\Filament\Dashboard\Resources\SalesPhases\Pages\ViewSalesPhase;
 use App\Filament\Dashboard\Resources\SalesPhases\Schemas\SalesPhaseForm;
-use App\Filament\Dashboard\Resources\SalesPhases\Schemas\SalesPhaseInfolist;
 use App\Filament\Dashboard\Resources\SalesPhases\Tables\SalesPhasesTable;
 use App\Models\SalesPhase;
 use BackedEnum;
@@ -17,6 +15,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class SalesPhaseResource extends Resource
 {
@@ -53,14 +52,14 @@ class SalesPhaseResource extends Resource
         return SalesPhaseForm::configure($schema);
     }
 
-    public static function infolist(Schema $schema): Schema
-    {
-        return SalesPhaseInfolist::configure($schema);
-    }
-
     public static function table(Table $table): Table
     {
         return SalesPhasesTable::configure($table);
+    }
+
+    public static function getRecordUrl(Model $record): ?string
+    {
+        return static::getUrl('edit', ['record' => $record]);
     }
 
     public static function getRelations(): array
@@ -75,7 +74,6 @@ class SalesPhaseResource extends Resource
         return [
             'index' => ListSalesPhases::route('/'),
             'create' => CreateSalesPhase::route('/create'),
-            'view' => ViewSalesPhase::route('/{record}'),
             'edit' => EditSalesPhase::route('/{record}/edit'),
         ];
     }

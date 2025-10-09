@@ -6,9 +6,7 @@ use App\Filament\Dashboard\Clusters\Configuration;
 use App\Filament\Dashboard\Resources\Areas\Pages\CreateArea;
 use App\Filament\Dashboard\Resources\Areas\Pages\EditArea;
 use App\Filament\Dashboard\Resources\Areas\Pages\ListAreas;
-use App\Filament\Dashboard\Resources\Areas\Pages\ViewArea;
 use App\Filament\Dashboard\Resources\Areas\Schemas\AreaForm;
-use App\Filament\Dashboard\Resources\Areas\Schemas\AreaInfolist;
 use App\Filament\Dashboard\Resources\Areas\Tables\AreasTable;
 use App\Models\Area;
 use BackedEnum;
@@ -16,6 +14,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class AreaResource extends Resource
 {
@@ -51,14 +50,14 @@ class AreaResource extends Resource
         return AreaForm::configure($schema);
     }
 
-    public static function infolist(Schema $schema): Schema
-    {
-        return AreaInfolist::configure($schema);
-    }
-
     public static function table(Table $table): Table
     {
         return AreasTable::configure($table);
+    }
+
+    public static function getRecordUrl(Model $record): ?string
+    {
+        return static::getUrl('edit', ['record' => $record]);
     }
 
     public static function getRelations(): array
@@ -73,7 +72,6 @@ class AreaResource extends Resource
         return [
             'index' => ListAreas::route('/'),
             'create' => CreateArea::route('/create'),
-            'view' => ViewArea::route('/{record}'),
             'edit' => EditArea::route('/{record}/edit'),
         ];
     }

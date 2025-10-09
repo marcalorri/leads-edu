@@ -8,4 +8,9 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateLeadNote extends CreateRecord
 {
     protected static string $resource = LeadNoteResource::class;
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
 }

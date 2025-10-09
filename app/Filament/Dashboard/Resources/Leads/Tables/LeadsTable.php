@@ -9,7 +9,6 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
-use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -42,6 +41,20 @@ class LeadsTable
                         'perdido' => 'Perdido',
                         default => $state,
                     }),
+                TextColumn::make('salesPhase.nombre')
+                    ->label('Fase de Venta')
+                    ->formatStateUsing(function ($state, $record) {
+                        if (!$record->salesPhase) return '-';
+                        $color = $record->salesPhase->color;
+                        return new \Illuminate\Support\HtmlString(
+                            '<span style="background-color: ' . $color . '; color: white; padding: 0.125rem 0.5rem; border-radius: 0.25rem; font-size: 0.6875rem; font-weight: 500; display: inline-block; white-space: nowrap; line-height: 1.25rem;">' 
+                            . e($state) . 
+                            '</span>'
+                        );
+                    })
+                    ->html()
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('course.codigo_curso')
                     ->label('Curso')
                     ->searchable()
@@ -51,7 +64,8 @@ class LeadsTable
                 TextColumn::make('campus.nombre')
                     ->label('Sede')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('modality.nombre')
                     ->label('Modalidad')
                     ->searchable()
@@ -95,20 +109,36 @@ class LeadsTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                TrashedFilter::make(),
-                SelectFilter::make('estado')
-                    ->options([
-                        'abierto' => 'Abierto',
-                        'ganado' => 'Ganado',
-                        'perdido' => 'Perdido',
-                    ])
-                    ->label('Estado'),
                 SelectFilter::make('asesor')
                     ->relationship('asesor', 'name')
+                    ->searchable()
+                    ->preload()
                     ->label('Asesor'),
                 SelectFilter::make('course')
                     ->relationship('course', 'titulacion')
+                    ->searchable()
+                    ->preload()
                     ->label('Curso'),
+                SelectFilter::make('salesPhase')
+                    ->relationship('salesPhase', 'nombre')
+                    ->searchable()
+                    ->preload()
+                    ->label('Fase de Venta'),
+                SelectFilter::make('nullReason')
+                    ->relationship('nullReason', 'nombre')
+                    ->searchable()
+                    ->preload()
+                    ->label('Motivo Nulo'),
+                SelectFilter::make('campus')
+                    ->relationship('campus', 'nombre')
+                    ->searchable()
+                    ->preload()
+                    ->label('Sede'),
+                SelectFilter::make('modality')
+                    ->relationship('modality', 'nombre')
+                    ->searchable()
+                    ->preload()
+                    ->label('Modalidad'),
             ])
             ->recordActions([
                 ViewAction::make()

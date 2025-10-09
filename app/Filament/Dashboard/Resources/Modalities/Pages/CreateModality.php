@@ -8,4 +8,9 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateModality extends CreateRecord
 {
     protected static string $resource = ModalityResource::class;
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
 }
