@@ -112,6 +112,9 @@ class DashboardPanelProvider extends PanelProvider
             ->renderHook(PanelsRenderHook::CONTENT_START,
                 fn (): string => Blade::render("@include('components.crm-subscription-banner')")
             )
+            ->renderHook(PanelsRenderHook::GLOBAL_SEARCH_AFTER,
+                fn (): string => Blade::render("@livewire('lead-limit-indicator')")
+            )
             ->navigationGroups([
                 NavigationGroup::make('CRM Principal')
                     ->collapsible(),

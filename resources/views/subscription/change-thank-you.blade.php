@@ -11,7 +11,7 @@
                     {{ __('It might take a few moments for your subscription to be updated.') }}
                 </p>
 
-                <x-button-link.primary href="{{ route('home') }}" class="mt-4 mx-auto">
+                <x-button-link.primary href="{{ route('filament.dashboard.pages.dashboard', ['tenant' => auth()->user()->currentTenant]) }}" class="mt-4 mx-auto">
                     {{ __('Continue Your Journey') }}
                 </x-button-link.primary>
 
