@@ -29,9 +29,10 @@ class CrmSubscription
             return true;
         }
         
-        // Verificar si tiene suscripción CRM activa o está en trial
-        return $user->isSubscribed('crm-plan', $tenant) || 
-               $user->isTrialing('crm-plan', $tenant);
+        // Verificar si tiene CUALQUIER suscripción activa o está en trial
+        // Pasamos null como productSlug para aceptar cualquier producto
+        return $user->isSubscribed(null, $tenant) || 
+               $user->isTrialing(null, $tenant);
     }
     
     /**
