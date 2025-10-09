@@ -384,17 +384,21 @@ class StripeProvider implements PaymentProviderInterface
         $stripeProductId = $this->planService->getPaymentProviderProductId($plan, $paymentProvider);
 
         if ($stripeProductId !== null) {
+            Log::info('Stripe: Product already exists', ['product_id' => $stripeProductId, 'plan_id' => $plan->id]);
             return $stripeProductId;
         }
 
+        Log::info('Stripe: Creating new product', ['plan_id' => $plan->id, 'plan_name' => $plan->name]);
+
         $stripe = $this->getClient();
 
-        $description = strip_tags($plan->description ?? '');
         $stripeProductId = $stripe->products->create([
             'id' => $plan->slug.'-'.Str::random(),
             'name' => $plan->name,
-            'description' => !empty($description) ? $description : $plan->name,
+            'description' => ! empty($plan->description) ? strip_tags($plan->description) : $plan->name,
         ])->id;
+
+        Log::info('Stripe: Product created successfully', ['product_id' => $stripeProductId]);
 
         $this->planService->addPaymentProviderProductId($plan, $paymentProvider, $stripeProductId);
 
@@ -411,11 +415,10 @@ class StripeProvider implements PaymentProviderInterface
 
         $stripe = $this->getClient();
 
-        $description = strip_tags($product->description ?? '');
         $stripeProductId = $stripe->products->create([
             'id' => $product->slug.'-'.Str::random(),
             'name' => $product->name,
-            'description' => !empty($description) ? $description : $product->name,
+            'description' => ! empty($product->description) ? strip_tags($product->description) : $product->name,
         ])->id;
 
         $this->oneTimeProductService->addPaymentProviderProductId($product, $paymentProvider, $stripeProductId);
