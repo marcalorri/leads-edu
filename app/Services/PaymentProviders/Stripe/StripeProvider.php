@@ -45,7 +45,15 @@ class StripeProvider implements PaymentProviderInterface
 
     public function createSubscriptionCheckoutRedirectLink(Plan $plan, Subscription $subscription, ?Discount $discount = null, int $quantity = 1): string
     {
+        Log::info('Stripe: Starting checkout process', [
+            'plan_id' => $plan->id,
+            'plan_name' => $plan->name,
+            'subscription_id' => $subscription->id
+        ]);
+
         $paymentProvider = $this->assertProviderIsActive();
+
+        Log::info('Stripe: Provider is active', ['provider_id' => $paymentProvider->id]);
 
         /** @var User $user */
         $user = auth()->user();
@@ -53,8 +61,13 @@ class StripeProvider implements PaymentProviderInterface
         try {
 
             $stripeCustomerId = $this->findOrCreateStripeCustomer($user, $subscription->tenant);
+            Log::info('Stripe: Customer ready', ['customer_id' => $stripeCustomerId]);
+            
             $stripeProductId = $this->findOrCreateStripeSubscriptionProduct($plan, $paymentProvider);
+            Log::info('Stripe: Product ready', ['product_id' => $stripeProductId]);
+            
             $stripePrices = $this->findOrCreateStripeSubscriptionProductPrices($plan, $paymentProvider, $stripeProductId);
+            Log::info('Stripe: Prices ready', ['prices_count' => count($stripePrices)]);
 
             $lineItems = $this->buildLineItems($stripePrices, $plan, $quantity);
 
@@ -102,9 +115,22 @@ class StripeProvider implements PaymentProviderInterface
             }
 
             $session = $stripe->checkout->sessions->create($sessionCreationObject);
+            Log::info('Stripe: Checkout session created successfully', ['session_id' => $session->id]);
 
         } catch (ApiErrorException $e) {
-            Log::error($e->getMessage());
+            Log::error('Stripe: API Error in createSubscriptionCheckout', [
+                'error' => $e->getMessage(),
+                'plan_id' => $plan->id,
+                'subscription_id' => $subscription->id
+            ]);
+
+            throw $e;
+        } catch (\Exception $e) {
+            Log::error('Stripe: General Error in createSubscriptionCheckout', [
+                'error' => $e->getMessage(),
+                'plan_id' => $plan->id,
+                'subscription_id' => $subscription->id
+            ]);
 
             throw $e;
         }
@@ -392,10 +418,12 @@ class StripeProvider implements PaymentProviderInterface
 
         $stripe = $this->getClient();
 
+        // Limpiar descripción y verificar que no esté vacía después de strip_tags
+        $description = strip_tags($plan->description ?? '');
         $stripeProductId = $stripe->products->create([
             'id' => $plan->slug.'-'.Str::random(),
             'name' => $plan->name,
-            'description' => ! empty($plan->description) ? strip_tags($plan->description) : $plan->name,
+            'description' => !empty($description) ? $description : $plan->name,
         ])->id;
 
         Log::info('Stripe: Product created successfully', ['product_id' => $stripeProductId]);
@@ -415,10 +443,12 @@ class StripeProvider implements PaymentProviderInterface
 
         $stripe = $this->getClient();
 
+        // Limpiar descripción y verificar que no esté vacía después de strip_tags
+        $description = strip_tags($product->description ?? '');
         $stripeProductId = $stripe->products->create([
             'id' => $product->slug.'-'.Str::random(),
             'name' => $product->name,
-            'description' => ! empty($product->description) ? strip_tags($product->description) : $product->name,
+            'description' => !empty($description) ? $description : $product->name,
         ])->id;
 
         $this->oneTimeProductService->addPaymentProviderProductId($product, $paymentProvider, $stripeProductId);
