@@ -4,6 +4,7 @@ namespace App\Filament\Dashboard\Resources\Leads\Schemas;
 
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Schema;
@@ -49,6 +50,27 @@ class LeadForm
                                             ->relationship('province', 'nombre')
                                             ->searchable()
                                             ->preload()
+                                            ->createOptionForm([
+                                                TextInput::make('codigo')
+                                                    ->required()
+                                                    ->maxLength(10)
+                                                    ->label('Código'),
+                                                TextInput::make('nombre')
+                                                    ->required()
+                                                    ->maxLength(100)
+                                                    ->label('Nombre'),
+                                                TextInput::make('codigo_ine')
+                                                    ->maxLength(5)
+                                                    ->label('Código INE'),
+                                                TextInput::make('comunidad_autonoma')
+                                                    ->maxLength(100)
+                                                    ->label('Comunidad Autónoma'),
+                                            ])
+                                            ->createOptionUsing(function ($data) {
+                                                $data['tenant_id'] = filament()->getTenant()->id;
+                                                $data['activo'] = true;
+                                                return \App\Models\Province::create($data)->id;
+                                            })
                                             ->label('Provincia'),
                                     ])->columns(3),
                                 
@@ -58,17 +80,89 @@ class LeadForm
                                             ->relationship('course', 'titulacion')
                                             ->searchable()
                                             ->preload()
+                                            ->createOptionForm([
+                                                TextInput::make('codigo_curso')
+                                                    ->required()
+                                                    ->maxLength(50)
+                                                    ->label('Código del Curso'),
+                                                TextInput::make('titulacion')
+                                                    ->required()
+                                                    ->maxLength(255)
+                                                    ->label('Titulación'),
+                                                Select::make('area_id')
+                                                    ->relationship('area', 'nombre')
+                                                    ->searchable()
+                                                    ->preload()
+                                                    ->required()
+                                                    ->label('Área'),
+                                                Select::make('unidad_negocio_id')
+                                                    ->relationship('businessUnit', 'nombre')
+                                                    ->searchable()
+                                                    ->preload()
+                                                    ->required()
+                                                    ->label('Unidad de Negocio'),
+                                                Select::make('duracion_id')
+                                                    ->relationship('duration', 'nombre')
+                                                    ->searchable()
+                                                    ->preload()
+                                                    ->required()
+                                                    ->label('Duración'),
+                                            ])
+                                            ->createOptionUsing(function ($data) {
+                                                $data['tenant_id'] = filament()->getTenant()->id;
+                                                return \App\Models\Course::create($data)->id;
+                                            })
                                             ->label('Curso')
                                             ->columnSpanFull(),
                                         Select::make('sede_id')
                                             ->relationship('campus', 'nombre')
                                             ->searchable()
                                             ->preload()
+                                            ->createOptionForm([
+                                                TextInput::make('codigo')
+                                                    ->required()
+                                                    ->maxLength(20)
+                                                    ->label('Código'),
+                                                TextInput::make('nombre')
+                                                    ->required()
+                                                    ->maxLength(100)
+                                                    ->label('Nombre'),
+                                                TextInput::make('ciudad')
+                                                    ->maxLength(100)
+                                                    ->label('Ciudad'),
+                                                TextInput::make('telefono')
+                                                    ->tel()
+                                                    ->maxLength(20)
+                                                    ->label('Teléfono'),
+                                            ])
+                                            ->createOptionUsing(function ($data) {
+                                                $data['tenant_id'] = filament()->getTenant()->id;
+                                                $data['activo'] = true;
+                                                return \App\Models\Campus::create($data)->id;
+                                            })
                                             ->label('Sede'),
                                         Select::make('modalidad_id')
                                             ->relationship('modality', 'nombre')
                                             ->searchable()
                                             ->preload()
+                                            ->createOptionForm([
+                                                TextInput::make('codigo')
+                                                    ->required()
+                                                    ->maxLength(10)
+                                                    ->label('Código'),
+                                                TextInput::make('nombre')
+                                                    ->required()
+                                                    ->maxLength(50)
+                                                    ->label('Nombre'),
+                                                Toggle::make('requiere_sede')
+                                                    ->default(true)
+                                                    ->label('Requiere Sede'),
+                                            ])
+                                            ->createOptionUsing(function ($data) {
+                                                $data['tenant_id'] = filament()->getTenant()->id;
+                                                $data['activo'] = true;
+                                                return \App\Models\Modality::create($data)->id;
+                                            })
                                             ->label('Modalidad'),
                                         TextInput::make('convocatoria')
                                             ->maxLength(100)
