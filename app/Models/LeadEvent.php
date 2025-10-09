@@ -42,8 +42,9 @@ class LeadEvent extends Model implements Eventable
     protected static function booted()
     {
         static::addGlobalScope('tenant', function (Builder $builder) {
-            if (Auth::check() && Auth::user()->currentTenant) {
-                $builder->where('tenant_id', Auth::user()->currentTenant->id);
+            $tenant = filament()->getTenant();
+            if ($tenant) {
+                $builder->where('tenant_id', $tenant->id);
             }
         });
 
