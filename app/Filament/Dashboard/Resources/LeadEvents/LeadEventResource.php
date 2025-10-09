@@ -68,9 +68,9 @@ class LeadEventResource extends Resource
             return true;
         }
         
-        // Solo mostrar en navegación si tiene suscripción CRM
-        return $user->isSubscribed('crm-plan', $tenant) || 
-               $user->isTrialing('crm-plan', $tenant);
+        // Solo mostrar en navegación si tiene CUALQUIER suscripción activa
+        return $user->isSubscribed(null, $tenant) || 
+               $user->isTrialing(null, $tenant);
     }
 
     public static function form(Schema $schema): Schema
