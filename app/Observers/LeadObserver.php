@@ -71,6 +71,9 @@ class LeadObserver
         if ($lead->asesor_id) {
             $asesor = User::find($lead->asesor_id);
             if ($asesor) {
+                // Cargar relaciones necesarias para la notificación
+                $lead->load(['tenant', 'course']);
+                
                 // Notificación por email y base de datos
                 $asesor->notify(new NewLeadNotification($lead));
                 

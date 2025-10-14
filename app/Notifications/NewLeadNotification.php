@@ -24,21 +24,29 @@ class NewLeadNotification extends Notification implements ShouldQueue
 
     public function toMail($notifiable): MailMessage
     {
+        $tenantName = $this->lead->tenant->name ?? 'tu organización';
+        
+        // Construir URL correcta con tenant
+        $leadUrl = url('/dashboard/' . $this->lead->tenant->uuid . '/leads/' . $this->lead->id . '/edit');
+        
         return (new MailMessage)
-            ->subject('Nuevo Lead Asignado - ' . $this->lead->nombre)
+            ->subject('🎉 Nuevo lead para ' . $tenantName)
             ->greeting('¡Hola ' . $notifiable->name . '!')
             ->line('Se te ha asignado un nuevo lead:')
             ->line('**Nombre:** ' . $this->lead->nombre . ' ' . ($this->lead->apellidos ?? ''))
             ->line('**Email:** ' . ($this->lead->email ?? 'No proporcionado'))
             ->line('**Teléfono:** ' . ($this->lead->telefono ?? 'No proporcionado'))
             ->line('**Curso:** ' . ($this->lead->course?->titulacion ?? 'No asignado'))
-            ->action('Ver Lead', url('/dashboard/leads/' . $this->lead->id))
+            ->action('Ver Lead', $leadUrl)
             ->line('¡No olvides hacer seguimiento pronto!')
             ->salutation('Saludos, ' . config('app.name'));
     }
 
     public function toDatabase($notifiable): array
     {
+        // Construir URL correcta con tenant
+        $actionUrl = '/dashboard/' . $this->lead->tenant->uuid . '/leads/' . $this->lead->id . '/edit';
+        
         return [
             'title' => 'Nuevo Lead Asignado',
             'message' => 'Se te ha asignado el lead: ' . $this->lead->nombre,
@@ -46,7 +54,7 @@ class NewLeadNotification extends Notification implements ShouldQueue
             'lead_name' => $this->lead->nombre,
             'lead_email' => $this->lead->email,
             'course_name' => $this->lead->course?->titulacion,
-            'action_url' => '/dashboard/leads/' . $this->lead->id,
+            'action_url' => $actionUrl,
         ];
     }
 

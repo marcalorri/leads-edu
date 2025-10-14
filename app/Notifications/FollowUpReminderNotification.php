@@ -26,10 +26,8 @@ class FollowUpReminderNotification extends Notification implements ShouldQueue
 
     public function toMail($notifiable): MailMessage
     {
-        $tenantName = $this->lead->tenant->name ?? 'tu organización';
-        
         $mail = (new MailMessage)
-            ->subject('⏰ Nuevo lead para ' . $tenantName)
+            ->subject('⏰ Recordatorio de Seguimiento - ' . $this->lead->nombre)
             ->greeting('Hola ' . $notifiable->name)
             ->line('Tienes un seguimiento pendiente:')
             ->line('**Nombre:** ' . $this->lead->nombre . ' ' . ($this->lead->apellidos ?? ''))
