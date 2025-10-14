@@ -64,7 +64,13 @@ class SendFollowUpReminders extends Command
         $leadsNeedingFollowUp = Lead::with(['asesor', 'tenant'])
             ->where('estado', 'abierto')
             ->whereDoesntHave('events', function ($query) {
+                // No tiene eventos creados en los últimos 3 días
                 $query->where('created_at', '>=', now()->subDays(3));
+            })
+            ->whereDoesntHave('events', function ($query) {
+                // No tiene eventos futuros programados
+                $query->where('fecha_programada', '>', now())
+                    ->whereIn('estado', ['pendiente', 'en_progreso']);
             })
             ->where('created_at', '<=', now()->subDays(3))
             ->where(function ($query) {

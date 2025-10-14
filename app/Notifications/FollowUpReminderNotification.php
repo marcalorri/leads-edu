@@ -9,7 +9,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Filament\Notifications\Notification as FilamentNotification;
-use App\Filament\Dashboard\Resources\Leads\LeadResource;
 
 class FollowUpReminderNotification extends Notification implements ShouldQueue
 {
@@ -48,7 +47,7 @@ class FollowUpReminderNotification extends Notification implements ShouldQueue
         }
 
         // Construir URL correcta con tenant
-        $leadUrl = LeadResource::getUrl('edit', ['record' => $this->lead->id, 'tenant' => $this->lead->tenant->uuid]);
+        $leadUrl = url('/dashboard/' . $this->lead->tenant->uuid . '/leads/' . $this->lead->id . '/edit');
 
         return $mail->action('Ver Lead', $leadUrl)
             ->line('¡No dejes pasar esta oportunidad!')
@@ -58,7 +57,7 @@ class FollowUpReminderNotification extends Notification implements ShouldQueue
     public function toDatabase($notifiable): array
     {
         // Construir URL correcta con tenant
-        $actionUrl = LeadResource::getUrl('edit', ['record' => $this->lead->id, 'tenant' => $this->lead->tenant->uuid]);
+        $actionUrl = '/dashboard/' . $this->lead->tenant->uuid . '/leads/' . $this->lead->id . '/edit';
         
         return [
             'title' => '⏰ Recordatorio de Seguimiento',
