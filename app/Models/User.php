@@ -161,7 +161,16 @@ class User extends Authenticatable implements FilamentUser, HasTenants, MustVeri
      */
     public function canViewAllLeads(?Tenant $tenant = null): bool
     {
-        $tenant = $tenant ?? filament()->getTenant();
+        // Si no se pasa tenant, intentar obtenerlo de Filament
+        if (!$tenant) {
+            try {
+                $tenant = filament()->getTenant();
+            } catch (\Exception $e) {
+                // En contexto de API u otros contextos sin Filament
+                return false;
+            }
+        }
+        
         if (!$tenant) {
             return false;
         }

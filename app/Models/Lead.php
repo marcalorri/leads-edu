@@ -64,7 +64,13 @@ class Lead extends Model
         });
 
         // Scope para filtrar por usuario (solo si no puede ver todos los leads)
+        // NO se aplica en contexto de API (se maneja en el controlador)
         static::addGlobalScope('user_access', function (Builder $builder) {
+            // Skip en contexto de API
+            if (request()->is('api/*')) {
+                return;
+            }
+            
             if (Auth::check()) {
                 $user = Auth::user();
                 // Si no puede ver todos los leads, solo ve los suyos
