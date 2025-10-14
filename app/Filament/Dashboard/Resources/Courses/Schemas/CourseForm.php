@@ -6,6 +6,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Filament\Facades\Filament;
 
 class CourseForm
 {
@@ -17,7 +18,14 @@ class CourseForm
                     TextInput::make('codigo_curso')
                         ->required()
                         ->maxLength(50)
-                        ->unique(ignoreRecord: true)
+                        ->unique(
+                            table: 'courses',
+                            column: 'codigo_curso',
+                            ignoreRecord: true,
+                            modifyRuleUsing: function ($rule) {
+                                return $rule->where('tenant_id', Filament::getTenant()->id);
+                            }
+                        )
                         ->label('Código del Curso'),
                     TextInput::make('titulacion')
                         ->required()

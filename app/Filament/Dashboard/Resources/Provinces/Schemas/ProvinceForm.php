@@ -6,6 +6,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Filament\Facades\Filament;
 
 class ProvinceForm
 {
@@ -17,7 +18,14 @@ class ProvinceForm
                     TextInput::make('codigo')
                         ->required()
                         ->maxLength(10)
-                        ->unique(ignoreRecord: true)
+                        ->unique(
+                            table: 'provinces',
+                            column: 'codigo',
+                            ignoreRecord: true,
+                            modifyRuleUsing: function ($rule) {
+                                return $rule->where('tenant_id', Filament::getTenant()->id);
+                            }
+                        )
                         ->label('Código'),
                     TextInput::make('nombre')
                         ->required()

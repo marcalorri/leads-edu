@@ -7,6 +7,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Filament\Facades\Filament;
 
 class AreaForm
 {
@@ -18,7 +19,14 @@ class AreaForm
                     TextInput::make('codigo')
                         ->required()
                         ->maxLength(20)
-                        ->unique(ignoreRecord: true)
+                        ->unique(
+                            table: 'areas',
+                            column: 'codigo',
+                            ignoreRecord: true,
+                            modifyRuleUsing: function ($rule) {
+                                return $rule->where('tenant_id', Filament::getTenant()->id);
+                            }
+                        )
                         ->label('Código'),
                     TextInput::make('nombre')
                         ->required()
