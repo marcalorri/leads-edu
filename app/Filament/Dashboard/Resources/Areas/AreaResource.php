@@ -30,11 +30,6 @@ class AreaResource extends Resource
 
     protected static ?string $cluster = Configuration::class;
 
-    public static function canViewAny(): bool
-    {
-        return auth()->check() && auth()->user()->isAdmin();
-    }
-
     public static function getNavigationGroup(): ?string
     {
         return 'Catálogos Académicos';
