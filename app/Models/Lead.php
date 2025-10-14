@@ -39,11 +39,13 @@ class Lead extends Model
         'utm_campaign',
         'fecha_ganado',
         'fecha_perdido',
+        'last_reminder_sent_at',
     ];
 
     protected $casts = [
         'fecha_ganado' => 'datetime',
         'fecha_perdido' => 'datetime',
+        'last_reminder_sent_at' => 'datetime',
     ];
 
     protected static function booted()

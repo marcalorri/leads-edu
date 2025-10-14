@@ -30,7 +30,7 @@ class SendFollowUpReminders extends Command
     private function sendEventReminders()
     {
         // Eventos que deben recordarse (15 minutos antes por defecto)
-        $upcomingEvents = LeadEvent::with(['lead', 'lead.asesor'])
+        $upcomingEvents = LeadEvent::with(['lead', 'lead.asesor', 'lead.tenant'])
             ->where('estado', 'pendiente')
             ->where('requiere_recordatorio', true)
             ->where('fecha_programada', '<=', now()->addMinutes(15))
@@ -60,12 +60,18 @@ class SendFollowUpReminders extends Command
     private function sendLeadFollowUpReminders()
     {
         // Leads abiertos sin seguimiento en los últimos 3 días
-        $leadsNeedingFollowUp = Lead::with(['asesor'])
+        // Y que NO hayan recibido un recordatorio en las últimas 24 horas
+        $leadsNeedingFollowUp = Lead::with(['asesor', 'tenant'])
             ->where('estado', 'abierto')
             ->whereDoesntHave('events', function ($query) {
                 $query->where('created_at', '>=', now()->subDays(3));
             })
             ->where('created_at', '<=', now()->subDays(3))
+            ->where(function ($query) {
+                // No se ha enviado recordatorio nunca O hace más de 24 horas
+                $query->whereNull('last_reminder_sent_at')
+                    ->orWhere('last_reminder_sent_at', '<=', now()->subHours(24));
+            })
             ->get();
 
         foreach ($leadsNeedingFollowUp as $lead) {
@@ -82,6 +88,9 @@ class SendFollowUpReminders extends Command
                     ->icon('heroicon-o-exclamation-triangle')
                     ->iconColor('danger')
                     ->sendToDatabase($lead->asesor);
+
+                // Actualizar timestamp del último recordatorio enviado
+                $lead->update(['last_reminder_sent_at' => now()]);
 
                 $this->line('Recordatorio de seguimiento enviado para: ' . $lead->nombre);
             }

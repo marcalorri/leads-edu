@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Filament\Notifications\Notification as FilamentNotification;
+use App\Filament\Dashboard\Resources\Leads\LeadResource;
 
 class FollowUpReminderNotification extends Notification implements ShouldQueue
 {
@@ -26,11 +27,13 @@ class FollowUpReminderNotification extends Notification implements ShouldQueue
 
     public function toMail($notifiable): MailMessage
     {
+        $tenantName = $this->lead->tenant->name ?? 'tu organización';
+        
         $mail = (new MailMessage)
-            ->subject('⏰ Recordatorio de Seguimiento - ' . $this->lead->nombre)
+            ->subject('⏰ Nuevo lead para ' . $tenantName)
             ->greeting('Hola ' . $notifiable->name)
             ->line('Tienes un seguimiento pendiente:')
-            ->line('**Lead:** ' . $this->lead->nombre . ' ' . ($this->lead->apellidos ?? ''))
+            ->line('**Nombre:** ' . $this->lead->nombre . ' ' . ($this->lead->apellidos ?? ''))
             ->line('**Email:** ' . ($this->lead->email ?? 'No proporcionado'))
             ->line('**Teléfono:** ' . ($this->lead->telefono ?? 'No proporcionado'))
             ->line('**Estado:** ' . ucfirst($this->lead->estado));
@@ -40,17 +43,23 @@ class FollowUpReminderNotification extends Notification implements ShouldQueue
                 ->line('**Descripción:** ' . ($this->event->descripcion ?? 'Sin descripción'))
                 ->line('**Fecha programada:** ' . $this->event->fecha_programada->format('d/m/Y H:i'));
         } else {
-            $daysSinceCreated = $this->lead->created_at->diffInDays(now());
+            $daysSinceCreated = (int) $this->lead->created_at->diffInDays(now());
             $mail->line('**Días sin seguimiento:** ' . $daysSinceCreated . ' días');
         }
 
-        return $mail->action('Ver Lead', url('/dashboard/leads/' . $this->lead->id))
+        // Construir URL correcta con tenant
+        $leadUrl = LeadResource::getUrl('edit', ['record' => $this->lead->id, 'tenant' => $this->lead->tenant->uuid]);
+
+        return $mail->action('Ver Lead', $leadUrl)
             ->line('¡No dejes pasar esta oportunidad!')
             ->salutation('Saludos, ' . config('app.name'));
     }
 
     public function toDatabase($notifiable): array
     {
+        // Construir URL correcta con tenant
+        $actionUrl = LeadResource::getUrl('edit', ['record' => $this->lead->id, 'tenant' => $this->lead->tenant->uuid]);
+        
         return [
             'title' => '⏰ Recordatorio de Seguimiento',
             'message' => 'Seguimiento pendiente para: ' . $this->lead->nombre,
@@ -60,7 +69,7 @@ class FollowUpReminderNotification extends Notification implements ShouldQueue
             'event_id' => $this->event?->id,
             'event_title' => $this->event?->titulo,
             'scheduled_date' => $this->event?->fecha_programada,
-            'action_url' => '/dashboard/leads/' . $this->lead->id,
+            'action_url' => $actionUrl,
         ];
     }
 
