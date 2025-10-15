@@ -161,11 +161,11 @@ class LeadResource extends JsonResource
     private function getEstadoLabel(): string
     {
         return match($this->estado) {
-            'nuevo' => 'Nuevo',
-            'contactado' => 'Contactado',
-            'interesado' => 'Interesado',
-            'matriculado' => 'Matriculado',
-            'perdido' => 'Perdido',
+            'nuevo' => __('New'),
+            'contactado' => __('Contacted'),
+            'interesado' => __('Interested'),
+            'matriculado' => __('Enrolled'),
+            'perdido' => __('Lost'),
             default => ucfirst($this->estado),
         };
     }
@@ -179,17 +179,17 @@ class LeadResource extends JsonResource
         $dias = (int) $this->created_at->diffInDays($fechaFin, false);
         
         if ($dias == 0) {
-            return 'Menos de 1 día';
+            return __('Less than 1 day');
         } elseif ($dias == 1) {
-            return '1 día';
+            return __('1 day');
         } elseif ($dias < 7) {
-            return "{$dias} días";
+            return __(':count days', ['count' => $dias]);
         } elseif ($dias < 30) {
             $semanas = floor($dias / 7);
-            return $semanas == 1 ? '1 semana' : "{$semanas} semanas";
+            return $semanas == 1 ? __('1 week') : __(':count weeks', ['count' => $semanas]);
         } else {
             $meses = floor($dias / 30);
-            return $meses == 1 ? '1 mes' : "{$meses} meses";
+            return $meses == 1 ? __('1 month') : __(':count months', ['count' => $meses]);
         }
     }
 }

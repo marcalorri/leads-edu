@@ -225,11 +225,11 @@ class CatalogApiController extends Controller
     public function estados(Request $request): JsonResponse
     {
         $estados = [
-            ['value' => 'nuevo', 'label' => 'Nuevo'],
-            ['value' => 'contactado', 'label' => 'Contactado'],
-            ['value' => 'interesado', 'label' => 'Interesado'],
-            ['value' => 'matriculado', 'label' => 'Matriculado'],
-            ['value' => 'perdido', 'label' => 'Perdido'],
+            ['value' => 'nuevo', 'label' => __('New')],
+            ['value' => 'contactado', 'label' => __('Contacted')],
+            ['value' => 'interesado', 'label' => __('Interested')],
+            ['value' => 'matriculado', 'label' => __('Enrolled')],
+            ['value' => 'perdido', 'label' => __('Lost')],
         ];
 
         return response()->json([
@@ -282,7 +282,7 @@ class CatalogApiController extends Controller
                     'nombre' => $course->duration->nombre,
                 ] : null,
             ],
-            'message' => 'Curso creado exitosamente',
+            'message' => __('Course created successfully'),
         ], 201);
     }
 
@@ -325,7 +325,7 @@ class CatalogApiController extends Controller
                     'nombre' => $course->duration->nombre,
                 ] : null,
             ],
-            'message' => 'Curso actualizado exitosamente',
+            'message' => __('Course updated successfully'),
         ]);
     }
 
@@ -349,7 +349,7 @@ class CatalogApiController extends Controller
                 'ciudad' => $campus->ciudad,
                 'direccion' => $campus->direccion,
             ],
-            'message' => 'Sede creada exitosamente',
+            'message' => __('Campus created successfully'),
         ], 201);
     }
 
@@ -371,7 +371,7 @@ class CatalogApiController extends Controller
                 'ciudad' => $campus->ciudad,
                 'direccion' => $campus->direccion,
             ],
-            'message' => 'Sede actualizada exitosamente',
+            'message' => __('Campus updated successfully'),
         ]);
     }
 
@@ -394,7 +394,7 @@ class CatalogApiController extends Controller
                 'nombre' => $modality->nombre,
                 'requiere_sede' => $modality->requiere_sede,
             ],
-            'message' => 'Modalidad creada exitosamente',
+            'message' => __('Modality created successfully'),
         ], 201);
     }
 
@@ -415,7 +415,7 @@ class CatalogApiController extends Controller
                 'nombre' => $modality->nombre,
                 'requiere_sede' => $modality->requiere_sede,
             ],
-            'message' => 'Modalidad actualizada exitosamente',
+            'message' => __('Modality updated successfully'),
         ]);
     }
 
@@ -438,7 +438,7 @@ class CatalogApiController extends Controller
                 'nombre' => $province->nombre,
                 'comunidad_autonoma' => $province->comunidad_autonoma,
             ],
-            'message' => 'Provincia creada exitosamente',
+            'message' => __('Province created successfully'),
         ], 201);
     }
 
@@ -459,7 +459,7 @@ class CatalogApiController extends Controller
                 'nombre' => $province->nombre,
                 'comunidad_autonoma' => $province->comunidad_autonoma,
             ],
-            'message' => 'Provincia actualizada exitosamente',
+            'message' => __('Province updated successfully'),
         ]);
     }
 
@@ -482,7 +482,7 @@ class CatalogApiController extends Controller
                 'orden' => $phase->orden,
                 'color' => $phase->color,
             ],
-            'message' => 'Fase de venta creada exitosamente',
+            'message' => __('Sales phase created successfully'),
         ], 201);
     }
 
@@ -503,7 +503,7 @@ class CatalogApiController extends Controller
                 'orden' => $phase->orden,
                 'color' => $phase->color,
             ],
-            'message' => 'Fase de venta actualizada exitosamente',
+            'message' => __('Sales phase updated successfully'),
         ]);
     }
 
@@ -525,7 +525,7 @@ class CatalogApiController extends Controller
                 'nombre' => $origin->nombre,
                 'tipo' => $origin->tipo,
             ],
-            'message' => 'Origen creado exitosamente',
+            'message' => __('Origin created successfully'),
         ], 201);
     }
 
@@ -545,7 +545,7 @@ class CatalogApiController extends Controller
                 'nombre' => $origin->nombre,
                 'tipo' => $origin->tipo,
             ],
-            'message' => 'Origen actualizado exitosamente',
+            'message' => __('Origin updated successfully'),
         ]);
     }
 }

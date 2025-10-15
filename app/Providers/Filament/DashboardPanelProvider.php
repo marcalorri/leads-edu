@@ -116,12 +116,12 @@ class DashboardPanelProvider extends PanelProvider
                 fn (): string => Blade::render("@livewire('lead-limit-indicator')")
             )
             ->navigationGroups([
-                NavigationGroup::make('CRM Principal')
+                NavigationGroup::make(__('Main CRM'))
                     ->collapsible(),
-                NavigationGroup::make('Team')
+                NavigationGroup::make(__('Team'))
                     ->collapsible()
                     ->collapsed(true),
-                NavigationGroup::make('Gestión')
+                NavigationGroup::make(__('Management'))
                     ->collapsible()
                     ->collapsed(true),
             ])

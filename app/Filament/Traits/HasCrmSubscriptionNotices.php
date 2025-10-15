@@ -19,13 +19,13 @@ trait HasCrmSubscriptionNotices
     protected static function getCrmUpgradeAction(): Action
     {
         return Action::make('crm-upgrade')
-            ->label('Actualizar Plan')
+            ->label(__('Upgrade Plan'))
             ->icon('heroicon-o-rocket-launch')
             ->color('warning')
-            ->modalHeading('Funcionalidades CRM Limitadas')
-            ->modalDescription('Para acceder a todas las funcionalidades del CRM, necesitas una suscripción activa.')
-            ->modalSubmitActionLabel('Ver Planes')
-            ->modalCancelActionLabel('Cancelar')
+            ->modalHeading(__('Limited CRM Features'))
+            ->modalDescription(__('To access all CRM features, you need an active subscription.'))
+            ->modalSubmitActionLabel(__('View Plans'))
+            ->modalCancelActionLabel(__('Cancel'))
             ->action(function () {
                 return redirect()->to(CrmSubscription::getUpgradeUrl());
             });
@@ -42,7 +42,7 @@ trait HasCrmSubscriptionNotices
                 if ($action instanceof CreateAction || $action instanceof EditAction) {
                     $actions[$key] = $action
                         ->disabled()
-                        ->tooltip('Requiere suscripción CRM activa');
+                        ->tooltip(__('Requires active CRM subscription'));
                 }
             }
 
@@ -63,7 +63,7 @@ trait HasCrmSubscriptionNotices
                 if ($action instanceof EditAction || $action instanceof DeleteAction) {
                     $actions[$key] = $action
                         ->disabled()
-                        ->tooltip('Requiere suscripción CRM activa');
+                        ->tooltip(__('Requires active CRM subscription'));
                 } elseif ($action instanceof ActionGroup) {
                     // Para ActionGroups, deshabilitar acciones internas
                     $groupActions = $action->getActions();
@@ -71,7 +71,7 @@ trait HasCrmSubscriptionNotices
                         if ($groupAction instanceof EditAction || $groupAction instanceof DeleteAction) {
                             $groupActions[$groupKey] = $groupAction
                                 ->disabled()
-                                ->tooltip('Requiere suscripción CRM activa');
+                                ->tooltip(__('Requires active CRM subscription'));
                         }
                     }
                     $actions[$key] = $action->actions($groupActions);
@@ -92,7 +92,7 @@ trait HasCrmSubscriptionNotices
                 if ($action instanceof BulkAction) {
                     $actions[$key] = $action
                         ->disabled()
-                        ->tooltip('Requiere suscripción CRM activa');
+                        ->tooltip(__('Requires active CRM subscription'));
                 }
             }
         }
@@ -108,11 +108,11 @@ trait HasCrmSubscriptionNotices
         if (CrmSubscription::isInactive()) {
             Notification::make()
                 ->warning()
-                ->title('Funcionalidades CRM Limitadas')
+                ->title(__('Limited CRM Features'))
                 ->body(CrmSubscription::getStatusMessage())
                 ->actions([
                     \Filament\Notifications\Actions\Action::make('upgrade')
-                        ->label('Ver Planes')
+                        ->label(__('View Plans'))
                         ->url(CrmSubscription::getUpgradeUrl())
                         ->button(),
                 ])
@@ -128,12 +128,12 @@ trait HasCrmSubscriptionNotices
     {
         if (CrmSubscription::isInactive()) {
             return [
-                'heading' => 'Funcionalidades CRM Limitadas',
+                'heading' => __('Limited CRM Features'),
                 'description' => CrmSubscription::getStatusMessage(),
                 'icon' => 'heroicon-o-lock-closed',
                 'actions' => [
                     Action::make('upgrade')
-                        ->label('Ver Planes de Suscripción')
+                        ->label(__('View Subscription Plans'))
                         ->icon('heroicon-o-rocket-launch')
                         ->color('primary')
                         ->url(CrmSubscription::getUpgradeUrl()),

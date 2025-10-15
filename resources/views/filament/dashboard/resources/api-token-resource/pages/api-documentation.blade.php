@@ -4,7 +4,7 @@
             <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
             </svg>
-            <h2 class="text-lg font-semibold text-gray-900">Documentación de la API</h2>
+            <h2 class="text-lg font-semibold text-gray-900">{{ __('API Documentation') }}</h2>
         </div>
 
         <div class="space-y-6">
@@ -18,9 +18,9 @@
 
             <!-- Autenticación -->
             <div>
-                <h3 class="text-sm font-medium text-gray-900 mb-2">Autenticación</h3>
+                <h3 class="text-sm font-medium text-gray-900 mb-2">{{ __('Authentication') }}</h3>
                 <p class="text-sm text-gray-600 mb-2">
-                    Todas las peticiones requieren un Bearer Token en el header Authorization:
+                    {{ __('All requests require a Bearer Token in the Authorization header:') }}
                 </p>
                 <div class="bg-gray-900 rounded-lg p-3">
                     <code class="text-sm text-green-400">{{ $examples['authentication']['code'] }}</code>
@@ -29,7 +29,7 @@
 
             <!-- Scopes -->
             <div>
-                <h3 class="text-sm font-medium text-gray-900 mb-3">Scopes Disponibles</h3>
+                <h3 class="text-sm font-medium text-gray-900 mb-3">{{ __('Available Scopes') }}</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                     @foreach($scopes as $scope => $description)
                         <div class="flex items-start space-x-2 p-3 bg-gray-50 rounded-lg">
@@ -76,7 +76,7 @@
 
             <!-- Ejemplos de Uso -->
             <div>
-                <h3 class="text-sm font-medium text-gray-900 mb-3">Ejemplos de Uso</h3>
+                <h3 class="text-sm font-medium text-gray-900 mb-3">{{ __('Usage Examples') }}</h3>
                 <div class="space-y-4">
                     <!-- Ejemplo 1: Listar Leads -->
                     <div>
@@ -152,7 +152,7 @@
                         </div>
                         <div class="ml-3">
                             <p class="text-sm text-amber-800">
-                                <strong>Importante:</strong> Copia tus tokens desde la tabla de arriba. Solo se muestran completos una vez al crearlos.
+                                <strong>{{ __('Important:') }}</strong> {{ __('Copy your tokens from the table above. They are only shown in full once when created.') }}
                             </p>
                         </div>
                     </div>
@@ -167,7 +167,7 @@
                         </div>
                         <div class="ml-3">
                             <p class="text-sm text-blue-800">
-                                <strong>Documentación completa:</strong> Consulta el archivo <code class="bg-blue-100 px-1 rounded">docs/API_REFERENCE.md</code> para más detalles sobre validaciones, códigos de error y ejemplos avanzados.
+                                <strong>{{ __('Complete documentation:') }}</strong> {{ __('Check the file') }} <code class="bg-blue-100 px-1 rounded">docs/API_REFERENCE.md</code> {{ __('for more details on validations, error codes and advanced examples.') }}
                             </p>
                         </div>
                     </div>

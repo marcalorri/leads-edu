@@ -20,7 +20,7 @@ class CoursesTable
         return $table
             ->columns([
                 TextColumn::make('codigo_curso')
-                    ->label('Código')
+                    ->label(__('Code'))
                     ->searchable()
                     ->sortable()
                     ->badge(),
@@ -28,35 +28,35 @@ class CoursesTable
                     ->searchable()
                     ->sortable()
                     ->limit(50)
-                    ->label('Titulación'),
+                    ->label(__('Degree')),
                 TextColumn::make('area.nombre')
-                    ->label('Área')
+                    ->label(__('Area'))
                     ->sortable()
                     ->badge()
                     ->color('success'),
                 TextColumn::make('businessUnit.nombre')
-                    ->label('Unidad de Negocio')
+                    ->label(__('Business Unit'))
                     ->sortable()
                     ->toggleable(),
                 TextColumn::make('duration.nombre')
-                    ->label('Duración')
+                    ->label(__('Duration'))
                     ->sortable()
                     ->badge()
                     ->color('info'),
                 TextColumn::make('created_at')
-                    ->label('Creado')
+                    ->label(__('Created'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 SelectFilter::make('area_id')
-                    ->label('Área')
+                    ->label(__('Area'))
                     ->relationship('area', 'nombre')
                     ->searchable()
                     ->preload(),
                 SelectFilter::make('unidad_negocio_id')
-                    ->label('Unidad de Negocio')
+                    ->label(__('Business Unit'))
                     ->relationship('businessUnit', 'nombre')
                     ->searchable()
                     ->preload(),

@@ -20,9 +20,9 @@ class AreaResource extends Resource
 {
     protected static ?string $model = Area::class;
 
-    protected static ?string $modelLabel = 'Área';
+    protected static ?string $modelLabel = null;
     
-    protected static ?string $pluralModelLabel = 'Áreas';
+    protected static ?string $pluralModelLabel = null;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
     
@@ -32,7 +32,17 @@ class AreaResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return 'Catálogos Académicos';
+        return __('Academic Catalogs');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Area');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Areas');
     }
 
     public static function getNavigationSort(): ?int

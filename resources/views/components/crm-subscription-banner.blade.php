@@ -13,7 +13,7 @@
             </div>
             <div class="ml-3">
                 <p class="text-sm text-amber-700">
-                    <strong>Funcionalidades CRM limitadas:</strong> 
+                    <strong>{{ __('Limited CRM Features:') }}</strong> 
                     {{ CrmSubscription::getStatusMessage() }}
                 </p>
             </div>
@@ -24,7 +24,7 @@
                 <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
                 </svg>
-                Ver Planes
+                {{ __('View Plans') }}
             </a>
         </div>
     </div>

@@ -16,25 +16,29 @@ class SalesPhasesTable
     {
         return $table
             ->columns([
-                TextColumn::make('tenant.name')
-                    ->searchable(),
                 TextColumn::make('nombre')
-                    ->searchable(),
+                    ->searchable()
+                    ->label(__('Name')),
                 TextColumn::make('orden')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->label(__('Order')),
                 TextColumn::make('color')
-                    ->searchable(),
+                    ->searchable()
+                    ->label(__('Color')),
                 IconColumn::make('activo')
-                    ->boolean(),
+                    ->boolean()
+                    ->label(__('Active')),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label(__('Created')),
                 TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label(__('Updated')),
             ])
             ->filters([
                 //

@@ -28,17 +28,17 @@ class ProvinceResource extends Resource
 
     public static function getModelLabel(): string
     {
-        return 'Provincia';
+        return __('Province');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return 'Provincias';
+        return __('Provinces');
     }
 
     public static function getNavigationGroup(): ?string
     {
-        return 'Catálogos Operativos';
+        return __('Operational Catalogs');
     }
 
     public static function getNavigationSort(): ?int

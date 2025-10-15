@@ -4,11 +4,11 @@ namespace App\Filament\Dashboard\Resources\LeadNotes\Schemas;
 
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
 class LeadNoteForm
@@ -17,51 +17,52 @@ class LeadNoteForm
     {
         return $schema
             ->components([
-                Section::make('Información de la Nota')
+                Section::make(__('Note Information'))
                     ->schema([
                         Hidden::make('tenant_id')
                             ->default(fn () => filament()->getTenant()?->id),
-                        
-                        Select::make('lead_id')
-                            ->label('Lead')
-                            ->relationship('lead', 'nombre')
-                            ->searchable()
-                            ->preload()
-                            ->required(),
                         
                         Hidden::make('usuario_id')
                             ->default(fn () => auth()->id()),
                         
                         TextInput::make('titulo')
-                            ->label('Título')
-                            ->maxLength(255),
+                            ->label(__('Title'))
+                            ->required()
+                            ->maxLength(255)
+                            ->columnSpanFull(),
+                                                    
+                        Select::make('lead_id')
+                            ->label(__('Lead'))
+                            ->relationship('lead', 'nombre')
+                            ->searchable()
+                            ->preload()
+                            ->required(),
                         
                         Select::make('tipo')
-                            ->label('Tipo')
+                            ->label(__('Type'))
                             ->options([
-                                'llamada' => 'Llamada',
-                                'email' => 'Email',
-                                'reunion' => 'Reunión',
-                                'seguimiento' => 'Seguimiento',
-                                'observacion' => 'Observación',
-                                'otro' => 'Otro',
+                                'llamada' => __('Call'),
+                                'email' => __('Email'),
+                                'reunion' => __('Meeting'),
+                                'seguimiento' => __('Follow-up'),
+                                'observacion' => __('Observation'),
+                                'otro' => __('Other'),
                             ])
                             ->required()
                             ->default('observacion'),
                         
                         Textarea::make('contenido')
-                            ->label('Contenido')
-                            ->required()
+                            ->label(__('Content'))
                             ->rows(4)
                             ->columnSpanFull(),
                         
                         Toggle::make('es_importante')
-                            ->label('Marcar como importante')
+                            ->label(__('Mark as important'))
                             ->default(false),
                         
                         DateTimePicker::make('fecha_seguimiento')
-                            ->label('Fecha de seguimiento')
-                            ->helperText('Opcional: programa un recordatorio para esta fecha'),
+                            ->label(__('Follow-up Date'))
+                            ->helperText(__('Optional: schedule a reminder for this date')),
                     ])
                     ->columns(2),
             ]);

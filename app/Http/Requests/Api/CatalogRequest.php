@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 /**
- * Request genérico para catálogos simples (Modality, Province, SalesPhase, Origin)
+ * Generic request for simple catalogs (Modality, Province, SalesPhase, Origin)
  */
 class CatalogRequest extends FormRequest
 {

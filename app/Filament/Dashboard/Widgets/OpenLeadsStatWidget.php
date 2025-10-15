@@ -53,8 +53,8 @@ class OpenLeadsStatWidget extends BaseWidget
         $changeColor = $change >= 0 ? 'warning' : 'danger';
         
         return [
-            Stat::make('Leads Abiertos', $count)
-                ->description(($change >= 0 ? '+' : '') . number_format($change, 1) . '% vs período anterior')
+            Stat::make(__('Open Leads'), $count)
+                ->description(($change >= 0 ? '+' : '') . number_format($change, 1) . '% ' . __('vs previous period'))
                 ->descriptionIcon($changeIcon)
                 ->color('warning')
                 ->chart([3, 8, 5, 12, 7, 9, 6])

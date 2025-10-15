@@ -50,8 +50,8 @@ class LossRateStatWidget extends BaseWidget
         $changeColor = $change >= 0 ? 'danger' : 'success';
         
         return [
-            Stat::make('Tasa de Pérdida', number_format($lossRate, 1) . '%')
-                ->description(($change >= 0 ? '+' : '') . number_format($change, 1) . '% vs período anterior')
+            Stat::make(__('Loss Rate'), number_format($lossRate, 1) . '%')
+                ->description(($change >= 0 ? '+' : '') . number_format($change, 1) . '% ' . __('vs previous period'))
                 ->descriptionIcon($changeIcon)
                 ->color('warning')
                 ->chart([25, 20, 18, 15, 12, 10, 8])

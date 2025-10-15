@@ -14,18 +14,18 @@ class OriginForm
     {
         return $schema
             ->components([
-                Section::make('Información del Origen')
+                Section::make(__('Origin Information'))
                     ->schema([
                         TextInput::make('nombre')
                             ->required()
                             ->maxLength(100)
-                            ->label('Nombre'),
+                            ->label(__('Name')),
                         Textarea::make('descripcion')
                             ->maxLength(500)
-                            ->label('Descripción'),
+                            ->label(__('Description')),
                         Toggle::make('activo')
                             ->default(true)
-                            ->label('Activo'),
+                            ->label(__('Active')),
                     ])->columns(2),
             ]);
     }

@@ -40,7 +40,7 @@ class ApiExceptionHandler
         $baseResponse = [
             'error' => [
                 'code' => 'INTERNAL_ERROR',
-                'message' => 'Ha ocurrido un error interno',
+                'message' => __('An internal error has occurred'),
             ],
             'meta' => [
                 'tenant' => $tenant?->name,
@@ -56,7 +56,7 @@ class ApiExceptionHandler
                     'data' => array_merge($baseResponse, [
                         'error' => [
                             'code' => 'VALIDATION_FAILED',
-                            'message' => 'Los datos proporcionados no son válidos',
+                            'message' => __('The provided data is not valid'),
                             'details' => $e->errors(),
                         ]
                     ]),
@@ -68,7 +68,7 @@ class ApiExceptionHandler
                     'data' => array_merge($baseResponse, [
                         'error' => [
                             'code' => 'UNAUTHENTICATED',
-                            'message' => 'Token de autenticación requerido o inválido',
+                            'message' => __('Authentication token required or invalid'),
                         ]
                     ]),
                     'status' => 401
@@ -79,7 +79,7 @@ class ApiExceptionHandler
                     'data' => array_merge($baseResponse, [
                         'error' => [
                             'code' => 'ACCESS_DENIED',
-                            'message' => 'No tienes permisos para realizar esta acción',
+                            'message' => __('You do not have permission to perform this action'),
                         ]
                     ]),
                     'status' => 403
@@ -90,7 +90,7 @@ class ApiExceptionHandler
                     'data' => array_merge($baseResponse, [
                         'error' => [
                             'code' => 'RESOURCE_NOT_FOUND',
-                            'message' => 'El recurso solicitado no fue encontrado',
+                            'message' => __('The requested resource was not found'),
                             'resource' => self::getModelName($e),
                         ]
                     ]),
@@ -102,7 +102,7 @@ class ApiExceptionHandler
                     'data' => array_merge($baseResponse, [
                         'error' => [
                             'code' => 'ENDPOINT_NOT_FOUND',
-                            'message' => 'El endpoint solicitado no existe',
+                            'message' => __('The requested endpoint does not exist'),
                             'endpoint' => $request->getPathInfo(),
                         ]
                     ]),
@@ -114,7 +114,7 @@ class ApiExceptionHandler
                     'data' => array_merge($baseResponse, [
                         'error' => [
                             'code' => 'HTTP_ERROR',
-                            'message' => $e->getMessage() ?: 'Error HTTP',
+                            'message' => $e->getMessage() ?: __('HTTP Error'),
                         ]
                     ]),
                     'status' => $e->getStatusCode()
@@ -135,7 +135,7 @@ class ApiExceptionHandler
 
                 $message = config('app.debug') 
                     ? $e->getMessage() 
-                    : 'Ha ocurrido un error interno del servidor';
+                    : __('An internal server error has occurred');
 
                 return [
                     'data' => array_merge($baseResponse, [
@@ -183,7 +183,7 @@ class ApiExceptionHandler
         return response()->json([
             'error' => [
                 'code' => 'DATABASE_ERROR',
-                'message' => 'Error de conexión con la base de datos',
+                'message' => __('Database connection error'),
             ],
             'meta' => [
                 'tenant' => $request->current_tenant?->name,
@@ -201,7 +201,7 @@ class ApiExceptionHandler
         return response()->json([
             'error' => [
                 'code' => 'TENANT_ERROR',
-                'message' => $message ?? 'Error relacionado con el tenant',
+                'message' => $message ?? __('Tenant related error'),
             ],
             'meta' => [
                 'api_version' => 'v1',

@@ -14,43 +14,57 @@ class LeadEventInfolist
         return $schema
             ->components([
                 TextEntry::make('tenant.name')
-                    ->label('Tenant'),
-                TextEntry::make('lead.id')
-                    ->label('Lead'),
+                    ->label(__('Tenant')),
+                TextEntry::make('lead.nombre')
+                    ->label(__('Lead')),
                 TextEntry::make('usuario.name')
-                    ->label('Usuario'),
-                TextEntry::make('titulo'),
+                    ->label(__('User')),
+                TextEntry::make('titulo')
+                    ->label(__('Title')),
                 TextEntry::make('descripcion')
+                    ->label(__('Description'))
                     ->placeholder('-')
                     ->columnSpanFull(),
                 TextEntry::make('tipo')
+                    ->label(__('Type'))
                     ->badge(),
                 TextEntry::make('estado')
+                    ->label(__('Status'))
                     ->badge(),
                 TextEntry::make('prioridad')
+                    ->label(__('Priority'))
                     ->badge(),
                 TextEntry::make('fecha_programada')
+                    ->label(__('Scheduled Date'))
                     ->dateTime(),
                 TextEntry::make('fecha_completada')
+                    ->label(__('Completed Date'))
                     ->dateTime()
                     ->placeholder('-'),
                 TextEntry::make('duracion_estimada')
+                    ->label(__('Estimated Duration'))
                     ->numeric()
                     ->placeholder('-'),
                 TextEntry::make('resultado')
+                    ->label(__('Result'))
                     ->placeholder('-')
                     ->columnSpanFull(),
                 IconEntry::make('requiere_recordatorio')
+                    ->label(__('Requires Reminder'))
                     ->boolean(),
                 TextEntry::make('minutos_recordatorio')
+                    ->label(__('Reminder Minutes'))
                     ->numeric(),
                 TextEntry::make('created_at')
+                    ->label(__('Created'))
                     ->dateTime()
                     ->placeholder('-'),
                 TextEntry::make('updated_at')
+                    ->label(__('Updated'))
                     ->dateTime()
                     ->placeholder('-'),
                 TextEntry::make('deleted_at')
+                    ->label(__('Deleted'))
                     ->dateTime()
                     ->visible(fn (LeadEvent $record): bool => $record->trashed()),
             ]);

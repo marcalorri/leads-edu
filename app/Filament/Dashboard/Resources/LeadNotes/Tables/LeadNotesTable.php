@@ -19,33 +19,40 @@ class LeadNotesTable
     {
         return $table
             ->columns([
-                TextColumn::make('tenant.name')
-                    ->searchable(),
                 TextColumn::make('lead.id')
-                    ->searchable(),
+                    ->searchable()
+                    ->label(__('Lead id')),
                 TextColumn::make('usuario.name')
-                    ->searchable(),
+                    ->searchable()
+                    ->label(__('User')),
                 TextColumn::make('titulo')
-                    ->searchable(),
+                    ->searchable()
+                    ->label(__('Title')),
                 TextColumn::make('tipo')
-                    ->badge(),
+                    ->badge()
+                    ->label(__('Type')),
                 IconColumn::make('es_importante')
-                    ->boolean(),
+                    ->boolean()
+                    ->label(__('Important')),
                 TextColumn::make('fecha_seguimiento')
                     ->dateTime()
-                    ->sortable(),
+                    ->sortable()
+                    ->label(__('Follow-up Date')),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label(__('Created')),
                 TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label(__('Updated')),
                 TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label(__('Deleted')),
             ])
             ->filters([
                 TrashedFilter::make(),

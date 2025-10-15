@@ -31,27 +31,27 @@ class AvatarForm extends MyProfileComponent
         return $schema
             ->components([
                 FileUpload::make('avatar')
-                    ->label('Avatar')
+                    ->label(__('Avatar'))
                     ->image()
                     ->avatar()
                     ->disk('public')
                     ->directory('avatars')
                     ->visibility('public')
                     ->columnSpanFull()
-                    ->helperText('Sube una imagen para tu avatar. Si no subes ninguna, se mostrarán tus iniciales.'),
+                    ->helperText(__('Upload an image for your avatar. If you don\'t upload one, your initials will be displayed.')),
                 
                 TextInput::make('name')
-                    ->label('Nombre Completo')
+                    ->label(__('Full Name'))
                     ->required()
                     ->maxLength(255),
                 
                 TextInput::make('public_name')
-                    ->label('Nombre Público')
+                    ->label(__('Public Name'))
                     ->maxLength(255)
-                    ->helperText('Nombre que se mostrará públicamente (opcional)'),
+                    ->helperText(__('Name that will be displayed publicly (optional)')),
                 
                 TextInput::make('phone_number')
-                    ->label('Teléfono')
+                    ->label(__('Phone'))
                     ->tel()
                     ->maxLength(20),
             ])
@@ -67,8 +67,8 @@ class AvatarForm extends MyProfileComponent
         $user->update($data);
 
         Notification::make()
-            ->title('Perfil Actualizado')
-            ->body('Tu información personal ha sido actualizada correctamente.')
+            ->title(__('Profile Updated'))
+            ->body(__('Your personal information has been updated successfully.'))
             ->success()
             ->send();
     }

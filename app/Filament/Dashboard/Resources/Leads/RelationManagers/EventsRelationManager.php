@@ -22,60 +22,60 @@ class EventsRelationManager extends RelationManager
 {
     protected static string $relationship = 'events';
 
-    protected static ?string $title = 'Eventos y Tareas';
+    protected static ?string $title = 'Events and Tasks';
 
-    protected static ?string $modelLabel = 'Evento';
+    protected static ?string $modelLabel = 'Event';
 
-    protected static ?string $pluralModelLabel = 'Eventos';
+    protected static ?string $pluralModelLabel = 'Events';
 
     public function form(Schema $schema): Schema
     {
         return $schema
             ->schema([
                 Forms\Components\TextInput::make('titulo')
-                    ->label('Título del evento')
+                    ->label(__('Event title'))
                     ->required()
                     ->maxLength(255)
-                    ->placeholder('Ej: Llamada de seguimiento, Reunión informativa...')
+                    ->placeholder(__('e.g.: Follow-up call, Information meeting...'))
                     ->columnSpanFull(),
 
                 Forms\Components\DateTimePicker::make('fecha_programada')
-                    ->label('Fecha y hora programada')
+                    ->label(__('Scheduled date and time'))
                     ->required()
                     ->default(now()->addHour())
-                    ->helperText('Cuándo debe realizarse este evento'),
+                    ->helperText(__('When this event should take place')),
 
                 Forms\Components\TextInput::make('duracion_estimada')
-                    ->label('Duración (minutos)')
+                    ->label(__('Duration (minutes)'))
                     ->numeric()
                     ->default(15)
                     ->minValue(5)
                     ->maxValue(480)
                     ->step(5)
                     ->suffix('min')
-                    ->helperText('Duración estimada del evento en minutos'),
+                    ->helperText(__('Estimated event duration in minutes')),
 
                 Forms\Components\Select::make('estado')
-                    ->label('Estado')
+                    ->label(__('Status'))
                     ->options([
-                        'pendiente' => 'Pendiente',
-                        'completada' => 'Completada',
-                        'cancelada' => 'Cancelada',
+                        'pendiente' => __('Pending'),
+                        'completada' => __('Completed'),
+                        'cancelada' => __('Cancelled'),
                     ])
                     ->required()
                     ->default('pendiente')
                     ->live(),
 
                 Forms\Components\Textarea::make('descripcion')
-                    ->label('Descripción')
+                    ->label(__('Description'))
                     ->rows(3)
-                    ->placeholder('Detalles adicionales sobre el evento...')
+                    ->placeholder(__('Additional details about the event...'))
                     ->columnSpanFull(),
 
                 Forms\Components\Textarea::make('resultado')
-                    ->label('Resultado')
+                    ->label(__('Result'))
                     ->rows(4)
-                    ->placeholder('¿Qué pasó en este evento? Resultado, conclusiones, próximos pasos...')
+                    ->placeholder(__('What happened in this event? Result, conclusions, next steps...'))
                     ->columnSpanFull()
                     ->visible(fn (callable $get) => $get('estado') === 'completada'),
             ]);
@@ -85,17 +85,17 @@ class EventsRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('titulo')
-            ->heading('Eventos y Tareas del Lead')
+            ->heading(__('Lead Events and Tasks'))
             ->columns([
                 Tables\Columns\TextColumn::make('titulo')
-                    ->label('Título')
+                    ->label(__('Title'))
                     ->searchable()
                     ->sortable()
                     ->wrap()
                     ->limit(50),
 
                 Tables\Columns\TextColumn::make('fecha_programada')
-                    ->label('Fecha programada')
+                    ->label(__('Scheduled date'))
                     ->dateTime('d/m/Y H:i')
                     ->sortable()
                     ->color(fn ($record): string => 
@@ -105,7 +105,7 @@ class EventsRelationManager extends RelationManager
                     ),
 
                 Tables\Columns\TextColumn::make('estado')
-                    ->label('Estado')
+                    ->label(__('Status'))
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'pendiente' => 'warning',
@@ -115,56 +115,56 @@ class EventsRelationManager extends RelationManager
                     }),
 
                 Tables\Columns\TextColumn::make('duracion_estimada')
-                    ->label('Duración')
+                    ->label(__('Duration'))
                     ->suffix(' min')
-                    ->placeholder('No definida')
+                    ->placeholder(__('Not defined'))
                     ->toggleable(),
 
                 Tables\Columns\TextColumn::make('descripcion')
-                    ->label('Descripción')
+                    ->label(__('Description'))
                     ->limit(60)
-                    ->placeholder('Sin descripción')
+                    ->placeholder(__('No description'))
                     ->toggleable(),
 
                 Tables\Columns\TextColumn::make('usuario.name')
-                    ->label('Asignado a')
+                    ->label(__('Assigned to'))
                     ->sortable()
                     ->toggleable(),
 
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Creado')
+                    ->label(__('Created'))
                     ->dateTime('d/m/Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('estado')
-                    ->label('Estado')
+                    ->label(__('Status'))
                     ->options([
-                        'pendiente' => 'Pendiente',
-                        'completada' => 'Completada',
-                        'cancelada' => 'Cancelada',
+                        'pendiente' => __('Pending'),
+                        'completada' => __('Completed'),
+                        'cancelada' => __('Cancelled'),
                     ]),
 
                 Tables\Filters\Filter::make('vencidos')
-                    ->label('Vencidos')
+                    ->label(__('Overdue'))
                     ->query(fn (Builder $query): Builder => 
                         $query->where('fecha_programada', '<', now())
                               ->where('estado', 'pendiente')
                     ),
 
                 Tables\Filters\Filter::make('hoy')
-                    ->label('Para hoy')
+                    ->label(__('For today'))
                     ->query(fn (Builder $query): Builder => 
                         $query->whereDate('fecha_programada', today())
                     ),
             ])
             ->headerActions([
                 \Filament\Actions\CreateAction::make()
-                    ->label('Nuevo Evento')
+                    ->label(__('New Event'))
                     ->icon('heroicon-o-plus')
                     ->modal()
-                    ->modalHeading('Crear Nuevo Evento')
+                    ->modalHeading(__('Create New Event'))
                     ->modalWidth('lg')
                     ->mutateFormDataUsing(function (array $data): array {
                         $data['usuario_id'] = auth()->id();
@@ -181,7 +181,7 @@ class EventsRelationManager extends RelationManager
             ->actions([
                 \Filament\Actions\EditAction::make()
                     ->modal()
-                    ->modalHeading('Editar Evento')
+                    ->modalHeading(__('Edit Event'))
                     ->modalWidth('lg')
                     ->mutateFormDataUsing(function (array $data): array {
                         // Si se marca como completada, establecer fecha de finalización
@@ -194,8 +194,8 @@ class EventsRelationManager extends RelationManager
                 \Filament\Actions\DeleteAction::make(),
             ])
             ->defaultSort('fecha_programada', 'asc')
-            ->emptyStateHeading('Sin eventos programados')
-            ->emptyStateDescription('Crea el primer evento para programar tareas y hacer seguimiento del lead.')
+            ->emptyStateHeading(__('No scheduled events'))
+            ->emptyStateDescription(__('Create the first event to schedule tasks and track the lead.'))
             ->emptyStateIcon('heroicon-o-calendar-days');
     }
 

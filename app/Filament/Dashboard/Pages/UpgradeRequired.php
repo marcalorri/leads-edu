@@ -9,7 +9,7 @@ class UpgradeRequired extends Page
 {
     protected string $view = 'filament.dashboard.pages.upgrade-required';
     
-    protected static ?string $title = 'Suscripción Requerida';
+    protected static ?string $title = 'Subscription Required';
     
     protected static ?string $navigationLabel = null;
     
@@ -33,7 +33,7 @@ class UpgradeRequired extends Page
     {
         return [
             Action::make('viewPlans')
-                ->label('Ver Planes')
+                ->label(__('View Plans'))
                 ->icon('heroicon-o-credit-card')
                 ->color('primary')
                 ->url(function () {
@@ -44,7 +44,7 @@ class UpgradeRequired extends Page
                 ->openUrlInNewTab(false),
                 
             Action::make('backToDashboard')
-                ->label('Volver al Dashboard')
+                ->label(__('Back to Dashboard'))
                 ->icon('heroicon-o-home')
                 ->color('gray')
                 ->url(function () {

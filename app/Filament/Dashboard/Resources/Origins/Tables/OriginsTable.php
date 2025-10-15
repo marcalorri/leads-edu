@@ -17,21 +17,27 @@ class OriginsTable
         return $table
             ->columns([
                 TextColumn::make('tenant.name')
-                    ->searchable(),
+                    ->searchable()
+                    ->label(__('Tenant')),
                 TextColumn::make('nombre')
-                    ->searchable(),
+                    ->searchable()
+                    ->label(__('Name')),
                 TextColumn::make('tipo')
-                    ->badge(),
+                    ->badge()
+                    ->label(__('Type')),
                 IconColumn::make('activo')
-                    ->boolean(),
+                    ->boolean()
+                    ->label(__('Active')),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label(__('Created')),
                 TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label(__('Updated')),
             ])
             ->filters([
                 //

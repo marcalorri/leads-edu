@@ -14,23 +14,23 @@ class CrmSubscription
         $user = Auth::user();
         $tenant = filament()->getTenant();
         
-        // Si no hay tenant, permitir acceso (para recursos globales)
+        // If there's no tenant, allow access (for global resources)
         if (!$tenant) {
             return true;
         }
         
-        // Si no hay usuario autenticado, no tiene acceso
+        // If there's no authenticated user, no access
         if (!$user) {
             return false;
         }
         
-        // Permitir acceso a admins globales siempre
+        // Always allow access to global admins
         if ($user->is_admin) {
             return true;
         }
         
-        // Verificar si tiene CUALQUIER suscripción activa o está en trial
-        // Pasamos null como productSlug para aceptar cualquier producto
+        // Check if has ANY active subscription or is on trial
+        // We pass null as productSlug to accept any product
         return $user->isSubscribed(null, $tenant) || 
                $user->isTrialing(null, $tenant);
     }
@@ -59,6 +59,6 @@ class CrmSubscription
      */
     public static function getStatusMessage(): string
     {
-        return 'Se requiere una suscripción activa para acceder a las funcionalidades del CRM.';
+        return __('An active subscription is required to access CRM features.');
     }
 }

@@ -13,20 +13,27 @@ class BusinessUnitInfolist
         return $schema
             ->components([
                 TextEntry::make('tenant.name')
-                    ->label('Tenant'),
-                TextEntry::make('nombre'),
+                    ->label(__('Tenant')),
+                TextEntry::make('nombre')
+                    ->label(__('Name')),
                 TextEntry::make('descripcion')
+                    ->label(__('Description'))
                     ->placeholder('-')
                     ->columnSpanFull(),
-                TextEntry::make('codigo'),
+                TextEntry::make('codigo')
+                    ->label(__('Code')),
                 TextEntry::make('responsable')
+                    ->label(__('Manager'))
                     ->placeholder('-'),
                 IconEntry::make('activo')
+                    ->label(__('Active'))
                     ->boolean(),
                 TextEntry::make('created_at')
+                    ->label(__('Created'))
                     ->dateTime()
                     ->placeholder('-'),
                 TextEntry::make('updated_at')
+                    ->label(__('Updated'))
                     ->dateTime()
                     ->placeholder('-'),
             ]);

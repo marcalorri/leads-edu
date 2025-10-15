@@ -19,46 +19,58 @@ class LeadEventsTable
     {
         return $table
             ->columns([
-                TextColumn::make('tenant.name')
-                    ->searchable(),
                 TextColumn::make('lead.id')
-                    ->searchable(),
+                    ->searchable()
+                    ->label(__('Lead')),
                 TextColumn::make('usuario.name')
-                    ->searchable(),
+                    ->searchable()
+                    ->label(__('User')),
                 TextColumn::make('titulo')
-                    ->searchable(),
+                    ->searchable()
+                    ->label(__('Title')),
                 TextColumn::make('tipo')
-                    ->badge(),
+                    ->badge()
+                    ->label(__('Type')),
                 TextColumn::make('estado')
-                    ->badge(),
+                    ->badge()
+                    ->label(__('Status')),
                 TextColumn::make('prioridad')
-                    ->badge(),
+                    ->badge()
+                    ->label(__('Priority')),
                 TextColumn::make('fecha_programada')
                     ->dateTime()
-                    ->sortable(),
+                    ->sortable()
+                    ->label(__('Scheduled Date')),
                 TextColumn::make('fecha_completada')
                     ->dateTime()
-                    ->sortable(),
+                    ->sortable()
+                    ->label(__('Completed Date')),
                 TextColumn::make('duracion_estimada')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->label(__('Duration')),
                 IconColumn::make('requiere_recordatorio')
-                    ->boolean(),
+                    ->boolean()
+                    ->label(__('Reminder')),
                 TextColumn::make('minutos_recordatorio')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->label(__('Minutes')),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label(__('Created')),
                 TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label(__('Updated')),
                 TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label(__('Deleted')),
             ])
             ->filters([
                 TrashedFilter::make(),

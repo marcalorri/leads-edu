@@ -16,25 +16,33 @@ class ProvincesTable
         return $table
             ->columns([
                 TextColumn::make('tenant.name')
-                    ->searchable(),
+                    ->searchable()
+                    ->label(__('Tenant')),
                 TextColumn::make('nombre')
-                    ->searchable(),
+                    ->searchable()
+                    ->label(__('Name')),
                 TextColumn::make('codigo')
-                    ->searchable(),
+                    ->searchable()
+                    ->label(__('Code')),
                 TextColumn::make('codigo_ine')
-                    ->searchable(),
+                    ->searchable()
+                    ->label(__('INE Code')),
                 TextColumn::make('comunidad_autonoma')
-                    ->searchable(),
+                    ->searchable()
+                    ->label(__('Autonomous Community')),
                 IconColumn::make('activo')
-                    ->boolean(),
+                    ->boolean()
+                    ->label(__('Active')),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label(__('Created')),
                 TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label(__('Updated')),
             ])
             ->filters([
                 //

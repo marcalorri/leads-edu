@@ -36,15 +36,15 @@ class CourseRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'codigo_curso.required' => 'El código del curso es obligatorio',
-            'codigo_curso.unique' => 'Este código de curso ya existe en tu organización',
-            'titulacion.required' => 'La titulación es obligatoria',
-            'area_id.required' => 'El área es obligatoria',
-            'area_id.exists' => 'El área seleccionada no existe',
-            'unidad_negocio_id.required' => 'La unidad de negocio es obligatoria',
-            'unidad_negocio_id.exists' => 'La unidad de negocio seleccionada no existe',
-            'duracion_id.required' => 'La duración es obligatoria',
-            'duracion_id.exists' => 'La duración seleccionada no existe',
+            'codigo_curso.required' => __('The course code is required'),
+            'codigo_curso.unique' => __('This course code already exists in your organization'),
+            'titulacion.required' => __('The degree is required'),
+            'area_id.required' => __('The area is required'),
+            'area_id.exists' => __('The selected area does not exist'),
+            'unidad_negocio_id.required' => __('The business unit is required'),
+            'unidad_negocio_id.exists' => __('The selected business unit does not exist'),
+            'duracion_id.required' => __('The duration is required'),
+            'duracion_id.exists' => __('The selected duration does not exist'),
         ];
     }
 }

@@ -27,17 +27,17 @@ class AreaForm
                                 return $rule->where('tenant_id', Filament::getTenant()->id);
                             }
                         )
-                        ->label('Código'),
+                        ->label(__('Code')),
                     TextInput::make('nombre')
                         ->required()
                         ->maxLength(100)
-                        ->label('Nombre'),
+                        ->label(__('Name')),
                     Textarea::make('descripcion')
                         ->columnSpanFull()
-                        ->label('Descripción'),
+                        ->label(__('Description')),
                     Toggle::make('activo')
                         ->default(true)
-                        ->label('Activo'),
+                        ->label(__('Active')),
                 ])
             ]);
     }

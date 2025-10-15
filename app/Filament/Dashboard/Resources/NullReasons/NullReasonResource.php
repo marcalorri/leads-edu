@@ -30,17 +30,17 @@ class NullReasonResource extends Resource
 
     public static function getModelLabel(): string
     {
-        return 'Motivo Nulo';
+        return __('Null Reason');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return 'Motivos Nulos';
+        return __('Null Reasons');
     }
 
     public static function getNavigationGroup(): ?string
     {
-        return 'Catálogos de Ventas';
+        return __('Sales Catalogs');
     }
 
     public static function getNavigationSort(): ?int

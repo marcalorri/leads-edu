@@ -13,18 +13,18 @@ class LeadObserver
 {
     /**
      * Handle the Lead "creating" event.
-     * Se ejecuta ANTES de guardar el lead en la base de datos.
+     * Executes BEFORE saving the lead to the database.
      */
     public function creating(Lead $lead): void
     {
         // ========================================
-        // PASO 1: Gestión del Contacto
+        // STEP 1: Contact Management
         // ========================================
         
-        // Si ya tiene contacto asignado, no hacer nada
+        // If already has assigned contact, do nothing
         if (!$lead->contact_id) {
-            // Buscar contacto existente por email o teléfono (sin global scope, excluyendo soft-deleted)
-            // Solo buscar si tenemos email o teléfono válidos
+            // Search for existing contact by email or phone (without global scope, excluding soft-deleted)
+            // Only search if we have valid email or phone
             $existingContact = null;
             
             if (!empty($lead->email) || !empty($lead->telefono)) {
@@ -43,10 +43,10 @@ class LeadObserver
             }
 
             if ($existingContact) {
-                // Asignar contacto existente
+                // Assign existing contact
                 $lead->contact_id = $existingContact->id;
             } else {
-                // Crear nuevo contacto solo si tenemos datos mínimos
+                // Create new contact only if we have minimum data
                 if (!empty($lead->nombre)) {
                     $newContact = Contact::create([
                         'tenant_id' => $lead->tenant_id,
@@ -57,46 +57,46 @@ class LeadObserver
                         'preferencia_comunicacion' => !empty($lead->email) ? 'email' : 'telefono',
                     ]);
                     
-                    // Asignar el nuevo contacto al lead
+                    // Assign the new contact to the lead
                     $lead->contact_id = $newContact->id;
                 }
             }
         }
         
         // ========================================
-        // PASO 2: Asignación del Asesor (Lógica de Prioridad)
+        // STEP 2: Advisor Assignment (Priority Logic)
         // ========================================
         
-        // Si NO se especificó asesor explícitamente, aplicar lógica de prioridad
+        // If advisor was NOT explicitly specified, apply priority logic
         if (!$lead->asesor_id) {
-            // Prioridad 1: Asesor del contacto existente
+            // Priority 1: Existing contact's advisor
             if ($lead->contact_id) {
                 $contact = Contact::withoutGlobalScopes()->find($lead->contact_id);
                 if ($contact && $contact->asesor_id) {
                     $lead->asesor_id = $contact->asesor_id;
-                    return; // Ya tenemos asesor, salir
+                    return; // Already have advisor, exit
                 }
             }
             
-            // Prioridad 2: Usuario que está creando el lead (si hay contexto de autenticación)
+            // Priority 2: User creating the lead (if authentication context exists)
             if (auth()->check()) {
                 $lead->asesor_id = auth()->id();
-                return; // Ya tenemos asesor, salir
+                return; // Already have advisor, exit
             }
             
-            // Prioridad 3: NULL (se asigna manualmente después)
-            // No hacer nada, dejar asesor_id como null
+            // Priority 3: NULL (assigned manually later)
+            // Do nothing, leave asesor_id as null
         }
-        // Si ya tiene asesor_id especificado explícitamente, respetarlo
+        // If already has explicitly specified asesor_id, respect it
     }
 
     /**
      * Handle the Lead "created" event.
-     * Se ejecuta DESPUÉS de guardar el lead en la base de datos.
+     * Executes AFTER saving the lead to the database.
      */
     public function created(Lead $lead): void
     {
-        // Sincronizar asesor con el contacto si el contacto NO tiene asesor
+        // Sync advisor with contact if contact does NOT have advisor
         if ($lead->contact_id && $lead->asesor_id) {
             $contact = Contact::withoutGlobalScopes()->find($lead->contact_id);
             if ($contact && !$contact->asesor_id) {
@@ -104,20 +104,20 @@ class LeadObserver
             }
         }
         
-        // Enviar notificación al asesor asignado
+        // Send notification to assigned advisor
         if ($lead->asesor_id) {
             $asesor = User::find($lead->asesor_id);
             if ($asesor) {
-                // Cargar relaciones necesarias para la notificación
+                // Load necessary relationships for notification
                 $lead->load(['tenant', 'course']);
                 
-                // Notificación por email y base de datos
+                // Email and database notification
                 $asesor->notify(new NewLeadNotification($lead));
                 
-                // Notificación Filament
+                // Filament notification
                 Notification::make()
-                    ->title('Nuevo Lead Asignado')
-                    ->body('Se te ha asignado el lead: ' . $lead->nombre)
+                    ->title(__('New Lead Assigned'))
+                    ->body(__('You have been assigned the lead: :name', ['name' => $lead->nombre]))
                     ->icon('heroicon-o-user-plus')
                     ->iconColor('success')
                     ->sendToDatabase($asesor);
@@ -130,7 +130,7 @@ class LeadObserver
      */
     public function updated(Lead $lead): void
     {
-        // Sincronizar asesor con el contacto si cambió
+        // Sync advisor with contact if changed
         if ($lead->isDirty('asesor_id') && $lead->contact_id && $lead->asesor_id) {
             $contact = Contact::find($lead->contact_id);
             if ($contact) {
@@ -138,28 +138,28 @@ class LeadObserver
             }
         }
         
-        // Verificar si el estado ha cambiado
+        // Check if status has changed
         if ($lead->isDirty('estado')) {
             $oldEstado = $lead->getOriginal('estado');
             $newEstado = $lead->estado;
             
-            // Si cambió a 'ganado' y no tiene fecha_ganado
+            // If changed to 'ganado' and doesn't have fecha_ganado
             if ($newEstado === 'ganado' && !$lead->fecha_ganado) {
                 $lead->fecha_ganado = now();
                 
-                // Guardar sin disparar eventos para evitar recursión
+                // Save without triggering events to avoid recursion
                 $lead->saveQuietly();
                 
-                // Enviar notificación de conversión
+                // Send conversion notification
                 if ($lead->asesor_id) {
                     $asesor = User::find($lead->asesor_id);
                     if ($asesor) {
                         $asesor->notify(new LeadWonNotification($lead));
                         
-                        // Notificación Filament
+                        // Filament notification
                         Notification::make()
-                            ->title('🎉 ¡Lead Convertido!')
-                            ->body('¡Felicidades! Has convertido el lead: ' . $lead->nombre)
+                            ->title(__('🎉 Lead Converted!'))
+                            ->body(__('Congratulations! You have converted the lead: :name', ['name' => $lead->nombre]))
                             ->icon('heroicon-o-trophy')
                             ->iconColor('success')
                             ->duration(10000)
@@ -168,21 +168,21 @@ class LeadObserver
                 }
             }
             
-            // Si cambió a 'perdido' y no tiene fecha_perdido
+            // If changed to 'perdido' and doesn't have fecha_perdido
             if ($newEstado === 'perdido' && !$lead->fecha_perdido) {
                 $lead->fecha_perdido = now();
                 
-                // Guardar sin disparar eventos para evitar recursión
+                // Save without triggering events to avoid recursion
                 $lead->saveQuietly();
             }
             
-            // Si cambió de 'ganado' a otro estado, limpiar fecha_ganado
+            // If changed from 'ganado' to another status, clear fecha_ganado
             if ($oldEstado === 'ganado' && $newEstado !== 'ganado') {
                 $lead->fecha_ganado = null;
                 $lead->saveQuietly();
             }
             
-            // Si cambió de 'perdido' a otro estado, limpiar fecha_perdido
+            // If changed from 'perdido' to another status, clear fecha_perdido
             if ($oldEstado === 'perdido' && $newEstado !== 'perdido') {
                 $lead->fecha_perdido = null;
                 $lead->saveQuietly();

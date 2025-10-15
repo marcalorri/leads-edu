@@ -27,34 +27,34 @@ class CampusForm
                                 return $rule->where('tenant_id', Filament::getTenant()->id);
                             }
                         )
-                        ->label('Código'),
+                        ->label(__('Code')),
                     TextInput::make('nombre')
                         ->required()
                         ->maxLength(100)
-                        ->label('Nombre'),
+                        ->label(__('Name')),
                     Textarea::make('direccion')
                         ->columnSpanFull()
-                        ->label('Dirección'),
+                        ->label(__('Address')),
                     TextInput::make('ciudad')
                         ->maxLength(100)
-                        ->label('Ciudad'),
+                        ->label(__('City')),
                     TextInput::make('codigo_postal')
                         ->maxLength(10)
-                        ->label('Código Postal'),
+                        ->label(__('Postal Code')),
                     TextInput::make('telefono')
                         ->tel()
                         ->maxLength(20)
-                        ->label('Teléfono'),
+                        ->label(__('Phone')),
                     TextInput::make('email')
                         ->email()
                         ->maxLength(255)
-                        ->label('Email'),
+                        ->label(__('Email')),
                     TextInput::make('responsable')
                         ->maxLength(255)
-                        ->label('Responsable'),
+                        ->label(__('Manager')),
                     Toggle::make('activo')
                         ->default(true)
-                        ->label('Activo'),
+                        ->label(__('Active')),
                 ])
             ]);
     }

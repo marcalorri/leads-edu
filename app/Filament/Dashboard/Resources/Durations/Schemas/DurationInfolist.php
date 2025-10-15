@@ -13,26 +13,34 @@ class DurationInfolist
         return $schema
             ->components([
                 TextEntry::make('tenant.name')
-                    ->label('Tenant'),
-                TextEntry::make('nombre'),
+                    ->label(__('Tenant')),
+                TextEntry::make('nombre')
+                    ->label(__('Name')),
                 TextEntry::make('descripcion')
+                    ->label(__('Description'))
                     ->placeholder('-')
                     ->columnSpanFull(),
                 TextEntry::make('horas_totales')
+                    ->label(__('Total Hours'))
                     ->numeric()
                     ->placeholder('-'),
                 TextEntry::make('tipo')
+                    ->label(__('Type'))
                     ->badge()
                     ->placeholder('-'),
                 TextEntry::make('valor_numerico')
+                    ->label(__('Numeric Value'))
                     ->numeric()
                     ->placeholder('-'),
                 IconEntry::make('activo')
+                    ->label(__('Active'))
                     ->boolean(),
                 TextEntry::make('created_at')
+                    ->label(__('Created'))
                     ->dateTime()
                     ->placeholder('-'),
                 TextEntry::make('updated_at')
+                    ->label(__('Updated'))
                     ->dateTime()
                     ->placeholder('-'),
             ]);

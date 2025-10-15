@@ -13,20 +13,27 @@ class SalesPhaseInfolist
         return $schema
             ->components([
                 TextEntry::make('tenant.name')
-                    ->label('Tenant'),
-                TextEntry::make('nombre'),
+                    ->label(__('Tenant')),
+                TextEntry::make('nombre')
+                    ->label(__('Name')),
                 TextEntry::make('descripcion')
+                    ->label(__('Description'))
                     ->placeholder('-')
                     ->columnSpanFull(),
                 TextEntry::make('orden')
+                    ->label(__('Order'))
                     ->numeric(),
-                TextEntry::make('color'),
+                TextEntry::make('color')
+                    ->label(__('Color')),
                 IconEntry::make('activo')
+                    ->label(__('Active'))
                     ->boolean(),
                 TextEntry::make('created_at')
+                    ->label(__('Created'))
                     ->dateTime()
                     ->placeholder('-'),
                 TextEntry::make('updated_at')
+                    ->label(__('Updated'))
                     ->dateTime()
                     ->placeholder('-'),
             ]);

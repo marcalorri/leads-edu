@@ -114,7 +114,7 @@ class LeadApiController extends Controller
         $lead->load(['course', 'asesor', 'campus', 'modality', 'province', 'salesPhase', 'origin']);
 
         return response()->json([
-            'message' => 'Lead creado exitosamente',
+            'message' => __('Lead created successfully'),
             'data' => new LeadResource($lead)
         ], 201);
     }
@@ -165,7 +165,7 @@ class LeadApiController extends Controller
         $lead->load(['course', 'asesor', 'campus', 'modality', 'province', 'salesPhase', 'origin']);
 
         return response()->json([
-            'message' => 'Lead actualizado exitosamente',
+            'message' => __('Lead updated successfully'),
             'data' => new LeadResource($lead)
         ]);
     }
@@ -185,7 +185,7 @@ class LeadApiController extends Controller
             return response()->json([
                 'error' => [
                     'code' => 'PERMISSION_DENIED',
-                    'message' => 'No tienes permisos para eliminar leads'
+                    'message' => __('You do not have permission to delete leads')
                 ]
             ], 403);
         }
@@ -194,7 +194,7 @@ class LeadApiController extends Controller
         $lead->delete();
 
         return response()->json([
-            'message' => 'Lead eliminado exitosamente'
+            'message' => __('Lead deleted successfully')
         ]);
     }
 
@@ -207,11 +207,11 @@ class LeadApiController extends Controller
 
         $filters = [
             'estados' => [
-                'nuevo' => 'Nuevo',
-                'contactado' => 'Contactado', 
-                'interesado' => 'Interesado',
-                'matriculado' => 'Matriculado',
-                'perdido' => 'Perdido'
+                'nuevo' => __('New'),
+                'contactado' => __('Contacted'), 
+                'interesado' => __('Interested'),
+                'matriculado' => __('Enrolled'),
+                'perdido' => __('Lost')
             ],
             'cursos' => $tenant->courses()->select('id', 'codigo_curso', 'titulacion')->get(),
             'asesores' => $tenant->users()->select('id', 'name')->get(),

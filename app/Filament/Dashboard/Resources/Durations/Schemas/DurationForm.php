@@ -19,29 +19,29 @@ class DurationForm
                     TextInput::make('nombre')
                         ->required()
                         ->maxLength(50)
-                        ->label('Nombre'),
+                        ->label(__('Name')),
                     Textarea::make('descripcion')
                         ->columnSpanFull()
-                        ->label('Descripción'),
+                        ->label(__('Description')),
                     Select::make('tipo')
                         ->options([
-                            'horas' => 'Horas',
-                            'dias' => 'Días',
-                            'semanas' => 'Semanas',
-                            'meses' => 'Meses',
-                            'años' => 'Años',
+                            'horas' => __('Hours'),
+                            'dias' => __('Days'),
+                            'semanas' => __('Weeks'),
+                            'meses' => __('Months'),
+                            'años' => __('Years'),
                         ])
                         ->required()
-                        ->label('Tipo'),
+                        ->label(__('Type')),
                     TextInput::make('valor_numerico')
                         ->numeric()
-                        ->label('Valor Numérico'),
+                        ->label(__('Numeric Value')),
                     TextInput::make('horas_totales')
                         ->numeric()
-                        ->label('Horas Totales'),
+                        ->label(__('Total Hours')),
                     Toggle::make('activo')
                         ->default(true)
-                        ->label('Activo'),
+                        ->label(__('Active')),
                 ])
             ]);
     }

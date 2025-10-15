@@ -18,7 +18,7 @@ class AllEventsCalendarWidget extends CalendarWidget
     
     public static function getWidgetLabel(): string
     {
-        return 'Calendario de Todos los Eventos';
+        return __('All Events Calendar');
     }
     
     public function getColumnSpan(): int | string | array

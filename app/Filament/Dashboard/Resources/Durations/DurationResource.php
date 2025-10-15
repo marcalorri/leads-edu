@@ -21,9 +21,9 @@ class DurationResource extends Resource
 {
     protected static ?string $model = Duration::class;
 
-    protected static ?string $modelLabel = 'Duración';
+    protected static ?string $modelLabel = null;
     
-    protected static ?string $pluralModelLabel = 'Duraciones';
+    protected static ?string $pluralModelLabel = null;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClock;
 
@@ -33,7 +33,17 @@ class DurationResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return 'Catálogos Académicos';
+        return __('Academic Catalogs');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Duration');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Durations');
     }
 
     public static function getNavigationSort(): ?int

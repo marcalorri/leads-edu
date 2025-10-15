@@ -9,7 +9,7 @@
                 <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                 </svg>
-                <h2 class="text-lg font-semibold text-gray-900">Documentación de la API</h2>
+                <h2 class="text-lg font-semibold text-gray-900">{{ __('API Documentation') }}</h2>
             </div>
 
             <div class="space-y-6">
@@ -23,9 +23,9 @@
 
                 <!-- Autenticación -->
                 <div>
-                    <h3 class="text-sm font-medium text-gray-900 mb-2">Autenticación</h3>
+                    <h3 class="text-sm font-medium text-gray-900 mb-2">{{ __('Authentication') }}</h3>
                     <p class="text-sm text-gray-600 mb-2">
-                        Incluye tu token API en el header Authorization:
+                        {{ __('Include your API token in the Authorization header:') }}
                     </p>
                     <div class="bg-gray-900 rounded-lg p-3">
                         <code class="text-sm text-green-400">Authorization: Bearer tu_token_aqui</code>
@@ -34,7 +34,7 @@
 
                 <!-- Endpoints -->
                 <div>
-                    <h3 class="text-sm font-medium text-gray-900 mb-3">Endpoints Disponibles</h3>
+                    <h3 class="text-sm font-medium text-gray-900 mb-3">{{ __('Available Endpoints') }}</h3>
                     <div class="space-y-2">
                         @foreach($endpoints as $endpoint)
                             <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
@@ -61,7 +61,7 @@
 
                 <!-- Scopes -->
                 <div>
-                    <h3 class="text-sm font-medium text-gray-900 mb-3">Permisos (Scopes)</h3>
+                    <h3 class="text-sm font-medium text-gray-900 mb-3">{{ __('Permissions (Scopes)') }}</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                         @foreach($scopes as $scope => $description)
                             <div class="flex items-center p-3 bg-gray-50 rounded-lg">
@@ -80,10 +80,10 @@
 
                 <!-- Ejemplo de uso -->
                 <div>
-                    <h3 class="text-sm font-medium text-gray-900 mb-3">Ejemplo de Uso</h3>
+                    <h3 class="text-sm font-medium text-gray-900 mb-3">{{ __('Usage Example') }}</h3>
                     <div class="space-y-4">
                         <div>
-                            <h4 class="text-xs font-medium text-gray-700 mb-2">Listar leads:</h4>
+                            <h4 class="text-xs font-medium text-gray-700 mb-2">{{ __('List leads:') }}</h4>
                             <div class="bg-gray-900 rounded-lg p-3 overflow-x-auto">
                                 <pre class="text-xs text-green-400"><code>curl -X GET "{{ $baseUrl }}/leads" \
   -H "Authorization: Bearer tu_token_aqui" \
@@ -92,7 +92,7 @@
                         </div>
                         
                         <div>
-                            <h4 class="text-xs font-medium text-gray-700 mb-2">Crear un lead:</h4>
+                            <h4 class="text-xs font-medium text-gray-700 mb-2">{{ __('Create a lead:') }}</h4>
                             <div class="bg-gray-900 rounded-lg p-3 overflow-x-auto">
                                 <pre class="text-xs text-green-400"><code>curl -X POST "{{ $baseUrl }}/leads" \
   -H "Authorization: Bearer tu_token_aqui" \
@@ -114,7 +114,7 @@
 
                 <!-- Rate Limiting -->
                 <div>
-                    <h3 class="text-sm font-medium text-gray-900 mb-3">Límites de Velocidad</h3>
+                    <h3 class="text-sm font-medium text-gray-900 mb-3">{{ __('Rate Limits') }}</h3>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                         <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 text-center">
                             <div class="text-lg font-bold text-blue-600">1,000</div>
@@ -141,7 +141,7 @@
                         </div>
                         <div class="ml-3">
                             <p class="text-sm text-amber-800">
-                                <strong>Importante:</strong> Guarda tus tokens API de forma segura. Una vez creados, el token completo solo se muestra una vez. Puedes copiarlo desde la tabla de arriba.
+                                <strong>{{ __('Important:') }}</strong> {{ __('Save your API tokens securely. Once created, the full token is only shown once. You can copy it from the table above.') }}
                             </p>
                         </div>
                     </div>

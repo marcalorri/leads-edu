@@ -22,23 +22,23 @@ class LeadsRelationManager extends RelationManager
             ->columns([
                 SelectColumn::make('estado')
                     ->options([
-                        'abierto' => 'Abierto',
-                        'ganado' => 'Ganado',
-                        'perdido' => 'Perdido',
+                        'abierto' => __('Open'),
+                        'ganado' => __('Won'),
+                        'perdido' => __('Lost'),
                     ])
-                    ->label('Estado'),
+                    ->label(__('Status')),
                 TextColumn::make('course.codigo_curso')
-                    ->label('Curso')
+                    ->label(__('Course'))
                     ->searchable(),
                 TextColumn::make('campus.nombre')
-                    ->label('Sede')
+                    ->label(__('Campus'))
                     ->searchable(),
                 TextColumn::make('asesor.name')
-                    ->label('Asesor')
+                    ->label(__('Advisor'))
                     ->searchable(),
                 TextColumn::make('created_at')
                     ->dateTime('d/m/Y')
-                    ->label('Creado')
+                    ->label(__('Created'))
                     ->sortable(),
             ])
             ->headerActions([

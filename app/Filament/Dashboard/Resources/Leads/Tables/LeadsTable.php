@@ -19,15 +19,15 @@ class LeadsTable
         return $table
             ->columns([
                 ImageColumn::make('asesor.avatar')
-                    ->label('Asesor')
+                    ->label(__('Advisor'))
                     ->circular()
                     ->size(40)
                     ->getStateUsing(function ($record) {
-                        return $record->asesor?->avatar_url ?? 'https://ui-avatars.com/api/?name=Sin+Asesor&color=9CA3AF&background=F3F4F6&size=40';
+                        return $record->asesor?->avatar_url ?? 'https://ui-avatars.com/api/?name=No+Advisor&color=9CA3AF&background=F3F4F6&size=40';
                     })
-                    ->tooltip(fn ($record) => $record->asesor?->name ?? 'Sin asesor asignado'),
+                    ->tooltip(fn ($record) => $record->asesor?->name ?? __('No advisor assigned')),
                 TextColumn::make('estado')
-                    ->label('Estado')
+                    ->label(__('Status'))
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'abierto' => 'warning',
@@ -36,13 +36,13 @@ class LeadsTable
                         default => 'gray',
                     })
                     ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'abierto' => 'Abierto',
-                        'ganado' => 'Ganado',
-                        'perdido' => 'Perdido',
+                        'abierto' => __('Open'),
+                        'ganado' => __('Won'),
+                        'perdido' => __('Lost'),
                         default => $state,
                     }),
                 TextColumn::make('salesPhase.nombre')
-                    ->label('Fase de Venta')
+                    ->label(__('Sales Phase'))
                     ->formatStateUsing(function ($state, $record) {
                         if (!$record->salesPhase) return '-';
                         $color = $record->salesPhase->color;
@@ -56,55 +56,55 @@ class LeadsTable
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('course.codigo_curso')
-                    ->label('Curso')
+                    ->label(__('Course'))
                     ->searchable()
                     ->sortable()
                     ->badge()
                     ->color('primary'),
                 TextColumn::make('campus.nombre')
-                    ->label('Sede')
+                    ->label(__('Campus'))
                     ->searchable()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('modality.nombre')
-                    ->label('Modalidad')
+                    ->label(__('Modality'))
                     ->searchable()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('province.nombre')
-                    ->label('Provincia')
+                    ->label(__('Province'))
                     ->searchable()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('nombre')
-                    ->label('Nombre')
+                    ->label(__('First Name'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('apellidos')
-                    ->label('Apellidos')
+                    ->label(__('Last Name'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('telefono')
-                    ->label('Teléfono')
+                    ->label(__('Phone'))
                     ->searchable(),
                 TextColumn::make('email')
-                    ->label('Email')
+                    ->label(__('Email'))
                     ->searchable()
                     ->limit(20)
                     ->tooltip(fn ($record) => $record->email)
                     ->copyable()
-                    ->copyMessage('Email copiado')
+                    ->copyMessage(__('Email copied'))
                     ->icon('heroicon-m-envelope'),
                 TextColumn::make('origin.nombre')
-                    ->label('Origen')
+                    ->label(__('Origin'))
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('convocatoria')
-                    ->label('Convocatoria')
+                    ->label(__('Call'))
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('created_at')
                     ->dateTime('d/m/Y H:i')
-                    ->label('Creado')
+                    ->label(__('Created'))
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
@@ -113,32 +113,32 @@ class LeadsTable
                     ->relationship('asesor', 'name')
                     ->searchable()
                     ->preload()
-                    ->label('Asesor'),
+                    ->label(__('Advisor')),
                 SelectFilter::make('course')
                     ->relationship('course', 'titulacion')
                     ->searchable()
                     ->preload()
-                    ->label('Curso'),
+                    ->label(__('Course')),
                 SelectFilter::make('salesPhase')
                     ->relationship('salesPhase', 'nombre')
                     ->searchable()
                     ->preload()
-                    ->label('Fase de Venta'),
+                    ->label(__('Sales Phase')),
                 SelectFilter::make('nullReason')
                     ->relationship('nullReason', 'nombre')
                     ->searchable()
                     ->preload()
-                    ->label('Motivo Nulo'),
+                    ->label(__('Null Reason')),
                 SelectFilter::make('campus')
                     ->relationship('campus', 'nombre')
                     ->searchable()
                     ->preload()
-                    ->label('Sede'),
+                    ->label(__('Campus')),
                 SelectFilter::make('modality')
                     ->relationship('modality', 'nombre')
                     ->searchable()
                     ->preload()
-                    ->label('Modalidad'),
+                    ->label(__('Modality')),
             ])
             ->recordActions([
                 ViewAction::make()

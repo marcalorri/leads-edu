@@ -10,7 +10,7 @@
                 </div>
                 <div>
                     <h2 class="text-xl font-semibold text-gray-900">API Tokens</h2>
-                    <p class="text-sm text-gray-600">Gestiona los tokens de acceso a la API REST</p>
+                    <p class="text-sm text-gray-600">{{ __('Manage REST API access tokens') }}</p>
                 </div>
             </div>
         </div>
@@ -25,7 +25,7 @@
                         </svg>
                     </div>
                     <div class="ml-3">
-                        <p class="text-sm font-medium text-green-800">API Activa</p>
+                        <p class="text-sm font-medium text-green-800">{{ __('Active API') }}</p>
                         <p class="text-xs text-green-600">{{ $baseUrl }}</p>
                     </div>
                 </div>
@@ -39,8 +39,8 @@
                         </svg>
                     </div>
                     <div class="ml-3">
-                        <p class="text-sm font-medium text-blue-800">{{ $tokens->count() }} Tokens</p>
-                        <p class="text-xs text-blue-600">Creados en total</p>
+                        <p class="text-sm font-medium text-blue-800">{{ $tokens->count() }} {{ __('Tokens') }}</p>
+                        <p class="text-xs text-blue-600">{{ __('Created in total') }}</p>
                     </div>
                 </div>
             </div>
@@ -53,8 +53,8 @@
                         </svg>
                     </div>
                     <div class="ml-3">
-                        <p class="text-sm font-medium text-purple-800">6 Endpoints</p>
-                        <p class="text-xs text-purple-600">CRUD completo</p>
+                        <p class="text-sm font-medium text-purple-800">6 {{ __('Endpoints') }}</p>
+                        <p class="text-xs text-purple-600">{{ __('Complete CRUD') }}</p>
                     </div>
                 </div>
             </div>
@@ -64,7 +64,7 @@
         @if($tokens->count() > 0)
         <div class="bg-white rounded-lg shadow">
             <div class="px-6 py-4 border-b border-gray-200">
-                <h3 class="text-lg font-medium text-gray-900">Tokens Existentes</h3>
+                <h3 class="text-lg font-medium text-gray-900">{{ __('Existing Tokens') }}</h3>
             </div>
             <div class="divide-y divide-gray-200">
                 @foreach($tokens as $token)
@@ -75,21 +75,21 @@
                                 <h4 class="text-sm font-medium text-gray-900">{{ $token->name }}</h4>
                                 @if($token->isActive())
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                        Activo
+                                        {{ __('Active') }}
                                     </span>
                                 @else
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                                        Expirado
+                                        {{ __('Expired') }}
                                     </span>
                                 @endif
                             </div>
                             <div class="mt-1 flex items-center space-x-4 text-sm text-gray-500">
-                                <span>Usuario: {{ $token->tokenable->name }}</span>
-                                <span>Creado: {{ $token->created_at->format('d/m/Y H:i') }}</span>
+                                <span>{{ __('User:') }} {{ $token->tokenable->name }}</span>
+                                <span>{{ __('Created:') }} {{ $token->created_at->format('d/m/Y H:i') }}</span>
                                 @if($token->last_used_at)
-                                    <span>Último uso: {{ $token->last_used_at->format('d/m/Y H:i') }}</span>
+                                    <span>{{ __('Last used:') }} {{ $token->last_used_at->format('d/m/Y H:i') }}</span>
                                 @else
-                                    <span>Nunca usado</span>
+                                    <span>{{ __('Never used') }}</span>
                                 @endif
                             </div>
                             @if($token->abilities)
@@ -107,7 +107,7 @@
                                 @csrf
                                 @method('DELETE')
                                 <button type="button" onclick="if(confirm('¿Eliminar token?')) { fetch('/api/tokens/{{ $token->id }}', {method: 'DELETE', headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'}}).then(() => location.reload()); }" class="text-red-600 hover:text-red-900 text-sm font-medium">
-                                    Eliminar
+                                    {{ __('Delete') }}
                                 </button>
                             </form>
                         </div>
@@ -120,7 +120,7 @@
 
         <!-- Create New Token -->
         <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-lg font-medium text-gray-900 mb-4">Crear Nuevo Token</h3>
+            <h3 class="text-lg font-medium text-gray-900 mb-4">{{ __('Create New Token') }}</h3>
             <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4">
                 <div class="flex">
                     <div class="flex-shrink-0">
@@ -130,14 +130,14 @@
                     </div>
                     <div class="ml-3">
                         <p class="text-sm text-amber-800">
-                            <strong>Crear token manualmente:</strong> Por el momento, los tokens deben crearse usando Laravel Tinker.
+                            <strong>{{ __('Create token manually:') }}</strong> {{ __('For now, tokens must be created using Laravel Tinker.') }}
                         </p>
                     </div>
                 </div>
             </div>
 
             <div class="space-y-4">
-                <h4 class="text-sm font-medium text-gray-900">Pasos para crear un token:</h4>
+                <h4 class="text-sm font-medium text-gray-900">{{ __('Steps to create a token:') }}</h4>
                 @foreach($createTokenInstructions as $step => $instruction)
                 <div class="flex items-start space-x-3">
                     <div class="flex-shrink-0">
@@ -155,44 +155,44 @@
 
         <!-- API Endpoints -->
         <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-lg font-medium text-gray-900 mb-4">Endpoints Disponibles</h3>
+            <h3 class="text-lg font-medium text-gray-900 mb-4">{{ __('Available Endpoints') }}</h3>
             <div class="space-y-3">
                 <div class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg">
                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">GET</span>
                     <code class="text-sm font-mono">{{ $baseUrl }}/leads</code>
-                    <span class="text-sm text-gray-600">Listar leads</span>
+                    <span class="text-sm text-gray-600">{{ __('List leads') }}</span>
                 </div>
                 <div class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg">
                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">POST</span>
                     <code class="text-sm font-mono">{{ $baseUrl }}/leads</code>
-                    <span class="text-sm text-gray-600">Crear lead</span>
+                    <span class="text-sm text-gray-600">{{ __('Create lead') }}</span>
                 </div>
                 <div class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg">
                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">GET</span>
                     <code class="text-sm font-mono">{{ $baseUrl }}/leads/{id}</code>
-                    <span class="text-sm text-gray-600">Ver lead</span>
+                    <span class="text-sm text-gray-600">{{ __('View lead') }}</span>
                 </div>
                 <div class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg">
                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">PUT</span>
                     <code class="text-sm font-mono">{{ $baseUrl }}/leads/{id}</code>
-                    <span class="text-sm text-gray-600">Actualizar lead</span>
+                    <span class="text-sm text-gray-600">{{ __('Update lead') }}</span>
                 </div>
                 <div class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg">
                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">DELETE</span>
                     <code class="text-sm font-mono">{{ $baseUrl }}/leads/{id}</code>
-                    <span class="text-sm text-gray-600">Eliminar lead</span>
+                    <span class="text-sm text-gray-600">{{ __('Delete lead') }}</span>
                 </div>
                 <div class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg">
                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">GET</span>
                     <code class="text-sm font-mono">{{ $baseUrl }}/leads/filters</code>
-                    <span class="text-sm text-gray-600">Filtros disponibles</span>
+                    <span class="text-sm text-gray-600">{{ __('Available filters') }}</span>
                 </div>
             </div>
         </div>
 
         <!-- Usage Example -->
         <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-lg font-medium text-gray-900 mb-4">Ejemplo de Uso</h3>
+            <h3 class="text-lg font-medium text-gray-900 mb-4">{{ __('Usage Example') }}</h3>
             <div class="bg-gray-900 rounded-lg p-4 overflow-x-auto">
                 <pre class="text-sm text-green-400"><code>curl -X GET "{{ $baseUrl }}/leads" \
   -H "Authorization: Bearer tu_token_aqui" \

@@ -11,10 +11,10 @@
                 </div>
                 <div>
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                        {{ __('Información Personal') }}
+                        {{ __('Personal Information') }}
                     </h3>
                     <p class="text-sm text-gray-500 dark:text-gray-400">
-                        {{ __('Actualiza tu avatar y información personal.') }}
+                        {{ __('Update your avatar and personal information.') }}
                     </p>
                 </div>
             </div>
@@ -31,7 +31,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                             </svg>
                         </x-slot>
-                        {{ __('Guardar Cambios') }}
+                        {{ __('Save Changes') }}
                     </x-filament::button>
                 </div>
             </form>

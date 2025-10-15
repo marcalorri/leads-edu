@@ -30,17 +30,17 @@ class ModalityResource extends Resource
 
     public static function getModelLabel(): string
     {
-        return 'Modalidad';
+        return __('Modality');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return 'Modalidades';
+        return __('Modalities');
     }
 
     public static function getNavigationGroup(): ?string
     {
-        return 'Catálogos Operativos';
+        return __('Operational Catalogs');
     }
 
     public static function getNavigationSort(): ?int

@@ -17,19 +17,24 @@ class NullReasonsTable
         return $table
             ->columns([
                 TextColumn::make('tenant.name')
-                    ->searchable(),
+                    ->searchable()
+                    ->label(__('Tenant')),
                 TextColumn::make('nombre')
-                    ->searchable(),
+                    ->searchable()
+                    ->label(__('Name')),
                 IconColumn::make('activo')
-                    ->boolean(),
+                    ->boolean()
+                    ->label(__('Active')),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label(__('Created')),
                 TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->label(__('Updated')),
             ])
             ->filters([
                 //

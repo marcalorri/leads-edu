@@ -14,7 +14,12 @@ class DailyLeadsChart extends ChartWidget
     
     protected static ?int $sort = 9;
     
-    protected ?string $heading = 'Leads Nuevos Diarios';
+    protected ?string $heading = null;
+    
+    public function getHeading(): ?string
+    {
+        return __('Daily New Leads');
+    }
     
     protected ?string $pollingInterval = '30s';
     
@@ -51,7 +56,7 @@ class DailyLeadsChart extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'label' => 'Nuevos Leads',
+                    'label' => __('New Leads'),
                     'data' => $values,
                     'borderColor' => '#3B82F6',
                     'backgroundColor' => 'rgba(59, 130, 246, 0.1)',

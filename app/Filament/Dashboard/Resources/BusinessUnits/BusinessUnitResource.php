@@ -21,9 +21,9 @@ class BusinessUnitResource extends Resource
 {
     protected static ?string $model = BusinessUnit::class;
 
-    protected static ?string $modelLabel = 'Unidad de Negocio';
+    protected static ?string $modelLabel = null;
     
-    protected static ?string $pluralModelLabel = 'Unidades de Negocio';
+    protected static ?string $pluralModelLabel = null;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBuildingOffice2;
 
@@ -33,7 +33,17 @@ class BusinessUnitResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return 'Catálogos Académicos';
+        return __('Academic Catalogs');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Business Unit');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Business Units');
     }
 
     public static function getNavigationSort(): ?int

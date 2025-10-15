@@ -49,8 +49,8 @@ class ConversionRateStatWidget extends BaseWidget
         $changeColor = $change >= 0 ? 'success' : 'danger';
         
         return [
-            Stat::make('Tasa de Conversión', number_format($conversionRate, 1) . '%')
-                ->description(($change >= 0 ? '+' : '') . number_format($change, 1) . '% vs período anterior')
+            Stat::make(__('Conversion Rate'), number_format($conversionRate, 1) . '%')
+                ->description(($change >= 0 ? '+' : '') . number_format($change, 1) . '% ' . __('vs previous period'))
                 ->descriptionIcon($changeIcon)
                 ->color('primary')
                 ->chart([10, 15, 12, 18, 20, 25, 22])

@@ -45,8 +45,8 @@ class WonLeadsStatWidget extends BaseWidget
         $changeColor = $change >= 0 ? 'success' : 'danger';
         
         return [
-            Stat::make('Leads Ganados', $count)
-                ->description(($change >= 0 ? '+' : '') . number_format($change, 1) . '% vs período anterior')
+            Stat::make(__('Won Leads'), $count)
+                ->description(($change >= 0 ? '+' : '') . number_format($change, 1) . '% ' . __('vs previous period'))
                 ->descriptionIcon($changeIcon)
                 ->color('success')
                 ->chart([2, 4, 6, 8, 10, 12, 15])

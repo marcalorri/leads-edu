@@ -24,7 +24,7 @@ class ContactResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserCircle;
     
-    protected static string|\UnitEnum|null $navigationGroup = 'CRM Principal';
+    protected static string|\UnitEnum|null $navigationGroup = null;
     
     protected static ?int $navigationSort = 2;
 
@@ -32,17 +32,17 @@ class ContactResource extends Resource
 
     public static function getModelLabel(): string
     {
-        return 'Contacto';
+        return __('Contact');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return 'Contactos';
+        return __('Contacts');
     }
 
     public static function getNavigationGroup(): ?string
     {
-        return 'CRM Principal';
+        return __('Main CRM');
     }
 
     public static function getNavigationSort(): ?int

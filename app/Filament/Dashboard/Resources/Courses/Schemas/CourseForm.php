@@ -26,30 +26,30 @@ class CourseForm
                                 return $rule->where('tenant_id', Filament::getTenant()->id);
                             }
                         )
-                        ->label('Código del Curso'),
+                        ->label(__('Course Code')),
                     TextInput::make('titulacion')
                         ->required()
                         ->maxLength(255)
                         ->columnSpanFull()
-                        ->label('Titulación'),
+                        ->label(__('Degree')),
                     Select::make('area_id')
                         ->relationship('area', 'nombre')
                         ->searchable()
                         ->preload()
                         ->required()
-                        ->label('Área'),
+                        ->label(__('Area')),
                     Select::make('unidad_negocio_id')
                         ->relationship('businessUnit', 'nombre')
                         ->searchable()
                         ->preload()
                         ->required()
-                        ->label('Unidad de Negocio'),
+                        ->label(__('Business Unit')),
                     Select::make('duracion_id')
                         ->relationship('duration', 'nombre')
                         ->searchable()
                         ->preload()
                         ->required()
-                        ->label('Duración'),
+                        ->label(__('Duration')),
                 ])
             ]);
     }

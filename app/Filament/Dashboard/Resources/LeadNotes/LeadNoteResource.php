@@ -30,17 +30,17 @@ class LeadNoteResource extends Resource
 
     public static function getModelLabel(): string
     {
-        return 'Nota de Lead';
+        return __('Lead Note');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return 'Notas de Leads';
+        return __('Lead Notes');
     }
 
     public static function getNavigationGroup(): ?string
     {
-        return 'CRM Principal';
+        return __('Main CRM');
     }
 
     public static function getNavigationSort(): ?int

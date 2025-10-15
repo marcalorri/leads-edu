@@ -40,18 +40,18 @@ class NewLeadsWidget extends BaseWidget
         $changeColor = $weeklyChange >= 0 ? 'success' : 'danger';
         
         return [
-            Stat::make('Nuevos Leads Hoy', $today)
-                ->description('Leads creados hoy')
+            Stat::make(__('New Leads Today'), $today)
+                ->description(__('Leads created today'))
                 ->descriptionIcon('heroicon-m-calendar-days')
                 ->color('info'),
                 
-            Stat::make('Nuevos Leads Esta Semana', $thisWeek)
-                ->description(($weeklyChange >= 0 ? '+' : '') . number_format($weeklyChange, 1) . '% vs semana anterior')
+            Stat::make(__('New Leads This Week'), $thisWeek)
+                ->description(($weeklyChange >= 0 ? '+' : '') . number_format($weeklyChange, 1) . '% ' . __('vs previous week'))
                 ->descriptionIcon($changeIcon)
                 ->color($changeColor),
                 
-            Stat::make('Nuevos Leads Este Mes', $thisMonth)
-                ->description('Total del mes actual')
+            Stat::make(__('New Leads This Month'), $thisMonth)
+                ->description(__('Current month total'))
                 ->descriptionIcon('heroicon-m-chart-bar')
                 ->color('primary'),
         ];

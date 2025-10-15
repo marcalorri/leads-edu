@@ -20,27 +20,27 @@ class NotesRelationManager extends RelationManager
 {
     protected static string $relationship = 'notes';
 
-    protected static ?string $title = 'Notas';
+    protected static ?string $title = 'Notes';
 
-    protected static ?string $modelLabel = 'Nota';
+    protected static ?string $modelLabel = 'Note';
 
-    protected static ?string $pluralModelLabel = 'Notas';
+    protected static ?string $pluralModelLabel = 'Notes';
 
     public function form(Schema $schema): Schema
     {
         return $schema
             ->schema([
                 Forms\Components\Textarea::make('contenido')
-                    ->label('Contenido de la nota')
+                    ->label(__('Note content'))
                     ->required()
                     ->rows(4)
                     ->columnSpanFull()
-                    ->placeholder('Escribe aquí el contenido de la nota...'),
+                    ->placeholder(__('Write the note content here...')),
 
                 Forms\Components\Toggle::make('es_importante')
-                    ->label('Marcar como importante')
+                    ->label(__('Mark as important'))
                     ->default(false)
-                    ->helperText('Las notas importantes aparecerán destacadas'),
+                    ->helperText(__('Important notes will appear highlighted')),
             ]);
     }
 
@@ -48,16 +48,16 @@ class NotesRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('contenido')
-            ->heading('Notas del Lead')
+            ->heading(__('Lead Notes'))
             ->columns([
                 Tables\Columns\TextColumn::make('contenido')
-                    ->label('Contenido')
+                    ->label(__('Content'))
                     ->searchable()
                     ->wrap()
                     ->limit(100),
 
                 Tables\Columns\IconColumn::make('es_importante')
-                    ->label('Importante')
+                    ->label(__('Important'))
                     ->boolean()
                     ->trueIcon('heroicon-o-star')
                     ->falseIcon('heroicon-o-star')
@@ -66,28 +66,28 @@ class NotesRelationManager extends RelationManager
                     ->alignCenter(),
 
                 Tables\Columns\TextColumn::make('usuario.name')
-                    ->label('Creado por')
+                    ->label(__('Created by'))
                     ->sortable()
                     ->toggleable(),
 
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Fecha')
+                    ->label(__('Date'))
                     ->dateTime('d/m/Y H:i')
                     ->sortable(),
             ])
             ->filters([
                 Tables\Filters\TernaryFilter::make('es_importante')
-                    ->label('Importante')
-                    ->placeholder('Todas las notas')
-                    ->trueLabel('Solo importantes')
-                    ->falseLabel('No importantes'),
+                    ->label(__('Important'))
+                    ->placeholder(__('All notes'))
+                    ->trueLabel(__('Important only'))
+                    ->falseLabel(__('Not important')),
             ])
             ->headerActions([
                 \Filament\Actions\CreateAction::make()
-                    ->label('Nueva Nota')
+                    ->label(__('New Note'))
                     ->icon('heroicon-o-plus')
                     ->modal()
-                    ->modalHeading('Crear Nueva Nota')
+                    ->modalHeading(__('Create New Note'))
                     ->modalWidth('lg')
                     ->mutateFormDataUsing(function (array $data): array {
                         $data['usuario_id'] = auth()->id();
@@ -98,13 +98,13 @@ class NotesRelationManager extends RelationManager
             ->actions([
                 \Filament\Actions\EditAction::make()
                     ->modal()
-                    ->modalHeading('Editar Nota')
+                    ->modalHeading(__('Edit Note'))
                     ->modalWidth('lg'),
                 \Filament\Actions\DeleteAction::make(),
             ])
             ->defaultSort('created_at', 'desc')
-            ->emptyStateHeading('Sin notas')
-            ->emptyStateDescription('Aún no hay notas registradas para este lead. Crea la primera nota para comenzar el seguimiento.')
+            ->emptyStateHeading(__('No notes'))
+            ->emptyStateDescription(__('There are no notes registered for this lead yet. Create the first note to start tracking.'))
             ->emptyStateIcon('heroicon-o-document-text');
     }
 

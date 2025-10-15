@@ -51,18 +51,18 @@ class ConversionRateWidget extends BaseWidget
         $conversionChange = $lastMonthConversionRate > 0 ? $conversionRate - $lastMonthConversionRate : 0;
         
         return [
-            Stat::make('Tasa de Conversión', number_format($conversionRate, 1) . '%')
-                ->description(($conversionChange >= 0 ? '+' : '') . number_format($conversionChange, 1) . '% vs mes anterior')
+            Stat::make(__('Conversion Rate'), number_format($conversionRate, 1) . '%')
+                ->description(($conversionChange >= 0 ? '+' : '') . number_format($conversionChange, 1) . '% ' . __('vs previous month'))
                 ->descriptionIcon($conversionChange >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
                 ->color($conversionChange >= 0 ? 'success' : 'danger'),
                 
-            Stat::make('Tasa de Pérdida', number_format($lossRate, 1) . '%')
-                ->description('Leads perdidos este mes')
+            Stat::make(__('Loss Rate'), number_format($lossRate, 1) . '%')
+                ->description(__('Lost leads this month'))
                 ->descriptionIcon('heroicon-m-x-circle')
                 ->color('danger'),
                 
-            Stat::make('Leads Activos', number_format($activeRate, 1) . '%')
-                ->description('En proceso de conversión')
+            Stat::make(__('Active Leads'), number_format($activeRate, 1) . '%')
+                ->description(__('In conversion process'))
                 ->descriptionIcon('heroicon-m-clock')
                 ->color('warning'),
         ];

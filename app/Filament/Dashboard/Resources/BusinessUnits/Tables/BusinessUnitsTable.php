@@ -21,35 +21,35 @@ class BusinessUnitsTable
                     ->searchable()
                     ->sortable()
                     ->badge()
-                    ->label('Código'),
+                    ->label(__('Code')),
                 TextColumn::make('nombre')
                     ->searchable()
                     ->sortable()
-                    ->label('Nombre'),
+                    ->label(__('Name')),
                 TextColumn::make('descripcion')
                     ->limit(50)
                     ->toggleable()
-                    ->label('Descripción'),
+                    ->label(__('Description')),
                 TextColumn::make('responsable')
                     ->searchable()
                     ->toggleable()
-                    ->label('Responsable'),
+                    ->label(__('Manager')),
                 IconColumn::make('activo')
                     ->boolean()
                     ->sortable()
-                    ->label('Activo'),
+                    ->label(__('Active')),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true)
-                    ->label('Creado'),
+                    ->label(__('Created')),
             ])
             ->filters([
                 TernaryFilter::make('activo')
-                    ->label('Estado')
-                    ->placeholder('Todos')
-                    ->trueLabel('Activos')
-                    ->falseLabel('Inactivos'),
+                    ->label(__('Status'))
+                    ->placeholder(__('All'))
+                    ->trueLabel(__('Active'))
+                    ->falseLabel(__('Inactive')),
             ])
             ->recordActions([
                 ViewAction::make(),

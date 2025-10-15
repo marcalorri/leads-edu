@@ -24,29 +24,29 @@ class LeadImporter extends Importer
         return [
             // CAMPOS OBLIGATORIOS
             ImportColumn::make('nombre')
-                ->label('Nombre')
+                ->label(__('First Name'))
                 ->requiredMapping()
                 ->rules(['required', 'max:100']),
             
             ImportColumn::make('apellidos')
-                ->label('Apellidos')
+                ->label(__('Last Name'))
                 ->requiredMapping()
                 ->rules(['required', 'max:150']),
             
             ImportColumn::make('telefono')
-                ->label('Teléfono')
+                ->label(__('Phone'))
                 ->requiredMapping()
                 ->rules(['required', 'max:20']),
             
             ImportColumn::make('email')
-                ->label('Email')
+                ->label(__('Email'))
                 ->requiredMapping()
                 ->rules(['required', 'email', 'max:255'])
-                ->example('usuario@ejemplo.com'),
+                ->example('user@example.com'),
             
             // RELACIONES IMPORTANTES (OPCIONALES POR AHORA)
             ImportColumn::make('provincia')
-                ->label('Provincia')
+                ->label(__('Province'))
                 ->rules(['nullable'])
                 ->relationship('province', resolveUsing: function (?string $state): ?Province {
                     if (empty($state)) return null;
@@ -58,7 +58,7 @@ class LeadImporter extends Importer
                 ->example('Madrid, Barcelona, Valencia'),
             
             ImportColumn::make('curso')
-                ->label('Curso (Código o Título)')
+                ->label(__('Course (Code or Title)'))
                 ->rules(['nullable'])
                 ->relationship('course', resolveUsing: function (?string $state): ?Course {
                     if (empty($state)) return null;
@@ -87,10 +87,10 @@ class LeadImporter extends Importer
                         ->where('titulacion', 'like', "%{$state}%")
                         ->first();
                 })
-                ->example('PROG001, Programación Web'),
+                ->example('PROG001, Web Programming'),
             
             ImportColumn::make('sede')
-                ->label('Sede')
+                ->label(__('Campus'))
                 ->rules(['nullable'])
                 ->relationship('campus', resolveUsing: function (?string $state): ?Campus {
                     if (empty($state)) return null;
@@ -103,12 +103,12 @@ class LeadImporter extends Importer
             
             // CAMPOS OPCIONALES PERO IMPORTANTES
             ImportColumn::make('pais')
-                ->label('País')
+                ->label(__('Country'))
                 ->rules(['nullable', 'max:100'])
-                ->example('España'),
+                ->example('Spain'),
             
             ImportColumn::make('modalidad')
-                ->label('Modalidad')
+                ->label(__('Modality'))
                 ->relationship('modality', resolveUsing: function (?string $state): ?Modality {
                     if (empty($state)) return null;
                     $tenantId = filament()->getTenant()?->id ?? session('tenant_id', 1);
@@ -116,26 +116,26 @@ class LeadImporter extends Importer
                         ->where('nombre', 'like', "%{$state}%")
                         ->first();
                 })
-                ->example('Presencial, Online, Híbrida'),
+                ->example('In-person, Online, Hybrid'),
             
             ImportColumn::make('convocatoria')
-                ->label('Convocatoria')
+                ->label(__('Call'))
                 ->rules(['nullable', 'max:100'])
                 ->example('2024-01, Enero 2024'),
             
             ImportColumn::make('horario')
-                ->label('Horario')
+                ->label(__('Schedule'))
                 ->rules(['nullable', 'max:100'])
-                ->example('Mañana, Tarde, Noche'),
+                ->example('Morning, Afternoon, Evening'),
             
             // ESTADO Y SEGUIMIENTO
             ImportColumn::make('estado')
-                ->label('Estado')
+                ->label(__('Status'))
                 ->rules(['nullable', 'in:abierto,ganado,perdido'])
                 ->example('abierto, ganado, perdido'),
             
             ImportColumn::make('asesor')
-                ->label('Asesor (Email o Nombre)')
+                ->label(__('Advisor (Email or Name)'))
                 ->relationship('asesor', resolveUsing: function (?string $state): ?\App\Models\User {
                     if (empty($state)) return null;
                     $tenantId = filament()->getTenant()?->id ?? session('tenant_id', 1);
@@ -154,10 +154,10 @@ class LeadImporter extends Importer
                         $query->where('tenant_id', $tenantId);
                     })->where('name', 'like', "%{$state}%")->first();
                 })
-                ->example('asesor@empresa.com, Juan Pérez'),
+                ->example('advisor@company.com, John Doe'),
             
             ImportColumn::make('fase_venta')
-                ->label('Fase de Venta')
+                ->label(__('Sales Phase'))
                 ->relationship('salesPhase', resolveUsing: function (?string $state): ?SalesPhase {
                     if (empty($state)) return null;
                     $tenantId = filament()->getTenant()?->id ?? session('tenant_id', 1);
@@ -165,10 +165,10 @@ class LeadImporter extends Importer
                         ->where('nombre', 'like', "%{$state}%")
                         ->first();
                 })
-                ->example('Contacto Inicial, Interesado, Propuesta'),
+                ->example('Initial Contact, Interested, Proposal'),
             
             ImportColumn::make('origen')
-                ->label('Origen')
+                ->label(__('Origin'))
                 ->relationship('origin', resolveUsing: function (?string $state): ?Origin {
                     if (empty($state)) return null;
                     $tenantId = filament()->getTenant()?->id ?? session('tenant_id', 1);
@@ -176,10 +176,10 @@ class LeadImporter extends Importer
                         ->where('nombre', 'like', "%{$state}%")
                         ->first();
                 })
-                ->example('Web, Teléfono, Referido'),
+                ->example('Web, Phone, Referral'),
             
             ImportColumn::make('motivo_nulo')
-                ->label('Motivo Nulo (solo si estado=perdido)')
+                ->label(__('Null Reason (only if status=lost)'))
                 ->relationship('nullReason', resolveUsing: function (?string $state): ?\App\Models\NullReason {
                     if (empty($state)) return null;
                     $tenantId = filament()->getTenant()?->id ?? session('tenant_id', 1);
@@ -187,7 +187,7 @@ class LeadImporter extends Importer
                         ->where('nombre', 'like', "%{$state}%")
                         ->first();
                 })
-                ->example('No interesado, Precio alto'),
+                ->example('Not interested, High price'),
             
             // CAMPOS UTM PARA TRACKING
             ImportColumn::make('utm_source')
@@ -275,10 +275,10 @@ class LeadImporter extends Importer
 
     public static function getCompletedNotificationBody(Import $import): string
     {
-        $body = 'La importación de leads ha sido completada. ' . number_format($import->successful_rows) . ' ' . str('lead')->plural($import->successful_rows) . ' importados.';
+        $body = __('Lead import completed.') . ' ' . number_format($import->successful_rows) . ' ' . str('lead')->plural($import->successful_rows) . ' ' . __('imported') . '.';
 
         if ($failedRowsCount = $import->getFailedRowsCount()) {
-            $body .= ' ' . number_format($failedRowsCount) . ' ' . str('fila')->plural($failedRowsCount) . ' fallaron al importar.';
+            $body .= ' ' . number_format($failedRowsCount) . ' ' . str('row')->plural($failedRowsCount) . ' ' . __('failed to import') . '.';
         }
 
         return $body;

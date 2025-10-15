@@ -12,26 +12,26 @@ class LeadLimitService
     ) {}
 
     /**
-     * Obtener el límite máximo de leads para un tenant
+     * Get the maximum lead limit for a tenant
      */
     public function getMaxLeads(Tenant $tenant): int
     {
         $metadata = $this->subscriptionService
             ->getTenantSubscriptionProductMetadata($tenant);
         
-        // Si no hay metadata o no hay max_leads, retornar límite por defecto
+        // If there's no metadata or no max_leads, return default limit
         if (empty($metadata) || !isset($metadata['max_leads'])) {
-            return 50; // Límite por defecto
+            return 50; // Default limit
         }
         
         $maxLeads = (int) $metadata['max_leads'];
         
-        // -1 significa ilimitado
+        // -1 means unlimited
         return $maxLeads === -1 ? PHP_INT_MAX : $maxLeads;
     }
 
     /**
-     * Obtener el número actual de leads del tenant
+     * Get the current number of leads for the tenant
      */
     public function getCurrentLeadsCount(Tenant $tenant): int
     {
@@ -41,7 +41,7 @@ class LeadLimitService
     }
 
     /**
-     * Verificar si el tenant puede crear más leads
+     * Check if the tenant can create more leads
      */
     public function canCreateLead(Tenant $tenant): bool
     {
@@ -52,14 +52,14 @@ class LeadLimitService
     }
 
     /**
-     * Obtener leads restantes
+     * Get remaining leads
      */
     public function getRemainingLeads(Tenant $tenant): int
     {
         $maxLeads = $this->getMaxLeads($tenant);
         
         if ($maxLeads === PHP_INT_MAX) {
-            return -1; // Ilimitado
+            return -1; // Unlimited
         }
         
         $currentCount = $this->getCurrentLeadsCount($tenant);
@@ -67,14 +67,14 @@ class LeadLimitService
     }
 
     /**
-     * Obtener porcentaje de uso
+     * Get usage percentage
      */
     public function getUsagePercentage(Tenant $tenant): float
     {
         $maxLeads = $this->getMaxLeads($tenant);
         
         if ($maxLeads === PHP_INT_MAX) {
-            return 0; // Ilimitado
+            return 0; // Unlimited
         }
         
         $currentCount = $this->getCurrentLeadsCount($tenant);
@@ -87,7 +87,7 @@ class LeadLimitService
     }
 
     /**
-     * Verificar si debe mostrar advertencia
+     * Check if warning should be shown
      */
     public function shouldShowWarning(Tenant $tenant): bool
     {
@@ -98,7 +98,7 @@ class LeadLimitService
     }
 
     /**
-     * Verificar si es crítico (>90%)
+     * Check if it's critical (>90%)
      */
     public function isCritical(Tenant $tenant): bool
     {

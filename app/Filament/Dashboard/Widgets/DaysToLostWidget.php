@@ -40,8 +40,8 @@ class DaysToLostWidget extends BaseWidget
         
         if ($lostLeads->isEmpty()) {
             return [
-                Stat::make('Días hasta Perdido', 'N/A')
-                    ->description('No hay leads perdidos en este período')
+                Stat::make(__('Days to Lost'), 'N/A')
+                    ->description(__('No lost leads in this period'))
                     ->descriptionIcon('heroicon-m-clock')
                     ->color('gray')
             ];
@@ -106,16 +106,16 @@ class DaysToLostWidget extends BaseWidget
         // Para días hasta perdido, más días es mejor (más tiempo de oportunidad)
         $changeColor = $change >= 0 ? 'success' : 'danger';
         
-        $description = $change == 0 ? 'Sin cambios vs período anterior' : 
-                      ($change > 0 ? '+' : '') . number_format($change, 1) . ' días vs período anterior';
+        $description = $change == 0 ? __('No changes vs previous period') : 
+                      ($change > 0 ? '+' : '') . number_format($change, 1) . ' ' . __('days vs previous period');
         
         // Agregar indicador si estamos usando updated_at como fallback
         if ($useUpdatedAt) {
-            $description = 'Aprox. ' . $description . ' (usando fecha de actualización)';
+            $description = __('Approx.') . ' ' . $description . ' (' . __('using update date') . ')';
         }
         
         return [
-            Stat::make('Días hasta Perdido', number_format($averageDays, 1) . ' días')
+            Stat::make(__('Days to Lost'), number_format($averageDays, 1) . ' ' . __('days'))
                 ->description($description)
                 ->descriptionIcon($changeIcon)
                 ->color('warning')

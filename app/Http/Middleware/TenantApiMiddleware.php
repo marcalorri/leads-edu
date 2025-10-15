@@ -24,7 +24,7 @@ class TenantApiMiddleware
             return response()->json([
                 'error' => [
                     'code' => 'UNAUTHENTICATED',
-                    'message' => 'Token de autenticación requerido',
+                    'message' => __('Authentication token required'),
                 ]
             ], 401);
         }
@@ -36,7 +36,7 @@ class TenantApiMiddleware
             return response()->json([
                 'error' => [
                     'code' => 'INVALID_TOKEN',
-                    'message' => 'Token de acceso inválido',
+                    'message' => __('Invalid access token'),
                 ]
             ], 401);
         }
@@ -46,7 +46,7 @@ class TenantApiMiddleware
             return response()->json([
                 'error' => [
                     'code' => 'TENANT_REQUIRED',
-                    'message' => 'El token debe estar asociado a un tenant',
+                    'message' => __('Token must be associated with a tenant'),
                 ]
             ], 403);
         }
@@ -58,7 +58,7 @@ class TenantApiMiddleware
             return response()->json([
                 'error' => [
                     'code' => 'TENANT_NOT_FOUND',
-                    'message' => 'Tenant no encontrado',
+                    'message' => __('Tenant not found'),
                 ]
             ], 404);
         }
@@ -68,7 +68,7 @@ class TenantApiMiddleware
             return response()->json([
                 'error' => [
                     'code' => 'TENANT_ACCESS_DENIED',
-                    'message' => 'No tienes acceso a este tenant',
+                    'message' => __('You do not have access to this tenant'),
                 ]
             ], 403);
         }

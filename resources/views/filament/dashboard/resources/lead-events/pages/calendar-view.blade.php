@@ -1,7 +1,7 @@
 <x-filament-panels::page>
     <div class="space-y-6">
         <div class="text-sm text-gray-600 dark:text-gray-400">
-            Vista de calendario completa de todos los eventos. Haz clic en cualquier evento para ir al lead relacionado.
+            {{ __('Complete calendar view of all events. Click on any event to go to the related lead.') }}
         </div>
         
         {{ $this->getHeaderWidgetsForm() }}

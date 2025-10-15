@@ -17,35 +17,35 @@ class LeadForm
             ->columns(4)
             ->components([
                 // Área principal con tabs (3/4 del ancho)
-                Tabs::make('Lead Information')
+                Tabs::make(__('Lead Information'))
                     ->columnSpan(3)
                     ->tabs([
-                        Tabs\Tab::make('Información Personal')
+                        Tabs\Tab::make(__('Personal Information'))
                             ->icon('heroicon-o-user')
                             ->schema([
-                                Section::make('Datos Personales')
+                                Section::make(__('Personal Data'))
                                     ->schema([
                                         TextInput::make('nombre')
                                             ->required()
                                             ->maxLength(100)
-                                            ->label('Nombre'),
+                                            ->label(__('First Name')),
                                         TextInput::make('apellidos')
                                             ->required()
                                             ->maxLength(150)
-                                            ->label('Apellidos'),
+                                            ->label(__('Last Name')),
                                         TextInput::make('telefono')
                                             ->tel()
                                             ->required()
                                             ->maxLength(20)
-                                            ->label('Teléfono'),
+                                            ->label(__('Phone')),
                                         TextInput::make('email')
                                             ->email()
                                             ->required()
                                             ->maxLength(255)
-                                            ->label('Email'),
+                                            ->label(__('Email')),
                                         TextInput::make('pais')
                                             ->maxLength(100)
-                                            ->label('País'),
+                                            ->label(__('Country')),
                                         Select::make('provincia_id')
                                             ->relationship('province', 'nombre')
                                             ->searchable()
@@ -54,27 +54,27 @@ class LeadForm
                                                 TextInput::make('codigo')
                                                     ->required()
                                                     ->maxLength(10)
-                                                    ->label('Código'),
+                                                    ->label(__('Code')),
                                                 TextInput::make('nombre')
                                                     ->required()
                                                     ->maxLength(100)
-                                                    ->label('Nombre'),
+                                                    ->label(__('Name')),
                                                 TextInput::make('codigo_ine')
                                                     ->maxLength(5)
-                                                    ->label('Código INE'),
+                                                    ->label(__('INE Code')),
                                                 TextInput::make('comunidad_autonoma')
                                                     ->maxLength(100)
-                                                    ->label('Comunidad Autónoma'),
+                                                    ->label(__('Autonomous Community')),
                                             ])
                                             ->createOptionUsing(function ($data) {
                                                 $data['tenant_id'] = filament()->getTenant()->id;
                                                 $data['activo'] = true;
                                                 return \App\Models\Province::create($data)->id;
                                             })
-                                            ->label('Provincia'),
+                                            ->label(__('Province')),
                                     ])->columns(3),
                                 
-                                Section::make('Información Académica')
+                                Section::make(__('Academic Information'))
                                     ->schema([
                                         Select::make('curso_id')
                                             ->relationship('course', 'titulacion')
@@ -84,35 +84,35 @@ class LeadForm
                                                 TextInput::make('codigo_curso')
                                                     ->required()
                                                     ->maxLength(50)
-                                                    ->label('Código del Curso'),
+                                                    ->label(__('Course Code')),
                                                 TextInput::make('titulacion')
                                                     ->required()
                                                     ->maxLength(255)
-                                                    ->label('Titulación'),
+                                                    ->label(__('Degree')),
                                                 Select::make('area_id')
                                                     ->relationship('area', 'nombre')
                                                     ->searchable()
                                                     ->preload()
                                                     ->required()
-                                                    ->label('Área'),
+                                                    ->label(__('Area')),
                                                 Select::make('unidad_negocio_id')
                                                     ->relationship('businessUnit', 'nombre')
                                                     ->searchable()
                                                     ->preload()
                                                     ->required()
-                                                    ->label('Unidad de Negocio'),
+                                                    ->label(__('Business Unit')),
                                                 Select::make('duracion_id')
                                                     ->relationship('duration', 'nombre')
                                                     ->searchable()
                                                     ->preload()
                                                     ->required()
-                                                    ->label('Duración'),
+                                                    ->label(__('Duration')),
                                             ])
                                             ->createOptionUsing(function ($data) {
                                                 $data['tenant_id'] = filament()->getTenant()->id;
                                                 return \App\Models\Course::create($data)->id;
                                             })
-                                            ->label('Curso')
+                                            ->label(__('Course'))
                                             ->columnSpanFull(),
                                         Select::make('sede_id')
                                             ->relationship('campus', 'nombre')
@@ -122,25 +122,25 @@ class LeadForm
                                                 TextInput::make('codigo')
                                                     ->required()
                                                     ->maxLength(20)
-                                                    ->label('Código'),
+                                                    ->label(__('Code')),
                                                 TextInput::make('nombre')
                                                     ->required()
                                                     ->maxLength(100)
-                                                    ->label('Nombre'),
+                                                    ->label(__('Name')),
                                                 TextInput::make('ciudad')
                                                     ->maxLength(100)
-                                                    ->label('Ciudad'),
+                                                    ->label(__('City')),
                                                 TextInput::make('telefono')
                                                     ->tel()
                                                     ->maxLength(20)
-                                                    ->label('Teléfono'),
+                                                    ->label(__('Phone')),
                                             ])
                                             ->createOptionUsing(function ($data) {
                                                 $data['tenant_id'] = filament()->getTenant()->id;
                                                 $data['activo'] = true;
                                                 return \App\Models\Campus::create($data)->id;
                                             })
-                                            ->label('Sede'),
+                                            ->label(__('Campus')),
                                         Select::make('modalidad_id')
                                             ->relationship('modality', 'nombre')
                                             ->searchable()
@@ -149,52 +149,52 @@ class LeadForm
                                                 TextInput::make('codigo')
                                                     ->required()
                                                     ->maxLength(10)
-                                                    ->label('Código'),
+                                                    ->label(__('Code')),
                                                 TextInput::make('nombre')
                                                     ->required()
                                                     ->maxLength(50)
-                                                    ->label('Nombre'),
+                                                    ->label(__('Name')),
                                                 Toggle::make('requiere_sede')
                                                     ->default(true)
-                                                    ->label('Requiere Sede'),
+                                                    ->label(__('Requires Campus')),
                                             ])
                                             ->createOptionUsing(function ($data) {
                                                 $data['tenant_id'] = filament()->getTenant()->id;
                                                 $data['activo'] = true;
                                                 return \App\Models\Modality::create($data)->id;
                                             })
-                                            ->label('Modalidad'),
+                                            ->label(__('Modality')),
                                         TextInput::make('convocatoria')
                                             ->maxLength(100)
-                                            ->label('Convocatoria'),
+                                            ->label(__('Call')),
                                         TextInput::make('horario')
                                             ->maxLength(100)
-                                            ->label('Horario'),
+                                            ->label(__('Schedule')),
                                     ])->columns(2),
                             ]),
                         
-                        Tabs\Tab::make('Contacto')
+                        Tabs\Tab::make(__('Contact'))
                             ->icon('heroicon-o-phone')
                             ->schema([
-                                Section::make('Contacto Asociado')
+                                Section::make(__('Associated Contact'))
                                     ->schema([
                                         Select::make('contact_id')
                                             ->relationship('contact', 'nombre_completo')
                                             ->searchable()
                                             ->preload()
-                                            ->label('Contacto')
-                                            ->placeholder('Seleccionar contacto')
+                                            ->label(__('Contact'))
+                                            ->placeholder(__('Select contact'))
                                             ->createOptionForm([
                                                 TextInput::make('nombre_completo')
                                                     ->required()
-                                                    ->label('Nombre Completo'),
+                                                    ->label(__('Full Name')),
                                                 TextInput::make('telefono_principal')
                                                     ->required()
-                                                    ->label('Teléfono Principal'),
+                                                    ->label(__('Main Phone')),
                                                 TextInput::make('email_principal')
                                                     ->email()
                                                     ->required()
-                                                    ->label('Email Principal'),
+                                                    ->label(__('Main Email')),
                                             ])
                                             ->createOptionUsing(function (array $data) {
                                                 $data['tenant_id'] = filament()->getTenant()->id;
@@ -203,16 +203,16 @@ class LeadForm
                                     ])->columns(1),
                             ]),
                         
-                        Tabs\Tab::make('Origen y Tracking')
+                        Tabs\Tab::make(__('Origin and Tracking'))
                             ->icon('heroicon-o-chart-pie')
                             ->schema([
-                                Section::make('Origen del Lead')
+                                Section::make(__('Lead Origin'))
                                     ->schema([
                                         Select::make('origen_id')
                                             ->relationship('origin', 'nombre')
                                             ->searchable()
                                             ->preload()
-                                            ->label('Origen'),
+                                            ->label(__('Origin')),
                                         TextInput::make('utm_source')
                                             ->maxLength(255)
                                             ->label('UTM Source'),
@@ -227,14 +227,14 @@ class LeadForm
                     ]),
                 
                 // Columna lateral fija (1/4 del ancho)
-                Section::make('Estado y Seguimiento')
+                Section::make(__('Status and Follow-up'))
                     ->columnSpan(1)
                     ->schema([
                         Select::make('estado')
                             ->options([
-                                'abierto' => 'Abierto',
-                                'ganado' => 'Ganado',
-                                'perdido' => 'Perdido',
+                                'abierto' => __('Open'),
+                                'ganado' => __('Won'),
+                                'perdido' => __('Lost'),
                             ])
                             ->required()
                             ->default('abierto')
@@ -246,34 +246,34 @@ class LeadForm
                                     $set('fecha_ganado', now()->format('Y-m-d\TH:i'));
                                 }
                             })
-                            ->label('Estado'),
+                            ->label(__('Status')),
                         Select::make('fase_venta_id')
                             ->relationship('salesPhase', 'nombre')
                             ->searchable()
                             ->preload()
-                            ->label('Fase de Venta'),
+                            ->label(__('Sales Phase')),
                         Select::make('asesor_id')
                             ->relationship('asesor', 'name')
                             ->searchable()
                             ->preload()
-                            ->label('Asesor Asignado'),
+                            ->label(__('Assigned Advisor')),
                         Select::make('motivo_nulo_id')
                             ->relationship('nullReason', 'nombre')
                             ->searchable()
                             ->preload()
                             ->required(fn ($get) => $get('estado') === 'perdido')
-                            ->label('Motivo Nulo')
-                            ->helperText('Obligatorio cuando el estado es "Perdido"')
+                            ->label(__('Null Reason'))
+                            ->helperText(__('Required when status is "Lost"'))
                             ->visible(fn ($get) => $get('estado') === 'perdido'),
                         TextInput::make('fecha_ganado')
                             ->type('datetime-local')
-                            ->label('Fecha Ganado')
-                            ->helperText('Se establece automáticamente al marcar como ganado')
+                            ->label(__('Won Date'))
+                            ->helperText(__('Set automatically when marked as won'))
                             ->visible(fn ($get) => $get('estado') === 'ganado'),
                         TextInput::make('fecha_perdido')
                             ->type('datetime-local')
-                            ->label('Fecha Perdido')
-                            ->helperText('Se establece automáticamente al marcar como perdido')
+                            ->label(__('Lost Date'))
+                            ->helperText(__('Set automatically when marked as lost'))
                             ->visible(fn ($get) => $get('estado') === 'perdido'),
                     ])->columns(1),
             ]);

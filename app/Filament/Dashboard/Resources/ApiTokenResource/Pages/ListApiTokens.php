@@ -17,7 +17,7 @@ class ListApiTokens extends ListRecords
     {
         return [
             Actions\CreateAction::make()
-                ->label('Crear Token')
+                ->label(__('Create Token'))
                 ->url(route('filament.dashboard.resources.api-tokens.create', ['tenant' => filament()->getTenant()])),
         ];
     }
@@ -28,23 +28,23 @@ class ListApiTokens extends ListRecords
             ->query(ApiToken::query()->where('tenant_id', filament()->getTenant()->id))
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                    ->label('Nombre')
+                    ->label(__('Name'))
                     ->searchable(),
                 
                 Tables\Columns\TextColumn::make('token')
-                    ->label('Token')
+                    ->label(__('Token'))
                     ->formatStateUsing(fn ($state) => substr($state, 0, 20) . '...')
                     ->copyable()
-                    ->copyMessage('Token copiado al portapapeles')
-                    ->tooltip('Haz clic para copiar el token completo'),
+                    ->copyMessage(__('Token copied to clipboard'))
+                    ->tooltip(__('Click to copy full token')),
                 
                 Tables\Columns\TextColumn::make('description')
-                    ->label('Descripción')
+                    ->label(__('Description'))
                     ->limit(50)
-                    ->placeholder('Sin descripción'),
+                    ->placeholder(__('No description')),
                 
                 Tables\Columns\IconColumn::make('is_active')
-                    ->label('Estado')
+                    ->label(__('Status'))
                     ->boolean()
                     ->getStateUsing(fn (ApiToken $record): bool => $record->isActive())
                     ->trueIcon('heroicon-o-check-circle')
@@ -53,13 +53,13 @@ class ListApiTokens extends ListRecords
                     ->falseColor('danger'),
                 
                 Tables\Columns\TextColumn::make('last_used_at')
-                    ->label('Último uso')
+                    ->label(__('Last used'))
                     ->dateTime('d/m/Y H:i')
-                    ->placeholder('Nunca usado')
+                    ->placeholder(__('Never used'))
                     ->sortable(),
                 
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Creado')
+                    ->label(__('Created'))
                     ->dateTime('d/m/Y H:i')
                     ->sortable(),
             ])
@@ -78,53 +78,53 @@ class ListApiTokens extends ListRecords
         return view('filament.dashboard.resources.api-token-resource.pages.api-documentation', [
             'baseUrl' => url('/api/v1'),
             'endpointGroups' => [
-                'Gestión de Leads' => [
-                    ['method' => 'GET', 'path' => '/leads', 'description' => 'Listar leads con filtros y paginación', 'scope' => 'leads:read'],
-                    ['method' => 'POST', 'path' => '/leads', 'description' => 'Crear un nuevo lead', 'scope' => 'leads:write'],
-                    ['method' => 'GET', 'path' => '/leads/{id}', 'description' => 'Obtener un lead específico', 'scope' => 'leads:read'],
-                    ['method' => 'PUT', 'path' => '/leads/{id}', 'description' => 'Actualizar un lead existente', 'scope' => 'leads:write'],
-                    ['method' => 'DELETE', 'path' => '/leads/{id}', 'description' => 'Eliminar un lead', 'scope' => 'leads:delete'],
-                    ['method' => 'GET', 'path' => '/leads/filters', 'description' => 'Obtener filtros disponibles', 'scope' => 'leads:read'],
+                __('Lead Management') => [
+                    ['method' => 'GET', 'path' => '/leads', 'description' => __('List leads with filters and pagination'), 'scope' => 'leads:read'],
+                    ['method' => 'POST', 'path' => '/leads', 'description' => __('Create a new lead'), 'scope' => 'leads:write'],
+                    ['method' => 'GET', 'path' => '/leads/{id}', 'description' => __('Get a specific lead'), 'scope' => 'leads:read'],
+                    ['method' => 'PUT', 'path' => '/leads/{id}', 'description' => __('Update an existing lead'), 'scope' => 'leads:write'],
+                    ['method' => 'DELETE', 'path' => '/leads/{id}', 'description' => __('Delete a lead'), 'scope' => 'leads:delete'],
+                    ['method' => 'GET', 'path' => '/leads/filters', 'description' => __('Get available filters'), 'scope' => 'leads:read'],
                 ],
-                'Catálogos - Lectura' => [
-                    ['method' => 'GET', 'path' => '/catalogs/courses', 'description' => 'Listar cursos del tenant', 'scope' => 'leads:read'],
-                    ['method' => 'GET', 'path' => '/catalogs/asesores', 'description' => 'Listar asesores del tenant', 'scope' => 'leads:read'],
-                    ['method' => 'GET', 'path' => '/catalogs/campuses', 'description' => 'Listar sedes activas', 'scope' => 'leads:read'],
-                    ['method' => 'GET', 'path' => '/catalogs/modalities', 'description' => 'Listar modalidades activas', 'scope' => 'leads:read'],
-                    ['method' => 'GET', 'path' => '/catalogs/provinces', 'description' => 'Listar provincias activas', 'scope' => 'leads:read'],
-                    ['method' => 'GET', 'path' => '/catalogs/sales-phases', 'description' => 'Listar fases de venta', 'scope' => 'leads:read'],
-                    ['method' => 'GET', 'path' => '/catalogs/origins', 'description' => 'Listar orígenes de leads', 'scope' => 'leads:read'],
-                    ['method' => 'GET', 'path' => '/catalogs/estados', 'description' => 'Listar estados disponibles', 'scope' => 'leads:read'],
+                __('Catalogs - Read') => [
+                    ['method' => 'GET', 'path' => '/catalogs/courses', 'description' => __('List tenant courses'), 'scope' => 'leads:read'],
+                    ['method' => 'GET', 'path' => '/catalogs/asesores', 'description' => __('List tenant advisors'), 'scope' => 'leads:read'],
+                    ['method' => 'GET', 'path' => '/catalogs/campuses', 'description' => __('List active campuses'), 'scope' => 'leads:read'],
+                    ['method' => 'GET', 'path' => '/catalogs/modalities', 'description' => __('List active modalities'), 'scope' => 'leads:read'],
+                    ['method' => 'GET', 'path' => '/catalogs/provinces', 'description' => __('List active provinces'), 'scope' => 'leads:read'],
+                    ['method' => 'GET', 'path' => '/catalogs/sales-phases', 'description' => __('List sales phases'), 'scope' => 'leads:read'],
+                    ['method' => 'GET', 'path' => '/catalogs/origins', 'description' => __('List lead origins'), 'scope' => 'leads:read'],
+                    ['method' => 'GET', 'path' => '/catalogs/estados', 'description' => __('List available statuses'), 'scope' => 'leads:read'],
                 ],
-                'Catálogos - Gestión (Admin)' => [
-                    ['method' => 'POST', 'path' => '/catalogs/courses', 'description' => 'Crear un nuevo curso', 'scope' => 'leads:admin'],
-                    ['method' => 'PUT', 'path' => '/catalogs/courses/{id}', 'description' => 'Actualizar un curso', 'scope' => 'leads:admin'],
-                    ['method' => 'POST', 'path' => '/catalogs/campuses', 'description' => 'Crear una nueva sede', 'scope' => 'leads:admin'],
-                    ['method' => 'PUT', 'path' => '/catalogs/campuses/{id}', 'description' => 'Actualizar una sede', 'scope' => 'leads:admin'],
-                    ['method' => 'POST', 'path' => '/catalogs/modalities', 'description' => 'Crear una nueva modalidad', 'scope' => 'leads:admin'],
-                    ['method' => 'PUT', 'path' => '/catalogs/modalities/{id}', 'description' => 'Actualizar una modalidad', 'scope' => 'leads:admin'],
-                    ['method' => 'POST', 'path' => '/catalogs/provinces', 'description' => 'Crear una nueva provincia', 'scope' => 'leads:admin'],
-                    ['method' => 'PUT', 'path' => '/catalogs/provinces/{id}', 'description' => 'Actualizar una provincia', 'scope' => 'leads:admin'],
-                    ['method' => 'POST', 'path' => '/catalogs/sales-phases', 'description' => 'Crear una fase de venta', 'scope' => 'leads:admin'],
-                    ['method' => 'PUT', 'path' => '/catalogs/sales-phases/{id}', 'description' => 'Actualizar una fase de venta', 'scope' => 'leads:admin'],
-                    ['method' => 'POST', 'path' => '/catalogs/origins', 'description' => 'Crear un nuevo origen', 'scope' => 'leads:admin'],
-                    ['method' => 'PUT', 'path' => '/catalogs/origins/{id}', 'description' => 'Actualizar un origen', 'scope' => 'leads:admin'],
+                __('Catalogs - Management (Admin)') => [
+                    ['method' => 'POST', 'path' => '/catalogs/courses', 'description' => __('Create a new course'), 'scope' => 'leads:admin'],
+                    ['method' => 'PUT', 'path' => '/catalogs/courses/{id}', 'description' => __('Update a course'), 'scope' => 'leads:admin'],
+                    ['method' => 'POST', 'path' => '/catalogs/campuses', 'description' => __('Create a new campus'), 'scope' => 'leads:admin'],
+                    ['method' => 'PUT', 'path' => '/catalogs/campuses/{id}', 'description' => __('Update a campus'), 'scope' => 'leads:admin'],
+                    ['method' => 'POST', 'path' => '/catalogs/modalities', 'description' => __('Create a new modality'), 'scope' => 'leads:admin'],
+                    ['method' => 'PUT', 'path' => '/catalogs/modalities/{id}', 'description' => __('Update a modality'), 'scope' => 'leads:admin'],
+                    ['method' => 'POST', 'path' => '/catalogs/provinces', 'description' => __('Create a new province'), 'scope' => 'leads:admin'],
+                    ['method' => 'PUT', 'path' => '/catalogs/provinces/{id}', 'description' => __('Update a province'), 'scope' => 'leads:admin'],
+                    ['method' => 'POST', 'path' => '/catalogs/sales-phases', 'description' => __('Create a sales phase'), 'scope' => 'leads:admin'],
+                    ['method' => 'PUT', 'path' => '/catalogs/sales-phases/{id}', 'description' => __('Update a sales phase'), 'scope' => 'leads:admin'],
+                    ['method' => 'POST', 'path' => '/catalogs/origins', 'description' => __('Create a new origin'), 'scope' => 'leads:admin'],
+                    ['method' => 'PUT', 'path' => '/catalogs/origins/{id}', 'description' => __('Update an origin'), 'scope' => 'leads:admin'],
                 ],
             ],
             'scopes' => [
-                'leads:read' => 'Ver leads y catálogos del tenant',
-                'leads:write' => 'Crear y modificar leads',
-                'leads:delete' => 'Eliminar leads',
-                'leads:admin' => 'Acceso completo (incluye gestión de catálogos)',
+                'leads:read' => __('View leads and tenant catalogs'),
+                'leads:write' => __('Create and modify leads'),
+                'leads:delete' => __('Delete leads'),
+                'leads:admin' => __('Full access (includes catalog management)'),
             ],
             'examples' => [
                 'authentication' => [
-                    'title' => 'Autenticación',
-                    'description' => 'Todas las peticiones requieren un Bearer Token en el header Authorization',
+                    'title' => __('Authentication'),
+                    'description' => __('All requests require a Bearer Token in the Authorization header'),
                     'code' => 'Authorization: Bearer {tu_token_api}',
                 ],
                 'create_lead' => [
-                    'title' => 'Ejemplo: Crear Lead',
+                    'title' => __('Example: Create Lead'),
                     'method' => 'POST',
                     'url' => url('/api/v1/leads'),
                     'body' => [
@@ -139,12 +139,12 @@ class ListApiTokens extends ListRecords
                     ],
                 ],
                 'list_leads' => [
-                    'title' => 'Ejemplo: Listar Leads con Filtros',
+                    'title' => __('Example: List Leads with Filters'),
                     'method' => 'GET',
                     'url' => url('/api/v1/leads?estado=nuevo&curso_id=1&page=1&per_page=15'),
                 ],
                 'create_campus' => [
-                    'title' => 'Ejemplo: Crear Sede',
+                    'title' => __('Example: Create Campus'),
                     'method' => 'POST',
                     'url' => url('/api/v1/catalogs/campuses'),
                     'body' => [
@@ -170,18 +170,18 @@ class ListApiTokens extends ListRecords
             'showApiDocumentation' => true,
             'baseUrl' => url('/api/v1'),
             'endpoints' => [
-                ['method' => 'GET', 'path' => '/api/v1/leads', 'description' => 'Listar leads con filtros y paginación', 'scope' => 'leads:read'],
-                ['method' => 'POST', 'path' => '/api/v1/leads', 'description' => 'Crear un nuevo lead', 'scope' => 'leads:write'],
-                ['method' => 'GET', 'path' => '/api/v1/leads/{id}', 'description' => 'Obtener un lead específico', 'scope' => 'leads:read'],
-                ['method' => 'PUT', 'path' => '/api/v1/leads/{id}', 'description' => 'Actualizar un lead', 'scope' => 'leads:write'],
-                ['method' => 'DELETE', 'path' => '/api/v1/leads/{id}', 'description' => 'Eliminar un lead', 'scope' => 'leads:delete'],
-                ['method' => 'GET', 'path' => '/api/v1/leads/filters', 'description' => 'Obtener filtros disponibles', 'scope' => 'leads:read'],
+                ['method' => 'GET', 'path' => '/api/v1/leads', 'description' => __('List leads with filters and pagination'), 'scope' => 'leads:read'],
+                ['method' => 'POST', 'path' => '/api/v1/leads', 'description' => __('Create a new lead'), 'scope' => 'leads:write'],
+                ['method' => 'GET', 'path' => '/api/v1/leads/{id}', 'description' => __('Get a specific lead'), 'scope' => 'leads:read'],
+                ['method' => 'PUT', 'path' => '/api/v1/leads/{id}', 'description' => __('Update a lead'), 'scope' => 'leads:write'],
+                ['method' => 'DELETE', 'path' => '/api/v1/leads/{id}', 'description' => __('Delete a lead'), 'scope' => 'leads:delete'],
+                ['method' => 'GET', 'path' => '/api/v1/leads/filters', 'description' => __('Get available filters'), 'scope' => 'leads:read'],
             ],
             'scopes' => [
-                'leads:read' => 'Ver leads del tenant',
-                'leads:write' => 'Crear y modificar leads',
-                'leads:delete' => 'Eliminar leads',
-                'leads:admin' => 'Acceso completo a leads',
+                'leads:read' => __('View tenant leads'),
+                'leads:write' => __('Create and modify leads'),
+                'leads:delete' => __('Delete leads'),
+                'leads:admin' => __('Full access to leads'),
             ]
         ]);
     }

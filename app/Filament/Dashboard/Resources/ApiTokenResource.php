@@ -20,7 +20,7 @@ class ApiTokenResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return 'Gestión';
+        return __('Management');
     }
 
     public static function getNavigationIcon(): ?string
@@ -33,28 +33,28 @@ class ApiTokenResource extends Resource
         return $schema
             ->schema([
                 Forms\Components\TextInput::make('name')
-                    ->label('Nombre del Token')
+                    ->label(__('Token Name'))
                     ->required()
                     ->maxLength(255),
 
                 Forms\Components\Textarea::make('description')
-                    ->label('Descripción')
+                    ->label(__('Description'))
                     ->maxLength(500),
 
                 Forms\Components\CheckboxList::make('abilities')
-                    ->label('Permisos')
+                    ->label(__('Permissions'))
                     ->required()
                     ->options([
-                        'leads:read' => 'Ver leads',
-                        'leads:write' => 'Crear y modificar leads',
-                        'leads:delete' => 'Eliminar leads',
-                        'leads:admin' => 'Acceso completo',
+                        'leads:read' => __('View leads'),
+                        'leads:write' => __('Create and modify leads'),
+                        'leads:delete' => __('Delete leads'),
+                        'leads:admin' => __('Full access'),
                     ])
                     ->columns(2),
 
                 Forms\Components\DateTimePicker::make('expires_at')
-                    ->label('Fecha de Expiración')
-                    ->helperText('Opcional'),
+                    ->label(__('Expiration Date'))
+                    ->helperText(__('Optional')),
             ]);
     }
 
@@ -63,28 +63,28 @@ class ApiTokenResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                    ->label('Nombre')
+                    ->label(__('Name'))
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('tokenable.name')
-                    ->label('Usuario'),
+                    ->label(__('User')),
 
                 Tables\Columns\TextColumn::make('abilities')
-                    ->label('Permisos')
+                    ->label(__('Permissions'))
                     ->formatStateUsing(fn ($state) => is_array($state) ? implode(', ', $state) : $state),
 
                 Tables\Columns\IconColumn::make('is_active')
-                    ->label('Estado')
+                    ->label(__('Status'))
                     ->boolean()
                     ->getStateUsing(fn (ApiToken $record): bool => $record->isActive()),
 
                 Tables\Columns\TextColumn::make('last_used_at')
-                    ->label('Último uso')
+                    ->label(__('Last used'))
                     ->dateTime()
-                    ->placeholder('Nunca'),
+                    ->placeholder(__('Never')),
 
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Creado')
+                    ->label(__('Created'))
                     ->dateTime(),
             ])
             ->actions([

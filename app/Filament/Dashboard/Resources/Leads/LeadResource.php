@@ -27,7 +27,7 @@ class LeadResource extends Resource
 
     protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedUsers;
     
-    protected static string|\UnitEnum|null $navigationGroup = 'CRM Principal';
+    protected static string|\UnitEnum|null $navigationGroup = null;
     
     protected static ?int $navigationSort = 1;
     
@@ -104,7 +104,7 @@ class LeadResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return 'CRM Principal';
+        return __('Main CRM');
     }
 
     public static function getNavigationSort(): ?int

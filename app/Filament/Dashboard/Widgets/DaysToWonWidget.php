@@ -40,8 +40,8 @@ class DaysToWonWidget extends BaseWidget
         
         if ($wonLeads->isEmpty()) {
             return [
-                Stat::make('Días hasta Ganado', 'N/A')
-                    ->description('No hay leads ganados en este período')
+                Stat::make(__('Days to Won'), 'N/A')
+                    ->description(__('No won leads in this period'))
                     ->descriptionIcon('heroicon-m-clock')
                     ->color('gray')
             ];
@@ -106,16 +106,16 @@ class DaysToWonWidget extends BaseWidget
         // Para días hasta ganado, menos días es mejor (success), más días es peor (danger)
         $changeColor = $change <= 0 ? 'success' : 'danger';
         
-        $description = $change == 0 ? 'Sin cambios vs período anterior' : 
-                      ($change > 0 ? '+' : '') . number_format($change, 1) . ' días vs período anterior';
+        $description = $change == 0 ? __('No changes vs previous period') : 
+                      ($change > 0 ? '+' : '') . number_format($change, 1) . ' ' . __('days vs previous period');
         
         // Agregar indicador si estamos usando updated_at como fallback
         if ($useUpdatedAt) {
-            $description = 'Aprox. ' . $description . ' (usando fecha de actualización)';
+            $description = __('Approx.') . ' ' . $description . ' (' . __('using update date') . ')';
         }
         
         return [
-            Stat::make('Días hasta Ganado', number_format($averageDays, 1) . ' días')
+            Stat::make(__('Days to Won'), number_format($averageDays, 1) . ' ' . __('days'))
                 ->description($description)
                 ->descriptionIcon($changeIcon)
                 ->color('success')

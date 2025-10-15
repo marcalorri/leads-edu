@@ -26,20 +26,20 @@ class ProvinceForm
                                 return $rule->where('tenant_id', Filament::getTenant()->id);
                             }
                         )
-                        ->label('Código'),
+                        ->label(__('Code')),
                     TextInput::make('nombre')
                         ->required()
                         ->maxLength(100)
-                        ->label('Nombre'),
+                        ->label(__('Name')),
                     TextInput::make('codigo_ine')
                         ->maxLength(5)
-                        ->label('Código INE'),
+                        ->label(__('INE Code')),
                     TextInput::make('comunidad_autonoma')
                         ->maxLength(100)
-                        ->label('Comunidad Autónoma'),
+                        ->label(__('Autonomous Community')),
                     Toggle::make('activo')
                         ->default(true)
-                        ->label('Activo'),
+                        ->label(__('Active')),
                 ])
             ]);
     }

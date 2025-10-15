@@ -29,17 +29,17 @@ class LeadEventResource extends Resource
 
     public static function getModelLabel(): string
     {
-        return 'Evento de Lead';
+        return __('Lead Event');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return 'Eventos de Leads';
+        return __('Lead Events');
     }
 
     public static function getNavigationGroup(): ?string
     {
-        return 'CRM Principal';
+        return __('Main CRM');
     }
 
     public static function getNavigationSort(): ?int

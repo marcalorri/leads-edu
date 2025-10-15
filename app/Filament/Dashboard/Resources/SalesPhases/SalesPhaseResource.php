@@ -29,17 +29,17 @@ class SalesPhaseResource extends Resource
 
     public static function getModelLabel(): string
     {
-        return 'Fase de Venta';
+        return __('Sales Phase');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return 'Fases de Venta';
+        return __('Sales Phases');
     }
 
     public static function getNavigationGroup(): ?string
     {
-        return 'Catálogos de Ventas';
+        return __('Sales Catalogs');
     }
 
     public static function getNavigationSort(): ?int

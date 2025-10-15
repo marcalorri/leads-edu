@@ -17,34 +17,34 @@ class CampusesTable
                 TextColumn::make('codigo')
                     ->searchable()
                     ->sortable()
-                    ->label('Código'),
+                    ->label(__('Code')),
                 TextColumn::make('nombre')
                     ->searchable()
                     ->sortable()
-                    ->label('Nombre'),
+                    ->label(__('Name')),
                 TextColumn::make('ciudad')
                     ->searchable()
-                    ->label('Ciudad'),
+                    ->label(__('City')),
                 TextColumn::make('telefono')
-                    ->label('Teléfono'),
+                    ->label(__('Phone')),
                 TextColumn::make('email')
-                    ->label('Email'),
+                    ->label(__('Email')),
                 TextColumn::make('responsable')
-                    ->label('Responsable'),
+                    ->label(__('Manager')),
                 IconColumn::make('activo')
                     ->boolean()
-                    ->label('Activo'),
+                    ->label(__('Active')),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true)
-                    ->label('Creado'),
+                    ->label(__('Created')),
             ])
             ->filters([
                 TernaryFilter::make('activo')
-                    ->label('Estado')
-                    ->trueLabel('Solo activos')
-                    ->falseLabel('Solo inactivos')
+                    ->label(__('Status'))
+                    ->trueLabel(__('Active only'))
+                    ->falseLabel(__('Inactive only'))
                     ->native(false),
             ])
             ->defaultSort('nombre')

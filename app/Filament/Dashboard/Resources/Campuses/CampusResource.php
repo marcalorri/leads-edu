@@ -29,17 +29,17 @@ class CampusResource extends Resource
 
     public static function getModelLabel(): string
     {
-        return 'Sede';
+        return __('Campus');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return 'Sedes';
+        return __('Campuses');
     }
 
     public static function getNavigationGroup(): ?string
     {
-        return 'Catálogos Operativos';
+        return __('Operational Catalogs');
     }
 
     public static function getNavigationSort(): ?int

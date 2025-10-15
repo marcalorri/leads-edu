@@ -18,7 +18,7 @@ class LeadEventsCalendarWidget extends CalendarWidget
     
     public static function getWidgetLabel(): string
     {
-        return 'Próximos 5 Eventos';
+        return __('Next 5 Events');
     }
     
     public function getColumnSpan(): int | string | array

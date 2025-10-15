@@ -17,7 +17,7 @@ class LeadEventsCalendarWidget extends CalendarWidget
     
     public static function getWidgetLabel(): string
     {
-        return 'Calendario de Eventos del Lead';
+        return __('Lead Events Calendar');
     }
     
     public function getColumnSpan(): int | string | array

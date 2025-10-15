@@ -63,8 +63,8 @@ class CreateApiToken extends CreateRecord
 
         // Mostrar token al usuario
         Notification::make()
-            ->title('Token creado exitosamente')
-            ->body('GUARDA ESTE TOKEN: ' . $token->plainTextToken)
+            ->title(__('Token created successfully'))
+            ->body(__('SAVE THIS TOKEN: ') . $token->plainTextToken)
             ->success()
             ->persistent()
             ->send();

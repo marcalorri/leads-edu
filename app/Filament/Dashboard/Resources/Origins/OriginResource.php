@@ -30,17 +30,17 @@ class OriginResource extends Resource
 
     public static function getModelLabel(): string
     {
-        return 'Origen';
+        return __('Origin');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return 'Orígenes';
+        return __('Origins');
     }
 
     public static function getNavigationGroup(): ?string
     {
-        return 'Catálogos de Ventas';
+        return __('Sales Catalogs');
     }
 
     public static function getNavigationSort(): ?int

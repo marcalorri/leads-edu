@@ -21,12 +21,12 @@ class DurationsTable
                 TextColumn::make('nombre')
                     ->searchable()
                     ->sortable()
-                    ->label('Nombre'),
+                    ->label(__('Name')),
                 TextColumn::make('horas_totales')
                     ->numeric()
                     ->sortable()
                     ->suffix(' h')
-                    ->label('Horas Totales'),
+                    ->label(__('Total Hours')),
                 TextColumn::make('tipo')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
@@ -37,35 +37,35 @@ class DurationsTable
                         'años' => 'danger',
                         default => 'gray',
                     })
-                    ->label('Tipo'),
+                    ->label(__('Type')),
                 TextColumn::make('valor_numerico')
                     ->numeric()
-                    ->label('Valor'),
+                    ->label(__('Value')),
                 IconColumn::make('activo')
                     ->boolean()
                     ->sortable()
-                    ->label('Activo'),
+                    ->label(__('Active')),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true)
-                    ->label('Creado'),
+                    ->label(__('Created')),
             ])
             ->filters([
                 TernaryFilter::make('activo')
-                    ->label('Estado')
-                    ->placeholder('Todos')
-                    ->trueLabel('Activos')
-                    ->falseLabel('Inactivos'),
+                    ->label(__('Status'))
+                    ->placeholder(__('All'))
+                    ->trueLabel(__('Active'))
+                    ->falseLabel(__('Inactive')),
                 SelectFilter::make('tipo')
                     ->options([
-                        'horas' => 'Horas',
-                        'dias' => 'Días',
-                        'semanas' => 'Semanas',
-                        'meses' => 'Meses',
-                        'años' => 'Años',
+                        'horas' => __('Hours'),
+                        'dias' => __('Days'),
+                        'semanas' => __('Weeks'),
+                        'meses' => __('Months'),
+                        'años' => __('Years'),
                     ])
-                    ->label('Tipo'),
+                    ->label(__('Type')),
             ])
             ->recordActions([
                 ViewAction::make(),

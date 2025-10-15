@@ -19,25 +19,25 @@ class ContactsTable
         return $table
             ->columns([
                 TextColumn::make('nombre_completo')
-                    ->label('Nombre Completo')
+                    ->label(__('Full Name'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('telefono_principal')
-                    ->label('Teléfono')
+                    ->label(__('Phone'))
                     ->searchable(),
                 TextColumn::make('email_principal')
-                    ->label('Email')
+                    ->label(__('Email'))
                     ->searchable(),
                 TextColumn::make('province.nombre')
-                    ->label('Provincia')
+                    ->label(__('Province'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('leads_count')
                     ->counts('leads')
-                    ->label('Leads')
+                    ->label(__('Leads'))
                     ->sortable(),
                 TextColumn::make('preferencia_comunicacion')
-                    ->label('Preferencia')
+                    ->label(__('Preference'))
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'email' => 'success',
@@ -48,7 +48,7 @@ class ContactsTable
                     }),
                 TextColumn::make('created_at')
                     ->dateTime('d/m/Y')
-                    ->label('Creado')
+                    ->label(__('Created'))
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])

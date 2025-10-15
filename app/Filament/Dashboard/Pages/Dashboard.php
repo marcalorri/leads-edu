@@ -37,7 +37,7 @@ class Dashboard extends BaseDashboard
                             $component->state(now()->subDays(29)->toDateString());
                         }
                     })
-                    ->label('Fecha inicio'),
+                    ->label(__('Start date')),
                 DatePicker::make('end_date')
                     ->default(now()->toDateString())
                     ->afterStateHydrated(function (DatePicker $component, ?string $state) {
@@ -45,17 +45,17 @@ class Dashboard extends BaseDashboard
                             $component->state(now()->toDateString());
                         }
                     })
-                    ->label('Fecha fin'),
+                    ->label(__('End date')),
                 Select::make('period')
-                    ->label('Período')
+                    ->label(__('Period'))
                     ->options([
-                        'today' => 'Hoy',
-                        'yesterday' => 'Ayer',
-                        'last_7_days' => 'Últimos 7 días',
-                        'last_30_days' => 'Últimos 30 días',
-                        'this_month' => 'Este mes',
-                        'last_month' => 'Mes anterior',
-                        'custom' => 'Personalizado',
+                        'today' => __('Today'),
+                        'yesterday' => __('Yesterday'),
+                        'last_7_days' => __('Last 7 days'),
+                        'last_30_days' => __('Last 30 days'),
+                        'this_month' => __('This month'),
+                        'last_month' => __('Last month'),
+                        'custom' => __('Custom'),
                     ])
                     ->default('last_30_days')
                     ->live()

@@ -15,28 +15,28 @@ class SalesPhaseForm
     {
         return $schema
             ->components([
-                Section::make('Información de la Fase')
+                Section::make(__('Phase Information'))
                     ->schema([
                         TextInput::make('nombre')
                             ->required()
                             ->maxLength(100)
-                            ->label('Nombre'),
+                            ->label(__('Name')),
                         Textarea::make('descripcion')
                             ->maxLength(500)
-                            ->label('Descripción'),
+                            ->label(__('Description')),
                         TextInput::make('orden')
                             ->numeric()
                             ->default(0)
                             ->required()
-                            ->label('Orden')
-                            ->helperText('Orden de visualización'),
+                            ->label(__('Order'))
+                            ->helperText(__('Display order')),
                         ColorPicker::make('color')
-                            ->label('Color')
+                            ->label(__('Color'))
                             ->default('#3b82f6')
-                            ->helperText('Color para identificar la fase'),
+                            ->helperText(__('Color to identify the phase')),
                         Toggle::make('activo')
                             ->default(true)
-                            ->label('Activo'),
+                            ->label(__('Active')),
                     ])->columns(2),
             ]);
     }

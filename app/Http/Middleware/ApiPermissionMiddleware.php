@@ -30,7 +30,7 @@ class ApiPermissionMiddleware
             return response()->json([
                 'error' => [
                     'code' => 'INSUFFICIENT_SCOPE',
-                    'message' => "Token no tiene permisos para: {$scope}",
+                    'message' => __('Token does not have permissions for: :scope', ['scope' => $scope]),
                     'required_scope' => $scope,
                     'token_scopes' => $token->abilities ?? []
                 ]
@@ -52,7 +52,7 @@ class ApiPermissionMiddleware
             return response()->json([
                 'error' => [
                     'code' => 'PERMISSION_DENIED',
-                    'message' => "No tienes permisos para realizar esta acción en el tenant",
+                    'message' => __('You do not have permission to perform this action on the tenant'),
                     'required_permission' => $scope,
                     'tenant' => $tenant->name
                 ]

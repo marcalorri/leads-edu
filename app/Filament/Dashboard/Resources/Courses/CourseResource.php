@@ -22,9 +22,9 @@ class CourseResource extends Resource
 {
     protected static ?string $model = Course::class;
 
-    protected static ?string $modelLabel = 'Curso';
+    protected static ?string $modelLabel = null;
     
-    protected static ?string $pluralModelLabel = 'Cursos';
+    protected static ?string $pluralModelLabel = null;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedAcademicCap;
 
@@ -32,7 +32,17 @@ class CourseResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return 'CRM Principal';
+        return __('Main CRM');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Course');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Courses');
     }
 
     public static function getNavigationSort(): ?int

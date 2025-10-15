@@ -14,29 +14,37 @@ class LeadNoteInfolist
         return $schema
             ->components([
                 TextEntry::make('tenant.name')
-                    ->label('Tenant'),
-                TextEntry::make('lead.id')
-                    ->label('Lead'),
+                    ->label(__('Tenant')),
+                TextEntry::make('lead.nombre')
+                    ->label(__('Lead')),
                 TextEntry::make('usuario.name')
-                    ->label('Usuario'),
+                    ->label(__('User')),
                 TextEntry::make('titulo')
+                    ->label(__('Title'))
                     ->placeholder('-'),
                 TextEntry::make('contenido')
+                    ->label(__('Content'))
                     ->columnSpanFull(),
                 TextEntry::make('tipo')
+                    ->label(__('Type'))
                     ->badge(),
                 IconEntry::make('es_importante')
+                    ->label(__('Important'))
                     ->boolean(),
                 TextEntry::make('fecha_seguimiento')
+                    ->label(__('Follow-up Date'))
                     ->dateTime()
                     ->placeholder('-'),
                 TextEntry::make('created_at')
+                    ->label(__('Created'))
                     ->dateTime()
                     ->placeholder('-'),
                 TextEntry::make('updated_at')
+                    ->label(__('Updated'))
                     ->dateTime()
                     ->placeholder('-'),
                 TextEntry::make('deleted_at')
+                    ->label(__('Deleted'))
                     ->dateTime()
                     ->visible(fn (LeadNote $record): bool => $record->trashed()),
             ]);

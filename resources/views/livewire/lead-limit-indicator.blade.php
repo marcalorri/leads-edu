@@ -3,17 +3,17 @@
     
     @if($isUnlimited)
         <span class="font-medium">
-            {{ $currentCount }} Leads
+            {{ $currentCount }} {{ __('Leads') }}
         </span>
         <span class="text-xs opacity-75">
-            (Ilimitado)
+            ({{ __('Unlimited') }})
         </span>
     @else
         <span class="font-medium">
             {{ $currentCount }}/{{ $maxLeads }}
         </span>
         <span class="text-xs opacity-75">
-            Leads
+            {{ __('Leads') }}
         </span>
         
         @if($showWarning)

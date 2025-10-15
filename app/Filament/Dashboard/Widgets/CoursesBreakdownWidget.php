@@ -15,7 +15,12 @@ class CoursesBreakdownWidget extends ChartWidget
     
     protected static ?int $sort = 10;
     
-    protected ?string $heading = 'Distribución de Leads por Curso';
+    protected ?string $heading = null;
+    
+    public function getHeading(): ?string
+    {
+        return __('Lead Distribution by Course');
+    }
     
     protected ?string $pollingInterval = '30s';
     
@@ -92,21 +97,21 @@ class CoursesBreakdownWidget extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'label' => 'Abiertos',
+                    'label' => __('Open'),
                     'data' => $abiertosData,
                     'backgroundColor' => '#F59E0B', // Amber/Warning
                     'borderColor' => '#D97706',
                     'borderWidth' => 1,
                 ],
                 [
-                    'label' => 'Ganados',
+                    'label' => __('Won'),
                     'data' => $ganadosData,
                     'backgroundColor' => '#10B981', // Green/Success
                     'borderColor' => '#059669',
                     'borderWidth' => 1,
                 ],
                 [
-                    'label' => 'Perdidos',
+                    'label' => __('Lost'),
                     'data' => $perdidosData,
                     'backgroundColor' => '#EF4444', // Red/Danger
                     'borderColor' => '#DC2626',

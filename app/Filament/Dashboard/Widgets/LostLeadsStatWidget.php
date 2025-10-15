@@ -44,8 +44,8 @@ class LostLeadsStatWidget extends BaseWidget
         $changeColor = $change >= 0 ? 'danger' : 'success';
         
         return [
-            Stat::make('Leads Perdidos', $count)
-                ->description(($change >= 0 ? '+' : '') . number_format($change, 1) . '% vs período anterior')
+            Stat::make(__('Lost Leads'), $count)
+                ->description(($change >= 0 ? '+' : '') . number_format($change, 1) . '% ' . __('vs previous period'))
                 ->descriptionIcon($changeIcon)
                 ->color('danger')
                 ->chart([8, 6, 4, 7, 3, 5, 2])

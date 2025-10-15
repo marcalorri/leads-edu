@@ -48,18 +48,18 @@ class LeadsStatusWidget extends BaseWidget
         $perdidosChange = $perdidosLastMonth > 0 ? (($perdidos - $perdidosLastMonth) / $perdidosLastMonth) * 100 : 0;
         
         return [
-            Stat::make('Leads Abiertos', $abiertos)
-                ->description('Leads en proceso')
+            Stat::make(__('Open Leads'), $abiertos)
+                ->description(__('Leads in process'))
                 ->descriptionIcon('heroicon-m-clock')
                 ->color('warning'),
                 
-            Stat::make('Leads Ganados', $ganados)
-                ->description(($ganadosChange >= 0 ? '+' : '') . number_format($ganadosChange, 1) . '% vs mes anterior')
+            Stat::make(__('Won Leads'), $ganados)
+                ->description(($ganadosChange >= 0 ? '+' : '') . number_format($ganadosChange, 1) . '% ' . __('vs previous month'))
                 ->descriptionIcon($ganadosChange >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
                 ->color('success'),
                 
-            Stat::make('Leads Perdidos', $perdidos)
-                ->description(($perdidosChange >= 0 ? '+' : '') . number_format($perdidosChange, 1) . '% vs mes anterior')
+            Stat::make(__('Lost Leads'), $perdidos)
+                ->description(($perdidosChange >= 0 ? '+' : '') . number_format($perdidosChange, 1) . '% ' . __('vs previous month'))
                 ->descriptionIcon($perdidosChange >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
                 ->color('danger'),
         ];
