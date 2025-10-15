@@ -25,7 +25,7 @@ class LeadApiController extends Controller
         // Construir query base
         $query = Lead::query()
             ->where('tenant_id', $tenant->id)
-            ->with(['course', 'asesor', 'campus', 'modality', 'province', 'salesPhase', 'origin']);
+            ->with(['course', 'asesor', 'campus', 'modality', 'province', 'salesPhase', 'origin', 'contact']);
 
         // Aplicar filtros de usuario (si no puede ver todos los leads)
         // Para API: si el token tiene scope 'leads:admin', puede ver todos los leads

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\LeadApiController;
+use App\Http\Controllers\Api\V1\CatalogApiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -74,6 +75,86 @@ Route::prefix('v1')->middleware(['auth:sanctum', 'tenant.api', 'api.rate_limit:1
         Route::delete('/{lead}', [LeadApiController::class, 'destroy'])
             ->middleware('api.permission:leads:delete')
             ->name('api.v1.leads.destroy');
+    });
+    
+    // Catálogos API Routes
+    Route::prefix('catalogs')->group(function () {
+        
+        // Cursos
+        Route::get('/courses', [CatalogApiController::class, 'courses'])
+            ->middleware('api.permission:leads:read')
+            ->name('api.v1.catalogs.courses');
+        Route::post('/courses', [CatalogApiController::class, 'storeCourse'])
+            ->middleware('api.permission:leads:admin')
+            ->name('api.v1.catalogs.courses.store');
+        Route::put('/courses/{course}', [CatalogApiController::class, 'updateCourse'])
+            ->middleware('api.permission:leads:admin')
+            ->name('api.v1.catalogs.courses.update');
+        
+        // Asesores (solo lectura)
+        Route::get('/asesores', [CatalogApiController::class, 'asesores'])
+            ->middleware('api.permission:leads:read')
+            ->name('api.v1.catalogs.asesores');
+        
+        // Sedes
+        Route::get('/campuses', [CatalogApiController::class, 'campuses'])
+            ->middleware('api.permission:leads:read')
+            ->name('api.v1.catalogs.campuses');
+        Route::post('/campuses', [CatalogApiController::class, 'storeCampus'])
+            ->middleware('api.permission:leads:admin')
+            ->name('api.v1.catalogs.campuses.store');
+        Route::put('/campuses/{campus}', [CatalogApiController::class, 'updateCampus'])
+            ->middleware('api.permission:leads:admin')
+            ->name('api.v1.catalogs.campuses.update');
+        
+        // Modalidades
+        Route::get('/modalities', [CatalogApiController::class, 'modalities'])
+            ->middleware('api.permission:leads:read')
+            ->name('api.v1.catalogs.modalities');
+        Route::post('/modalities', [CatalogApiController::class, 'storeModality'])
+            ->middleware('api.permission:leads:admin')
+            ->name('api.v1.catalogs.modalities.store');
+        Route::put('/modalities/{modality}', [CatalogApiController::class, 'updateModality'])
+            ->middleware('api.permission:leads:admin')
+            ->name('api.v1.catalogs.modalities.update');
+        
+        // Provincias
+        Route::get('/provinces', [CatalogApiController::class, 'provinces'])
+            ->middleware('api.permission:leads:read')
+            ->name('api.v1.catalogs.provinces');
+        Route::post('/provinces', [CatalogApiController::class, 'storeProvince'])
+            ->middleware('api.permission:leads:admin')
+            ->name('api.v1.catalogs.provinces.store');
+        Route::put('/provinces/{province}', [CatalogApiController::class, 'updateProvince'])
+            ->middleware('api.permission:leads:admin')
+            ->name('api.v1.catalogs.provinces.update');
+        
+        // Fases de Venta
+        Route::get('/sales-phases', [CatalogApiController::class, 'salesPhases'])
+            ->middleware('api.permission:leads:read')
+            ->name('api.v1.catalogs.sales-phases');
+        Route::post('/sales-phases', [CatalogApiController::class, 'storeSalesPhase'])
+            ->middleware('api.permission:leads:admin')
+            ->name('api.v1.catalogs.sales-phases.store');
+        Route::put('/sales-phases/{salesPhase}', [CatalogApiController::class, 'updateSalesPhase'])
+            ->middleware('api.permission:leads:admin')
+            ->name('api.v1.catalogs.sales-phases.update');
+        
+        // Orígenes
+        Route::get('/origins', [CatalogApiController::class, 'origins'])
+            ->middleware('api.permission:leads:read')
+            ->name('api.v1.catalogs.origins');
+        Route::post('/origins', [CatalogApiController::class, 'storeOrigin'])
+            ->middleware('api.permission:leads:admin')
+            ->name('api.v1.catalogs.origins.store');
+        Route::put('/origins/{origin}', [CatalogApiController::class, 'updateOrigin'])
+            ->middleware('api.permission:leads:admin')
+            ->name('api.v1.catalogs.origins.update');
+        
+        // Estados (solo lectura - es un enum)
+        Route::get('/estados', [CatalogApiController::class, 'estados'])
+            ->middleware('api.permission:leads:read')
+            ->name('api.v1.catalogs.estados');
     });
     
 });

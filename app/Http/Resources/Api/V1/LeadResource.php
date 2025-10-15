@@ -99,14 +99,22 @@ class LeadResource extends JsonResource
             'contacto' => $this->whenLoaded('contact', function () {
                 return $this->contact ? [
                     'id' => $this->contact->id,
+                    'asesor_id' => $this->contact->asesor_id,
+                    'nombre_completo' => $this->contact->nombre_completo,
+                    'telefono_principal' => $this->contact->telefono_principal,
                     'telefono_secundario' => $this->contact->telefono_secundario,
+                    'email_principal' => $this->contact->email_principal,
                     'email_secundario' => $this->contact->email_secundario,
                     'direccion' => $this->contact->direccion,
                     'ciudad' => $this->contact->ciudad,
                     'codigo_postal' => $this->contact->codigo_postal,
+                    'provincia_id' => $this->contact->provincia_id,
+                    'fecha_nacimiento' => $this->contact->fecha_nacimiento?->toDateString(),
                     'dni_nie' => $this->contact->dni_nie,
                     'profesion' => $this->contact->profesion,
                     'empresa' => $this->contact->empresa,
+                    'notas_contacto' => $this->contact->notas_contacto,
+                    'preferencia_comunicacion' => $this->contact->preferencia_comunicacion,
                 ] : null;
             }),
             
@@ -128,7 +136,7 @@ class LeadResource extends JsonResource
             'updated_at' => $this->updated_at->toISOString(),
             
             // Métricas calculadas
-            'dias_desde_creacion' => $this->created_at->diffInDays(now()),
+            'dias_desde_creacion' => (int) $this->created_at->diffInDays(now(), false),
             'tiempo_en_proceso' => $this->getTiempoEnProceso(),
         ];
     }
@@ -168,7 +176,7 @@ class LeadResource extends JsonResource
     private function getTiempoEnProceso(): string
     {
         $fechaFin = $this->fecha_ganado ?? $this->fecha_perdido ?? now();
-        $dias = $this->created_at->diffInDays($fechaFin);
+        $dias = (int) $this->created_at->diffInDays($fechaFin, false);
         
         if ($dias == 0) {
             return 'Menos de 1 día';

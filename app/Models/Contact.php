@@ -17,6 +17,7 @@ class Contact extends Model
 
     protected $fillable = [
         'tenant_id',
+        'asesor_id',
         'nombre_completo',
         'telefono_principal',
         'telefono_secundario',
@@ -81,5 +82,10 @@ class Contact extends Model
     public function province(): BelongsTo
     {
         return $this->belongsTo(Province::class, 'provincia_id');
+    }
+
+    public function asesor(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'asesor_id');
     }
 }
