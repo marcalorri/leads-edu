@@ -3,7 +3,7 @@
 namespace App\Filament\Dashboard\Resources\Leads\Pages;
 
 use App\Filament\Dashboard\Resources\Leads\LeadResource;
-use App\Filament\Dashboard\Resources\Leads\LeadImporter;
+use App\Filament\Dashboard\Imports\LeadImporter;
 use App\Models\Lead;
 use App\Services\LeadLimitService;
 use Filament\Actions\CreateAction;
@@ -30,8 +30,11 @@ class ListLeads extends ListRecords
             $percentage = $leadLimitService->getUsagePercentage($tenant);
             $isCritical = $leadLimitService->isCritical($tenant);
 
-            $title = $isCritical ? '⚠️ Límite de Leads Casi Alcanzado' : 'Acercándote al Límite de Leads';
-            $body = "Has utilizado " . number_format($percentage, 1) . "% de tu límite. Te quedan {$remaining} leads disponibles.";
+            $title = $isCritical ? __('⚠️ Lead Limit Almost Reached') : __('Approaching Lead Limit');
+            $body = __('You have used :percentage% of your limit. You have :remaining leads remaining.', [
+                'percentage' => number_format($percentage, 1),
+                'remaining' => $remaining
+            ]);
 
             Notification::make()
                 ->warning()
@@ -39,7 +42,7 @@ class ListLeads extends ListRecords
                 ->body($body)
                 ->actions([
                     Action::make('upgrade')
-                        ->label('Actualizar Plan')
+                        ->label(__('Upgrade Plan'))
                         ->url(route('filament.dashboard.pages.subscriptions', ['tenant' => $tenant]))
                         ->button(),
                 ])
@@ -55,7 +58,7 @@ class ListLeads extends ListRecords
             CreateAction::make(),
             ImportAction::make()
                 ->importer(LeadImporter::class)
-                ->label('Importar Leads')
+                ->label(__('Import Leads'))
                 ->icon('heroicon-o-arrow-up-tray')
                 ->color('success'),
         ];
@@ -64,20 +67,20 @@ class ListLeads extends ListRecords
     public function getTabs(): array
     {
         return [
-            'all' => Tab::make('Todos')
+            'all' => Tab::make(__('All'))
                 ->badge(Lead::query()->count()),
             
-            'abierto' => Tab::make('Abiertos')
+            'abierto' => Tab::make(__('Open'))
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('estado', 'abierto'))
                 ->badge(Lead::query()->where('estado', 'abierto')->count())
                 ->badgeColor('warning'),
             
-            'ganado' => Tab::make('Ganados')
+            'ganado' => Tab::make(__('Won'))
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('estado', 'ganado'))
                 ->badge(Lead::query()->where('estado', 'ganado')->count())
                 ->badgeColor('success'),
             
-            'perdido' => Tab::make('Perdidos')
+            'perdido' => Tab::make(__('Lost'))
                 ->modifyQueryUsing(fn (Builder $query) => $query->where('estado', 'perdido'))
                 ->badge(Lead::query()->where('estado', 'perdido')->count())
                 ->badgeColor('danger'),

@@ -26,17 +26,20 @@ class LeadImporter extends Importer
             ImportColumn::make('nombre')
                 ->label(__('First Name'))
                 ->requiredMapping()
-                ->rules(['required', 'max:100']),
+                ->rules(['required', 'max:100'])
+                ->example('John'),
             
             ImportColumn::make('apellidos')
                 ->label(__('Last Name'))
                 ->requiredMapping()
-                ->rules(['required', 'max:150']),
+                ->rules(['required', 'max:150'])
+                ->example('Smith'),
             
             ImportColumn::make('telefono')
                 ->label(__('Phone'))
                 ->requiredMapping()
-                ->rules(['required', 'max:20']),
+                ->rules(['required', 'max:20'])
+                ->example('+1234567890'),
             
             ImportColumn::make('email')
                 ->label(__('Email'))
@@ -45,22 +48,23 @@ class LeadImporter extends Importer
                 ->example('user@example.com'),
             
             // RELACIONES IMPORTANTES (OPCIONALES POR AHORA)
-            ImportColumn::make('provincia')
+            ImportColumn::make('provincia_id')
                 ->label(__('Province'))
                 ->rules(['nullable'])
-                ->relationship('province', resolveUsing: function (?string $state): ?Province {
+                ->relationship(resolveUsing: function (?string $state): ?int {
                     if (empty($state)) return null;
                     $tenantId = filament()->getTenant()?->id ?? session('tenant_id', 1);
-                    return Province::where('tenant_id', $tenantId)
+                    $province = Province::where('tenant_id', $tenantId)
                         ->where('nombre', 'like', "%{$state}%")
                         ->first();
+                    return $province?->id;
                 })
-                ->example('Madrid, Barcelona, Valencia'),
+                ->example('New York'),
             
-            ImportColumn::make('curso')
+            ImportColumn::make('curso_id')
                 ->label(__('Course (Code or Title)'))
                 ->rules(['nullable'])
-                ->relationship('course', resolveUsing: function (?string $state): ?Course {
+                ->relationship(resolveUsing: function (?string $state): ?int {
                     if (empty($state)) return null;
                     $tenantId = filament()->getTenant()?->id ?? session('tenant_id', 1);
                     
@@ -70,7 +74,7 @@ class LeadImporter extends Importer
                         ->first();
                     
                     if ($course) {
-                        return $course;
+                        return $course->id;
                     }
                     
                     // Luego buscar por código parcial
@@ -79,64 +83,67 @@ class LeadImporter extends Importer
                         ->first();
                     
                     if ($course) {
-                        return $course;
+                        return $course->id;
                     }
                     
                     // Finalmente buscar por título
-                    return Course::where('tenant_id', $tenantId)
+                    $course = Course::where('tenant_id', $tenantId)
                         ->where('titulacion', 'like', "%{$state}%")
                         ->first();
+                    return $course?->id;
                 })
-                ->example('PROG001, Web Programming'),
+                ->example('PROG001'),
             
-            ImportColumn::make('sede')
+            ImportColumn::make('sede_id')
                 ->label(__('Campus'))
                 ->rules(['nullable'])
-                ->relationship('campus', resolveUsing: function (?string $state): ?Campus {
+                ->relationship(resolveUsing: function (?string $state): ?int {
                     if (empty($state)) return null;
                     $tenantId = filament()->getTenant()?->id ?? session('tenant_id', 1);
-                    return Campus::where('tenant_id', $tenantId)
+                    $campus = Campus::where('tenant_id', $tenantId)
                         ->where('nombre', 'like', "%{$state}%")
                         ->first();
+                    return $campus?->id;
                 })
-                ->example('Campus Central, Sede Norte'),
+                ->example('Main Campus'),
             
             // CAMPOS OPCIONALES PERO IMPORTANTES
             ImportColumn::make('pais')
                 ->label(__('Country'))
                 ->rules(['nullable', 'max:100'])
-                ->example('Spain'),
+                ->example('United States'),
             
-            ImportColumn::make('modalidad')
+            ImportColumn::make('modalidad_id')
                 ->label(__('Modality'))
-                ->relationship('modality', resolveUsing: function (?string $state): ?Modality {
+                ->relationship(resolveUsing: function (?string $state): ?int {
                     if (empty($state)) return null;
                     $tenantId = filament()->getTenant()?->id ?? session('tenant_id', 1);
-                    return Modality::where('tenant_id', $tenantId)
+                    $modality = Modality::where('tenant_id', $tenantId)
                         ->where('nombre', 'like', "%{$state}%")
                         ->first();
+                    return $modality?->id;
                 })
-                ->example('In-person, Online, Hybrid'),
+                ->example('Online'),
             
             ImportColumn::make('convocatoria')
                 ->label(__('Call'))
                 ->rules(['nullable', 'max:100'])
-                ->example('2024-01, Enero 2024'),
+                ->example('2024-01'),
             
             ImportColumn::make('horario')
                 ->label(__('Schedule'))
                 ->rules(['nullable', 'max:100'])
-                ->example('Morning, Afternoon, Evening'),
+                ->example('Morning'),
             
             // ESTADO Y SEGUIMIENTO
             ImportColumn::make('estado')
                 ->label(__('Status'))
                 ->rules(['nullable', 'in:abierto,ganado,perdido'])
-                ->example('abierto, ganado, perdido'),
+                ->example('abierto'),
             
-            ImportColumn::make('asesor')
+            ImportColumn::make('asesor_id')
                 ->label(__('Advisor (Email or Name)'))
-                ->relationship('asesor', resolveUsing: function (?string $state): ?\App\Models\User {
+                ->relationship(resolveUsing: function (?string $state): ?int {
                     if (empty($state)) return null;
                     $tenantId = filament()->getTenant()?->id ?? session('tenant_id', 1);
                     
@@ -146,64 +153,68 @@ class LeadImporter extends Importer
                     })->where('email', $state)->first();
                     
                     if ($user) {
-                        return $user;
+                        return $user->id;
                     }
                     
                     // Buscar por nombre
-                    return \App\Models\User::whereHas('tenants', function($query) use ($tenantId) {
+                    $user = \App\Models\User::whereHas('tenants', function($query) use ($tenantId) {
                         $query->where('tenant_id', $tenantId);
                     })->where('name', 'like', "%{$state}%")->first();
+                    return $user?->id;
                 })
-                ->example('advisor@company.com, John Doe'),
+                ->example('advisor@company.com'),
             
-            ImportColumn::make('fase_venta')
+            ImportColumn::make('fase_venta_id')
                 ->label(__('Sales Phase'))
-                ->relationship('salesPhase', resolveUsing: function (?string $state): ?SalesPhase {
+                ->relationship(resolveUsing: function (?string $state): ?int {
                     if (empty($state)) return null;
                     $tenantId = filament()->getTenant()?->id ?? session('tenant_id', 1);
-                    return SalesPhase::where('tenant_id', $tenantId)
+                    $salesPhase = SalesPhase::where('tenant_id', $tenantId)
                         ->where('nombre', 'like', "%{$state}%")
                         ->first();
+                    return $salesPhase?->id;
                 })
-                ->example('Initial Contact, Interested, Proposal'),
+                ->example('Initial Contact'),
             
-            ImportColumn::make('origen')
+            ImportColumn::make('origen_id')
                 ->label(__('Origin'))
-                ->relationship('origin', resolveUsing: function (?string $state): ?Origin {
+                ->relationship(resolveUsing: function (?string $state): ?int {
                     if (empty($state)) return null;
                     $tenantId = filament()->getTenant()?->id ?? session('tenant_id', 1);
-                    return Origin::where('tenant_id', $tenantId)
+                    $origin = Origin::where('tenant_id', $tenantId)
                         ->where('nombre', 'like', "%{$state}%")
                         ->first();
+                    return $origin?->id;
                 })
-                ->example('Web, Phone, Referral'),
+                ->example('Web'),
             
-            ImportColumn::make('motivo_nulo')
+            ImportColumn::make('motivo_nulo_id')
                 ->label(__('Null Reason (only if status=lost)'))
-                ->relationship('nullReason', resolveUsing: function (?string $state): ?\App\Models\NullReason {
+                ->relationship(resolveUsing: function (?string $state): ?int {
                     if (empty($state)) return null;
                     $tenantId = filament()->getTenant()?->id ?? session('tenant_id', 1);
-                    return \App\Models\NullReason::where('tenant_id', $tenantId)
+                    $nullReason = \App\Models\NullReason::where('tenant_id', $tenantId)
                         ->where('nombre', 'like', "%{$state}%")
                         ->first();
+                    return $nullReason?->id;
                 })
-                ->example('Not interested, High price'),
+                ->example('High price'),
             
             // CAMPOS UTM PARA TRACKING
             ImportColumn::make('utm_source')
                 ->label('UTM Source')
                 ->rules(['nullable', 'max:255'])
-                ->example('google, facebook, newsletter'),
+                ->example('google'),
             
             ImportColumn::make('utm_medium')
                 ->label('UTM Medium')
                 ->rules(['nullable', 'max:255'])
-                ->example('cpc, email, social'),
+                ->example('cpc'),
             
             ImportColumn::make('utm_campaign')
                 ->label('UTM Campaign')
                 ->rules(['nullable', 'max:255'])
-                ->example('summer_2024, black_friday'),
+                ->example('spring_2024'),
         ];
     }
 
