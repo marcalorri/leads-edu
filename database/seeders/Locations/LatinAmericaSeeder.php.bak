@@ -1,0 +1,349 @@
+<?php
+
+namespace Database\Seeders\Locations;
+
+use App\Models\Province;
+use App\Models\Tenant;
+use Illuminate\Database\Seeder;
+
+class LatinAmericaSeeder extends Seeder
+{
+    public function run(Tenant $tenant): void
+    {
+        $this->seedMexico($tenant);
+        $this->seedColombia($tenant);
+        $this->seedArgentina($tenant);
+        $this->seedChile($tenant);
+        $this->seedPeru($tenant);
+        $this->seedEcuador($tenant);
+        $this->seedVenezuela($tenant);
+        $this->seedBolivia($tenant);
+        $this->seedParaguay($tenant);
+        $this->seedUruguay($tenant);
+        $this->seedCostaRica($tenant);
+        $this->seedPanama($tenant);
+        $this->seedBrazil($tenant);
+    }
+    
+    protected function seedMexico(Tenant $tenant): void
+    {
+        $states = [
+            ['codigo' => 'MX-AGU', 'nombre' => 'Aguascalientes'],
+            ['codigo' => 'MX-BCN', 'nombre' => 'Baja California'],
+            ['codigo' => 'MX-BCS', 'nombre' => 'Baja California Sur'],
+            ['codigo' => 'MX-CAM', 'nombre' => 'Campeche'],
+            ['codigo' => 'MX-CHP', 'nombre' => 'Chiapas'],
+            ['codigo' => 'MX-CHH', 'nombre' => 'Chihuahua'],
+            ['codigo' => 'MX-CMX', 'nombre' => 'Ciudad de México'],
+            ['codigo' => 'MX-COA', 'nombre' => 'Coahuila'],
+            ['codigo' => 'MX-COL', 'nombre' => 'Colima'],
+            ['codigo' => 'MX-DUR', 'nombre' => 'Durango'],
+            ['codigo' => 'MX-GUA', 'nombre' => 'Guanajuato'],
+            ['codigo' => 'MX-GRO', 'nombre' => 'Guerrero'],
+            ['codigo' => 'MX-HID', 'nombre' => 'Hidalgo'],
+            ['codigo' => 'MX-JAL', 'nombre' => 'Jalisco'],
+            ['codigo' => 'MX-MEX', 'nombre' => 'Estado de México'],
+            ['codigo' => 'MX-MIC', 'nombre' => 'Michoacán'],
+            ['codigo' => 'MX-MOR', 'nombre' => 'Morelos'],
+            ['codigo' => 'MX-NAY', 'nombre' => 'Nayarit'],
+            ['codigo' => 'MX-NLE', 'nombre' => 'Nuevo León'],
+            ['codigo' => 'MX-OAX', 'nombre' => 'Oaxaca'],
+            ['codigo' => 'MX-PUE', 'nombre' => 'Puebla'],
+            ['codigo' => 'MX-QUE', 'nombre' => 'Querétaro'],
+            ['codigo' => 'MX-ROO', 'nombre' => 'Quintana Roo'],
+            ['codigo' => 'MX-SLP', 'nombre' => 'San Luis Potosí'],
+            ['codigo' => 'MX-SIN', 'nombre' => 'Sinaloa'],
+            ['codigo' => 'MX-SON', 'nombre' => 'Sonora'],
+            ['codigo' => 'MX-TAB', 'nombre' => 'Tabasco'],
+            ['codigo' => 'MX-TAM', 'nombre' => 'Tamaulipas'],
+            ['codigo' => 'MX-TLA', 'nombre' => 'Tlaxcala'],
+            ['codigo' => 'MX-VER', 'nombre' => 'Veracruz'],
+            ['codigo' => 'MX-YUC', 'nombre' => 'Yucatán'],
+            ['codigo' => 'MX-ZAC', 'nombre' => 'Zacatecas'],
+        ];
+        
+        foreach ($states as $state) {
+            Province::updateOrCreate(
+                ['tenant_id' => $tenant->id, 'codigo' => $state['codigo'], 'comunidad_autonoma' => 'México'],
+                ['nombre' => $state['nombre'], 'activo' => true]
+            );
+        }
+    }
+    
+    protected function seedColombia(Tenant $tenant): void
+    {
+        $departments = [
+            ['codigo' => 'AMA', 'nombre' => 'Amazonas'], ['codigo' => 'ANT', 'nombre' => 'Antioquia'],
+            ['codigo' => 'ARA', 'nombre' => 'Arauca'], ['codigo' => 'ATL', 'nombre' => 'Atlántico'],
+            ['codigo' => 'BOL', 'nombre' => 'Bolívar'], ['codigo' => 'BOY', 'nombre' => 'Boyacá'],
+            ['codigo' => 'CAL', 'nombre' => 'Caldas'], ['codigo' => 'CAQ', 'nombre' => 'Caquetá'],
+            ['codigo' => 'CAS', 'nombre' => 'Casanare'], ['codigo' => 'CAU', 'nombre' => 'Cauca'],
+            ['codigo' => 'CES', 'nombre' => 'Cesar'], ['codigo' => 'CHO', 'nombre' => 'Chocó'],
+            ['codigo' => 'COR', 'nombre' => 'Córdoba'], ['codigo' => 'CUN', 'nombre' => 'Cundinamarca'],
+            ['codigo' => 'DC', 'nombre' => 'Bogotá D.C.'], ['codigo' => 'GUA', 'nombre' => 'Guainía'],
+            ['codigo' => 'GUV', 'nombre' => 'Guaviare'], ['codigo' => 'HUI', 'nombre' => 'Huila'],
+            ['codigo' => 'LAG', 'nombre' => 'La Guajira'], ['codigo' => 'MAG', 'nombre' => 'Magdalena'],
+            ['codigo' => 'MET', 'nombre' => 'Meta'], ['codigo' => 'NAR', 'nombre' => 'Nariño'],
+            ['codigo' => 'NSA', 'nombre' => 'Norte de Santander'], ['codigo' => 'PUT', 'nombre' => 'Putumayo'],
+            ['codigo' => 'QUI', 'nombre' => 'Quindío'], ['codigo' => 'RIS', 'nombre' => 'Risaralda'],
+            ['codigo' => 'SAP', 'nombre' => 'San Andrés y Providencia'], ['codigo' => 'SAN', 'nombre' => 'Santander'],
+            ['codigo' => 'SUC', 'nombre' => 'Sucre'], ['codigo' => 'TOL', 'nombre' => 'Tolima'],
+            ['codigo' => 'VAC', 'nombre' => 'Valle del Cauca'], ['codigo' => 'VAU', 'nombre' => 'Vaupés'],
+            ['codigo' => 'VID', 'nombre' => 'Vichada'],
+        ];
+        
+        foreach ($departments as $dept) {
+            Province::updateOrCreate(
+                ['tenant_id' => $tenant->id, 'codigo' => $dept['codigo'], 'comunidad_autonoma' => 'Colombia'],
+                ['nombre' => $dept['nombre'], 'activo' => true]
+            );
+        }
+    }
+    
+    protected function seedArgentina(Tenant $tenant): void
+    {
+        $provinces = [
+            ['codigo' => 'BA', 'nombre' => 'Buenos Aires'], ['codigo' => 'CABA', 'nombre' => 'Ciudad Autónoma de Buenos Aires'],
+            ['codigo' => 'CAT', 'nombre' => 'Catamarca'], ['codigo' => 'CHA', 'nombre' => 'Chaco'],
+            ['codigo' => 'CHU', 'nombre' => 'Chubut'], ['codigo' => 'COR', 'nombre' => 'Córdoba'],
+            ['codigo' => 'COR2', 'nombre' => 'Corrientes'], ['codigo' => 'ER', 'nombre' => 'Entre Ríos'],
+            ['codigo' => 'FOR', 'nombre' => 'Formosa'], ['codigo' => 'JUJ', 'nombre' => 'Jujuy'],
+            ['codigo' => 'LP', 'nombre' => 'La Pampa'], ['codigo' => 'LR', 'nombre' => 'La Rioja'],
+            ['codigo' => 'MEN', 'nombre' => 'Mendoza'], ['codigo' => 'MIS', 'nombre' => 'Misiones'],
+            ['codigo' => 'NEU', 'nombre' => 'Neuquén'], ['codigo' => 'RN', 'nombre' => 'Río Negro'],
+            ['codigo' => 'SAL', 'nombre' => 'Salta'], ['codigo' => 'SJ', 'nombre' => 'San Juan'],
+            ['codigo' => 'SL', 'nombre' => 'San Luis'], ['codigo' => 'SC', 'nombre' => 'Santa Cruz'],
+            ['codigo' => 'SF', 'nombre' => 'Santa Fe'], ['codigo' => 'SE', 'nombre' => 'Santiago del Estero'],
+            ['codigo' => 'TF', 'nombre' => 'Tierra del Fuego'], ['codigo' => 'TUC', 'nombre' => 'Tucumán'],
+        ];
+        
+        foreach ($provinces as $prov) {
+            Province::updateOrCreate(
+                ['tenant_id' => $tenant->id, 'codigo' => $prov['codigo'], 'comunidad_autonoma' => 'Argentina'],
+                ['nombre' => $prov['nombre'], 'activo' => true]
+            );
+        }
+    }
+    
+    protected function seedChile(Tenant $tenant): void
+    {
+        $regions = [
+            ['codigo' => 'AP', 'nombre' => 'Arica y Parinacota'], ['codigo' => 'TA', 'nombre' => 'Tarapacá'],
+            ['codigo' => 'AN', 'nombre' => 'Antofagasta'], ['codigo' => 'AT', 'nombre' => 'Atacama'],
+            ['codigo' => 'CO', 'nombre' => 'Coquimbo'], ['codigo' => 'VA', 'nombre' => 'Valparaíso'],
+            ['codigo' => 'RM', 'nombre' => 'Región Metropolitana'], ['codigo' => 'LI', 'nombre' => 'Libertador General Bernardo O\'Higgins'],
+            ['codigo' => 'ML', 'nombre' => 'Maule'], ['codigo' => 'NB', 'nombre' => 'Ñuble'],
+            ['codigo' => 'BI', 'nombre' => 'Biobío'], ['codigo' => 'AR', 'nombre' => 'La Araucanía'],
+            ['codigo' => 'LR', 'nombre' => 'Los Ríos'], ['codigo' => 'LL', 'nombre' => 'Los Lagos'],
+            ['codigo' => 'AI', 'nombre' => 'Aysén'], ['codigo' => 'MA', 'nombre' => 'Magallanes'],
+        ];
+        
+        foreach ($regions as $region) {
+            Province::updateOrCreate(
+                ['tenant_id' => $tenant->id, 'codigo' => $region['codigo'], 'comunidad_autonoma' => 'Chile'],
+                ['nombre' => $region['nombre'], 'activo' => true]
+            );
+        }
+    }
+    
+    protected function seedPeru(Tenant $tenant): void
+    {
+        $departments = [
+            ['codigo' => 'AMA', 'nombre' => 'Amazonas'], ['codigo' => 'ANC', 'nombre' => 'Áncash'],
+            ['codigo' => 'APU', 'nombre' => 'Apurímac'], ['codigo' => 'ARE', 'nombre' => 'Arequipa'],
+            ['codigo' => 'AYA', 'nombre' => 'Ayacucho'], ['codigo' => 'CAJ', 'nombre' => 'Cajamarca'],
+            ['codigo' => 'CAL', 'nombre' => 'Callao'], ['codigo' => 'CUS', 'nombre' => 'Cusco'],
+            ['codigo' => 'HUV', 'nombre' => 'Huancavelica'], ['codigo' => 'HUC', 'nombre' => 'Huánuco'],
+            ['codigo' => 'ICA', 'nombre' => 'Ica'], ['codigo' => 'JUN', 'nombre' => 'Junín'],
+            ['codigo' => 'LAL', 'nombre' => 'La Libertad'], ['codigo' => 'LAM', 'nombre' => 'Lambayeque'],
+            ['codigo' => 'LIM', 'nombre' => 'Lima'], ['codigo' => 'LOR', 'nombre' => 'Loreto'],
+            ['codigo' => 'MDD', 'nombre' => 'Madre de Dios'], ['codigo' => 'MOQ', 'nombre' => 'Moquegua'],
+            ['codigo' => 'PAS', 'nombre' => 'Pasco'], ['codigo' => 'PIU', 'nombre' => 'Piura'],
+            ['codigo' => 'PUN', 'nombre' => 'Puno'], ['codigo' => 'SAM', 'nombre' => 'San Martín'],
+            ['codigo' => 'TAC', 'nombre' => 'Tacna'], ['codigo' => 'TUM', 'nombre' => 'Tumbes'],
+            ['codigo' => 'UCA', 'nombre' => 'Ucayali'],
+        ];
+        
+        foreach ($departments as $dept) {
+            Province::updateOrCreate(
+                ['tenant_id' => $tenant->id, 'codigo' => $dept['codigo'], 'comunidad_autonoma' => 'Perú'],
+                ['nombre' => $dept['nombre'], 'activo' => true]
+            );
+        }
+    }
+    
+    protected function seedEcuador(Tenant $tenant): void
+    {
+        $provinces = [
+            ['codigo' => 'AZU', 'nombre' => 'Azuay'], ['codigo' => 'BOL', 'nombre' => 'Bolívar'],
+            ['codigo' => 'CAN', 'nombre' => 'Cañar'], ['codigo' => 'CAR', 'nombre' => 'Carchi'],
+            ['codigo' => 'CHI', 'nombre' => 'Chimborazo'], ['codigo' => 'COT', 'nombre' => 'Cotopaxi'],
+            ['codigo' => 'EOR', 'nombre' => 'El Oro'], ['codigo' => 'ESM', 'nombre' => 'Esmeraldas'],
+            ['codigo' => 'GAL', 'nombre' => 'Galápagos'], ['codigo' => 'GUA', 'nombre' => 'Guayas'],
+            ['codigo' => 'IMB', 'nombre' => 'Imbabura'], ['codigo' => 'LOJ', 'nombre' => 'Loja'],
+            ['codigo' => 'LOR', 'nombre' => 'Los Ríos'], ['codigo' => 'MAN', 'nombre' => 'Manabí'],
+            ['codigo' => 'MSA', 'nombre' => 'Morona Santiago'], ['codigo' => 'NAP', 'nombre' => 'Napo'],
+            ['codigo' => 'ORE', 'nombre' => 'Orellana'], ['codigo' => 'PAS', 'nombre' => 'Pastaza'],
+            ['codigo' => 'PIC', 'nombre' => 'Pichincha'], ['codigo' => 'SDE', 'nombre' => 'Santo Domingo de los Tsáchilas'],
+            ['codigo' => 'STE', 'nombre' => 'Santa Elena'], ['codigo' => 'SUC', 'nombre' => 'Sucumbíos'],
+            ['codigo' => 'TUN', 'nombre' => 'Tungurahua'], ['codigo' => 'ZCH', 'nombre' => 'Zamora Chinchipe'],
+        ];
+        
+        foreach ($provinces as $prov) {
+            Province::updateOrCreate(
+                ['tenant_id' => $tenant->id, 'codigo' => $prov['codigo'], 'comunidad_autonoma' => 'Ecuador'],
+                ['nombre' => $prov['nombre'], 'activo' => true]
+            );
+        }
+    }
+    
+    protected function seedVenezuela(Tenant $tenant): void
+    {
+        $states = [
+            ['codigo' => 'AMA', 'nombre' => 'Amazonas'], ['codigo' => 'ANZ', 'nombre' => 'Anzoátegui'],
+            ['codigo' => 'APU', 'nombre' => 'Apure'], ['codigo' => 'ARA', 'nombre' => 'Aragua'],
+            ['codigo' => 'BAR', 'nombre' => 'Barinas'], ['codigo' => 'BOL', 'nombre' => 'Bolívar'],
+            ['codigo' => 'CAR', 'nombre' => 'Carabobo'], ['codigo' => 'COJ', 'nombre' => 'Cojedes'],
+            ['codigo' => 'DEL', 'nombre' => 'Delta Amacuro'], ['codigo' => 'DC', 'nombre' => 'Distrito Capital'],
+            ['codigo' => 'FAL', 'nombre' => 'Falcón'], ['codigo' => 'GUA', 'nombre' => 'Guárico'],
+            ['codigo' => 'LAR', 'nombre' => 'Lara'], ['codigo' => 'MER', 'nombre' => 'Mérida'],
+            ['codigo' => 'MIR', 'nombre' => 'Miranda'], ['codigo' => 'MON', 'nombre' => 'Monagas'],
+            ['codigo' => 'NEE', 'nombre' => 'Nueva Esparta'], ['codigo' => 'POR', 'nombre' => 'Portuguesa'],
+            ['codigo' => 'SUC', 'nombre' => 'Sucre'], ['codigo' => 'TAC', 'nombre' => 'Táchira'],
+            ['codigo' => 'TRU', 'nombre' => 'Trujillo'], ['codigo' => 'VAR', 'nombre' => 'Vargas'],
+            ['codigo' => 'YAR', 'nombre' => 'Yaracuy'], ['codigo' => 'ZUL', 'nombre' => 'Zulia'],
+        ];
+        
+        foreach ($states as $state) {
+            Province::updateOrCreate(
+                ['tenant_id' => $tenant->id, 'codigo' => $state['codigo'], 'comunidad_autonoma' => 'Venezuela'],
+                ['nombre' => $state['nombre'], 'activo' => true]
+            );
+        }
+    }
+    
+    protected function seedBolivia(Tenant $tenant): void
+    {
+        $departments = [
+            ['codigo' => 'CHU', 'nombre' => 'Chuquisaca'], ['codigo' => 'LPZ', 'nombre' => 'La Paz'],
+            ['codigo' => 'CBB', 'nombre' => 'Cochabamba'], ['codigo' => 'ORU', 'nombre' => 'Oruro'],
+            ['codigo' => 'POT', 'nombre' => 'Potosí'], ['codigo' => 'TAR', 'nombre' => 'Tarija'],
+            ['codigo' => 'SCZ', 'nombre' => 'Santa Cruz'], ['codigo' => 'BEN', 'nombre' => 'Beni'],
+            ['codigo' => 'PAN', 'nombre' => 'Pando'],
+        ];
+        
+        foreach ($departments as $dept) {
+            Province::updateOrCreate(
+                ['tenant_id' => $tenant->id, 'codigo' => $dept['codigo'], 'comunidad_autonoma' => 'Bolivia'],
+                ['nombre' => $dept['nombre'], 'activo' => true]
+            );
+        }
+    }
+    
+    protected function seedParaguay(Tenant $tenant): void
+    {
+        $departments = [
+            ['codigo' => 'ASU', 'nombre' => 'Asunción'], ['codigo' => 'CON', 'nombre' => 'Concepción'],
+            ['codigo' => 'SPE', 'nombre' => 'San Pedro'], ['codigo' => 'COR', 'nombre' => 'Cordillera'],
+            ['codigo' => 'GUA', 'nombre' => 'Guairá'], ['codigo' => 'CAA', 'nombre' => 'Caaguazú'],
+            ['codigo' => 'CAZ', 'nombre' => 'Caazapá'], ['codigo' => 'ITA', 'nombre' => 'Itapúa'],
+            ['codigo' => 'MIS', 'nombre' => 'Misiones'], ['codigo' => 'PAR', 'nombre' => 'Paraguarí'],
+            ['codigo' => 'APA', 'nombre' => 'Alto Paraná'], ['codigo' => 'CEN', 'nombre' => 'Central'],
+            ['codigo' => 'ÑEE', 'nombre' => 'Ñeembucú'], ['codigo' => 'AMA', 'nombre' => 'Amambay'],
+            ['codigo' => 'CAN', 'nombre' => 'Canindeyú'], ['codigo' => 'PPR', 'nombre' => 'Presidente Hayes'],
+            ['codigo' => 'BOQ', 'nombre' => 'Boquerón'], ['codigo' => 'APG', 'nombre' => 'Alto Paraguay'],
+        ];
+        
+        foreach ($departments as $dept) {
+            Province::updateOrCreate(
+                ['tenant_id' => $tenant->id, 'codigo' => $dept['codigo'], 'comunidad_autonoma' => 'Paraguay'],
+                ['nombre' => $dept['nombre'], 'activo' => true]
+            );
+        }
+    }
+    
+    protected function seedUruguay(Tenant $tenant): void
+    {
+        $departments = [
+            ['codigo' => 'AR', 'nombre' => 'Artigas'], ['codigo' => 'CA', 'nombre' => 'Canelones'],
+            ['codigo' => 'CL', 'nombre' => 'Cerro Largo'], ['codigo' => 'CO', 'nombre' => 'Colonia'],
+            ['codigo' => 'DU', 'nombre' => 'Durazno'], ['codigo' => 'FS', 'nombre' => 'Flores'],
+            ['codigo' => 'FD', 'nombre' => 'Florida'], ['codigo' => 'LA', 'nombre' => 'Lavalleja'],
+            ['codigo' => 'MA', 'nombre' => 'Maldonado'], ['codigo' => 'MO', 'nombre' => 'Montevideo'],
+            ['codigo' => 'PA', 'nombre' => 'Paysandú'], ['codigo' => 'RN', 'nombre' => 'Río Negro'],
+            ['codigo' => 'RV', 'nombre' => 'Rivera'], ['codigo' => 'RO', 'nombre' => 'Rocha'],
+            ['codigo' => 'SA', 'nombre' => 'Salto'], ['codigo' => 'SJ', 'nombre' => 'San José'],
+            ['codigo' => 'SO', 'nombre' => 'Soriano'], ['codigo' => 'TA', 'nombre' => 'Tacuarembó'],
+            ['codigo' => 'TT', 'nombre' => 'Treinta y Tres'],
+        ];
+        
+        foreach ($departments as $dept) {
+            Province::updateOrCreate(
+                ['tenant_id' => $tenant->id, 'codigo' => $dept['codigo'], 'comunidad_autonoma' => 'Uruguay'],
+                ['nombre' => $dept['nombre'], 'activo' => true]
+            );
+        }
+    }
+    
+    protected function seedCostaRica(Tenant $tenant): void
+    {
+        $provinces = [
+            ['codigo' => 'SJ', 'nombre' => 'San José'], ['codigo' => 'AL', 'nombre' => 'Alajuela'],
+            ['codigo' => 'CA', 'nombre' => 'Cartago'], ['codigo' => 'HE', 'nombre' => 'Heredia'],
+            ['codigo' => 'GU', 'nombre' => 'Guanacaste'], ['codigo' => 'PU', 'nombre' => 'Puntarenas'],
+            ['codigo' => 'LI', 'nombre' => 'Limón'],
+        ];
+        
+        foreach ($provinces as $prov) {
+            Province::updateOrCreate(
+                ['tenant_id' => $tenant->id, 'codigo' => $prov['codigo'], 'comunidad_autonoma' => 'Costa Rica'],
+                ['nombre' => $prov['nombre'], 'activo' => true]
+            );
+        }
+    }
+    
+    protected function seedPanama(Tenant $tenant): void
+    {
+        $provinces = [
+            ['codigo' => 'BOC', 'nombre' => 'Bocas del Toro'], ['codigo' => 'CHI', 'nombre' => 'Chiriquí'],
+            ['codigo' => 'COC', 'nombre' => 'Coclé'], ['codigo' => 'COL', 'nombre' => 'Colón'],
+            ['codigo' => 'DAR', 'nombre' => 'Darién'], ['codigo' => 'HER', 'nombre' => 'Herrera'],
+            ['codigo' => 'LSA', 'nombre' => 'Los Santos'], ['codigo' => 'PAN', 'nombre' => 'Panamá'],
+            ['codigo' => 'VER', 'nombre' => 'Veraguas'], ['codigo' => 'PNO', 'nombre' => 'Panamá Oeste'],
+        ];
+        
+        foreach ($provinces as $prov) {
+            Province::updateOrCreate(
+                ['tenant_id' => $tenant->id, 'codigo' => $prov['codigo'], 'comunidad_autonoma' => 'Panamá'],
+                ['nombre' => $prov['nombre'], 'activo' => true]
+            );
+        }
+    }
+    
+    protected function seedBrazil(Tenant $tenant): void
+    {
+        $states = [
+            ['codigo' => 'AC', 'nombre' => 'Acre'], ['codigo' => 'AL', 'nombre' => 'Alagoas'],
+            ['codigo' => 'AP', 'nombre' => 'Amapá'], ['codigo' => 'AM', 'nombre' => 'Amazonas'],
+            ['codigo' => 'BA', 'nombre' => 'Bahia'], ['codigo' => 'CE', 'nombre' => 'Ceará'],
+            ['codigo' => 'DF', 'nombre' => 'Distrito Federal'], ['codigo' => 'ES', 'nombre' => 'Espírito Santo'],
+            ['codigo' => 'GO', 'nombre' => 'Goiás'], ['codigo' => 'MA', 'nombre' => 'Maranhão'],
+            ['codigo' => 'MT', 'nombre' => 'Mato Grosso'], ['codigo' => 'MS', 'nombre' => 'Mato Grosso do Sul'],
+            ['codigo' => 'MG', 'nombre' => 'Minas Gerais'], ['codigo' => 'PA', 'nombre' => 'Pará'],
+            ['codigo' => 'PB', 'nombre' => 'Paraíba'], ['codigo' => 'PR', 'nombre' => 'Paraná'],
+            ['codigo' => 'PE', 'nombre' => 'Pernambuco'], ['codigo' => 'PI', 'nombre' => 'Piauí'],
+            ['codigo' => 'RJ', 'nombre' => 'Rio de Janeiro'], ['codigo' => 'RN', 'nombre' => 'Rio Grande do Norte'],
+            ['codigo' => 'RS', 'nombre' => 'Rio Grande do Sul'], ['codigo' => 'RO', 'nombre' => 'Rondônia'],
+            ['codigo' => 'RR', 'nombre' => 'Roraima'], ['codigo' => 'SC', 'nombre' => 'Santa Catarina'],
+            ['codigo' => 'SP', 'nombre' => 'São Paulo'], ['codigo' => 'SE', 'nombre' => 'Sergipe'],
+            ['codigo' => 'TO', 'nombre' => 'Tocantins'],
+        ];
+        
+        foreach ($states as $state) {
+            Province::updateOrCreate(
+                ['tenant_id' => $tenant->id, 'codigo' => $state['codigo'], 'comunidad_autonoma' => 'Brazil'],
+                ['nombre' => $state['nombre'], 'activo' => true]
+            );
+        }
+    }
+}

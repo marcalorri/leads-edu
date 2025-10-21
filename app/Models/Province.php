@@ -3,15 +3,18 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Auth;
 
+/**
+ * Modelo global de provincias/estados compartido entre todos los tenants.
+ * No tiene tenant_id - es un catálogo de referencia global de solo lectura.
+ */
 class Province extends Model
 {
     protected $fillable = [
-        'tenant_id',
+        'country_id',
         'nombre',
         'codigo',
         'codigo_ine',
@@ -23,25 +26,9 @@ class Province extends Model
         'activo' => 'boolean',
     ];
 
-    protected static function booted()
+    public function country(): BelongsTo
     {
-        static::addGlobalScope('tenant', function (Builder $builder) {
-            $tenant = filament()->getTenant();
-            if ($tenant) {
-                $builder->where('tenant_id', $tenant->id);
-            }
-        });
-
-        static::creating(function ($model) {
-            if (!$model->tenant_id && filament()->getTenant()) {
-                $model->tenant_id = filament()->getTenant()->id;
-            }
-        });
-    }
-
-    public function tenant(): BelongsTo
-    {
-        return $this->belongsTo(Tenant::class);
+        return $this->belongsTo(Country::class);
     }
 
     public function leads(): HasMany

@@ -29,26 +29,26 @@ class LeadWonNotification extends Notification implements ShouldQueue
             : null;
 
         return (new MailMessage)
-            ->subject('🎉 ¡Lead Convertido! - ' . $this->lead->nombre)
-            ->greeting('¡Felicidades ' . $notifiable->name . '!')
-            ->line('¡Has convertido exitosamente un lead!')
-            ->line('**Cliente:** ' . $this->lead->nombre . ' ' . ($this->lead->apellidos ?? ''))
-            ->line('**Email:** ' . ($this->lead->email ?? 'No proporcionado'))
-            ->line('**Curso:** ' . ($this->lead->course?->titulacion ?? 'No asignado'))
+            ->subject(__('🎉 Lead Converted! - :name', ['name' => $this->lead->nombre]))
+            ->greeting(__('Congratulations :name!', ['name' => $notifiable->name]))
+            ->line(__('You have successfully converted a lead!'))
+            ->line('**' . __('Client') . ':** ' . $this->lead->nombre . ' ' . ($this->lead->apellidos ?? ''))
+            ->line('**' . __('Email') . ':** ' . ($this->lead->email ?? __('Not provided')))
+            ->line('**' . __('Course') . ':** ' . ($this->lead->course?->titulacion ?? __('Not assigned')))
             ->when($daysToWin, function ($mail) use ($daysToWin) {
-                return $mail->line('**Tiempo de conversión:** ' . $daysToWin . ' días');
+                return $mail->line('**' . __('Conversion time') . ':** ' . $daysToWin . ' ' . __('days'));
             })
-            ->line('**Fecha de conversión:** ' . ($this->lead->fecha_ganado?->format('d/m/Y H:i') ?? 'Ahora'))
-            ->action('Ver Lead', url('/dashboard/leads/' . $this->lead->id))
-            ->line('¡Excelente trabajo! 🚀')
-            ->salutation('Saludos, ' . config('app.name'));
+            ->line('**' . __('Conversion date') . ':** ' . ($this->lead->fecha_ganado?->format('d/m/Y H:i') ?? __('Now')))
+            ->action(__('View Lead'), url('/dashboard/leads/' . $this->lead->id))
+            ->line(__('Excellent work! 🚀'))
+            ->salutation(__('Regards') . ', ' . config('app.name'));
     }
 
     public function toDatabase($notifiable): array
     {
         return [
-            'title' => '🎉 Lead Convertido',
-            'message' => '¡Has convertido el lead: ' . $this->lead->nombre . '!',
+            'title' => __('🎉 Lead Converted'),
+            'message' => __('You have converted the lead: :name!', ['name' => $this->lead->nombre]),
             'lead_id' => $this->lead->id,
             'lead_name' => $this->lead->nombre,
             'course_name' => $this->lead->course?->titulacion,
@@ -60,8 +60,8 @@ class LeadWonNotification extends Notification implements ShouldQueue
     public function toFilament($notifiable): FilamentNotification
     {
         return FilamentNotification::make()
-            ->title('🎉 ¡Lead Convertido!')
-            ->body('¡Felicidades! Has convertido el lead: ' . $this->lead->nombre . ' ' . ($this->lead->apellidos ?? ''))
+            ->title(__('🎉 Lead Converted!'))
+            ->body(__('Congratulations! You have converted the lead: :name', ['name' => $this->lead->nombre . ' ' . ($this->lead->apellidos ?? '')]))
             ->icon('heroicon-o-trophy')
             ->iconColor('success')
             ->persistent()

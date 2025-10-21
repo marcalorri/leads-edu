@@ -27,6 +27,7 @@ class Contact extends Model
         'ciudad',
         'codigo_postal',
         'provincia_id',
+        'country_id',
         'fecha_nacimiento',
         'dni_nie',
         'profesion',
@@ -82,6 +83,11 @@ class Contact extends Model
     public function province(): BelongsTo
     {
         return $this->belongsTo(Province::class, 'provincia_id');
+    }
+
+    public function country(): BelongsTo
+    {
+        return $this->belongsTo(Country::class);
     }
 
     public function asesor(): BelongsTo

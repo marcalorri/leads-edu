@@ -126,6 +126,21 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Location Normalization Settings
+    |--------------------------------------------------------------------------
+    |
+    | Configure how the system handles location data (provinces, countries)
+    | when receiving data from external sources (API, imports, etc.)
+    |
+    */
+
+    'auto_create_provinces' => false, // Siempre false - usar base de datos compartida
+    'auto_create_countries' => false, // Siempre false - usar base de datos compartida
+    'fuzzy_match_threshold' => env('FUZZY_MATCH_THRESHOLD', 3), // Levenshtein distance
+    'suggest_corrections' => env('SUGGEST_CORRECTIONS', true), // Sugerir correcciones en logs
+
+    /*
+    |--------------------------------------------------------------------------
     | Encryption Key
     |--------------------------------------------------------------------------
     |

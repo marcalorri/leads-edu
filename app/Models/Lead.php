@@ -25,6 +25,7 @@ class Lead extends Model
         'sede_id',
         'modalidad_id',
         'provincia_id',
+        'country_id',
         'nombre',
         'apellidos',
         'telefono',
@@ -116,6 +117,11 @@ class Lead extends Model
     public function province(): BelongsTo
     {
         return $this->belongsTo(Province::class, 'provincia_id');
+    }
+
+    public function country(): BelongsTo
+    {
+        return $this->belongsTo(Country::class);
     }
 
     public function salesPhase(): BelongsTo

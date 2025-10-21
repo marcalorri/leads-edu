@@ -35,8 +35,9 @@ class ListApiTokens extends ListRecords
                     ->label(__('Token'))
                     ->formatStateUsing(fn ($state) => substr($state, 0, 20) . '...')
                     ->copyable()
+                    ->copyableState(fn ($record) => $record->token) // Copia el token completo
                     ->copyMessage(__('Token copied to clipboard'))
-                    ->tooltip(__('Click to copy full token')),
+                    ->tooltip(__('Click to copy token')),
                 
                 Tables\Columns\TextColumn::make('description')
                     ->label(__('Description'))
@@ -123,37 +124,163 @@ class ListApiTokens extends ListRecords
                     'description' => __('All requests require a Bearer Token in the Authorization header'),
                     'code' => 'Authorization: Bearer {tu_token_api}',
                 ],
+                // LEADS EXAMPLES
+                'list_leads' => [
+                    'title' => __('Example: List Leads (Basic)'),
+                    'method' => 'GET',
+                    'url' => url('/api/v1/leads'),
+                ],
+                'list_leads_filtered' => [
+                    'title' => __('Example: List Leads with Filters'),
+                    'method' => 'GET',
+                    'url' => url('/api/v1/leads?estado=abierto&curso_id=1&asesor_id=2&page=1&per_page=20'),
+                ],
+                'list_leads_search' => [
+                    'title' => __('Example: Search Leads by Name/Email'),
+                    'method' => 'GET',
+                    'url' => url('/api/v1/leads?search=john&estado=abierto'),
+                ],
+                'list_leads_date_range' => [
+                    'title' => __('Example: Filter Leads by Date Range'),
+                    'method' => 'GET',
+                    'url' => url('/api/v1/leads?fecha_desde=2024-01-01&fecha_hasta=2024-12-31'),
+                ],
                 'create_lead' => [
-                    'title' => __('Example: Create Lead'),
+                    'title' => __('Example: Create Lead (Minimal)'),
                     'method' => 'POST',
                     'url' => url('/api/v1/leads'),
                     'body' => [
-                        'nombre' => 'Juan',
-                        'apellidos' => 'Pérez',
-                        'email' => 'juan@example.com',
-                        'telefono' => '612345678',
-                        'estado' => 'nuevo',
-                        'curso_id' => 1,
-                        'asesor_id' => 2,
-                        'sede_id' => 1,
+                        'nombre' => 'John',
+                        'apellidos' => 'Doe',
+                        'email' => 'john.doe@example.com',
+                        'telefono' => '+1234567890',
+                        'provincia_id' => 1,
                     ],
                 ],
-                'list_leads' => [
-                    'title' => __('Example: List Leads with Filters'),
+                'create_lead_complete' => [
+                    'title' => __('Example: Create Lead (Complete)'),
+                    'method' => 'POST',
+                    'url' => url('/api/v1/leads'),
+                    'body' => [
+                        'nombre' => 'María',
+                        'apellidos' => 'García López',
+                        'email' => 'maria.garcia@example.com',
+                        'telefono' => '+34612345678',
+                        'provincia_id' => 'Madrid',
+                        'curso_id' => 'PROG001',
+                        'sede_id' => 'Main Campus',
+                        'modalidad_id' => 'Online',
+                        'pais' => 'España',
+                        'convocatoria' => '2024-01',
+                        'horario' => 'Mañana',
+                        'estado' => 'abierto',
+                        'asesor_id' => 'advisor@example.com',
+                        'fase_venta_id' => 'Initial Contact',
+                        'origen_id' => 'Web',
+                        'utm_source' => 'google',
+                        'utm_medium' => 'cpc',
+                        'utm_campaign' => 'spring_2024',
+                    ],
+                ],
+                'create_lead_with_names' => [
+                    'title' => __('Example: Create Lead (Using Names/Codes)'),
+                    'method' => 'POST',
+                    'url' => url('/api/v1/leads'),
+                    'body' => [
+                        'nombre' => 'Carlos',
+                        'apellidos' => 'Rodríguez',
+                        'email' => 'carlos.rodriguez@example.com',
+                        'telefono' => '+34655443322',
+                        'provincia_id' => 'Barcelona',
+                        'curso_id' => 'Marketing Digital',
+                        'sede_id' => 'Barcelona Campus',
+                        'modalidad_id' => 'Presencial',
+                        'origen_id' => 'Referido',
+                        'asesor_id' => 'John Doe',
+                    ],
+                ],
+                'update_lead' => [
+                    'title' => __('Example: Update Lead'),
+                    'method' => 'PUT',
+                    'url' => url('/api/v1/leads/123'),
+                    'body' => [
+                        'estado' => 'ganado',
+                        'fase_venta_id' => 5,
+                        'asesor_id' => 4,
+                    ],
+                ],
+                'get_lead' => [
+                    'title' => __('Example: Get Single Lead'),
                     'method' => 'GET',
-                    'url' => url('/api/v1/leads?estado=nuevo&curso_id=1&page=1&per_page=15'),
+                    'url' => url('/api/v1/leads/123'),
+                ],
+                // CATALOGS EXAMPLES
+                'list_courses' => [
+                    'title' => __('Example: List Courses'),
+                    'method' => 'GET',
+                    'url' => url('/api/v1/catalogs/courses'),
+                ],
+                'create_course' => [
+                    'title' => __('Example: Create Course'),
+                    'method' => 'POST',
+                    'url' => url('/api/v1/catalogs/courses'),
+                    'body' => [
+                        'codigo_curso' => 'PROG001',
+                        'titulacion' => 'Web Development Bootcamp',
+                        'area_id' => 1,
+                        'unidad_negocio_id' => 2,
+                        'duracion_id' => 3,
+                    ],
+                ],
+                'list_campuses' => [
+                    'title' => __('Example: List Campuses'),
+                    'method' => 'GET',
+                    'url' => url('/api/v1/catalogs/campuses?activo=1'),
                 ],
                 'create_campus' => [
                     'title' => __('Example: Create Campus'),
                     'method' => 'POST',
                     'url' => url('/api/v1/catalogs/campuses'),
                     'body' => [
-                        'codigo' => 'MAD',
-                        'nombre' => 'Madrid Centro',
-                        'direccion' => 'Calle Gran Vía 123',
-                        'ciudad' => 'Madrid',
+                        'codigo' => 'NYC',
+                        'nombre' => 'New York Campus',
+                        'direccion' => '123 Main Street',
+                        'ciudad' => 'New York',
+                        'codigo_postal' => '10001',
+                        'telefono' => '+1234567890',
+                        'email' => 'nyc@example.com',
                         'activo' => true,
                     ],
+                ],
+                'list_advisors' => [
+                    'title' => __('Example: List Advisors'),
+                    'method' => 'GET',
+                    'url' => url('/api/v1/catalogs/asesores'),
+                ],
+                'get_filters' => [
+                    'title' => __('Example: Get Available Filters'),
+                    'method' => 'GET',
+                    'url' => url('/api/v1/leads/filters'),
+                ],
+            ],
+            'filters' => [
+                'leads' => [
+                    'search' => __('Search by name, email or phone (partial match)'),
+                    'estado' => __('Filter by status: abierto, ganado, perdido'),
+                    'curso_id' => __('Filter by course ID'),
+                    'asesor_id' => __('Filter by advisor/user ID'),
+                    'sede_id' => __('Filter by campus ID'),
+                    'modalidad_id' => __('Filter by modality ID'),
+                    'provincia_id' => __('Filter by province ID'),
+                    'fase_venta_id' => __('Filter by sales phase ID'),
+                    'origen_id' => __('Filter by origin ID'),
+                    'fecha_desde' => __('Filter from date (YYYY-MM-DD)'),
+                    'fecha_hasta' => __('Filter to date (YYYY-MM-DD)'),
+                    'page' => __('Page number (default: 1)'),
+                    'per_page' => __('Results per page (default: 15, max: 100)'),
+                ],
+                'catalogs' => [
+                    'activo' => __('Filter by active status (1 or 0)'),
                 ],
             ],
             'rateLimit' => [

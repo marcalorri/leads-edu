@@ -139,9 +139,129 @@ class LeadStoreRequest extends FormRequest
      */
     protected function prepareForValidation(): void
     {
+        $tenant = $this->current_tenant;
+        $data = [];
+
         // Establecer valores por defecto
         if (!$this->has('estado')) {
-            $this->merge(['estado' => 'nuevo']);
+            $data['estado'] = 'nuevo';
+        }
+
+        // Resolver curso_id si se proporciona código o nombre
+        if ($this->has('curso_id') && !is_numeric($this->curso_id)) {
+            $cursoIdentifier = $this->curso_id;
+            
+            // Buscar por código exacto
+            $course = \App\Models\Course::where('tenant_id', $tenant->id)
+                ->where('codigo_curso', $cursoIdentifier)
+                ->first();
+            
+            // Si no se encuentra, buscar por código parcial
+            if (!$course) {
+                $course = \App\Models\Course::where('tenant_id', $tenant->id)
+                    ->where('codigo_curso', 'like', "%{$cursoIdentifier}%")
+                    ->first();
+            }
+            
+            // Si no se encuentra, buscar por título
+            if (!$course) {
+                $course = \App\Models\Course::where('tenant_id', $tenant->id)
+                    ->where('titulacion', 'like', "%{$cursoIdentifier}%")
+                    ->first();
+            }
+            
+            if ($course) {
+                $data['curso_id'] = $course->id;
+            }
+        }
+
+        // Resolver sede_id si se proporciona nombre
+        if ($this->has('sede_id') && !is_numeric($this->sede_id)) {
+            $campus = \App\Models\Campus::where('tenant_id', $tenant->id)
+                ->where('nombre', 'like', "%{$this->sede_id}%")
+                ->first();
+            
+            if ($campus) {
+                $data['sede_id'] = $campus->id;
+            }
+        }
+
+        // Resolver modalidad_id si se proporciona nombre
+        if ($this->has('modalidad_id') && !is_numeric($this->modalidad_id)) {
+            $modality = \App\Models\Modality::where('tenant_id', $tenant->id)
+                ->where('nombre', 'like', "%{$this->modalidad_id}%")
+                ->first();
+            
+            if ($modality) {
+                $data['modalidad_id'] = $modality->id;
+            }
+        }
+
+        // Resolver provincia_id si se proporciona nombre (con normalización inteligente)
+        if ($this->has('provincia_id') && !is_numeric($this->provincia_id)) {
+            $normalizer = app(\App\Services\LocationNormalizerService::class);
+            $province = $normalizer->resolveProvince($this->provincia_id, $tenant);
+            
+            if ($province) {
+                $data['provincia_id'] = $province->id;
+            }
+            // Si no se encuentra, el log ya se registró en el servicio
+        }
+
+        // Resolver asesor_id si se proporciona email o nombre
+        if ($this->has('asesor_id') && !is_numeric($this->asesor_id)) {
+            // Buscar por email exacto
+            $user = \App\Models\User::whereHas('tenants', function($query) use ($tenant) {
+                $query->where('tenant_id', $tenant->id);
+            })->where('email', $this->asesor_id)->first();
+            
+            // Si no se encuentra, buscar por nombre
+            if (!$user) {
+                $user = \App\Models\User::whereHas('tenants', function($query) use ($tenant) {
+                    $query->where('tenant_id', $tenant->id);
+                })->where('name', 'like', "%{$this->asesor_id}%")->first();
+            }
+            
+            if ($user) {
+                $data['asesor_id'] = $user->id;
+            }
+        }
+
+        // Resolver fase_venta_id si se proporciona nombre
+        if ($this->has('fase_venta_id') && !is_numeric($this->fase_venta_id)) {
+            $salesPhase = \App\Models\SalesPhase::where('tenant_id', $tenant->id)
+                ->where('nombre', 'like', "%{$this->fase_venta_id}%")
+                ->first();
+            
+            if ($salesPhase) {
+                $data['fase_venta_id'] = $salesPhase->id;
+            }
+        }
+
+        // Resolver origen_id si se proporciona nombre
+        if ($this->has('origen_id') && !is_numeric($this->origen_id)) {
+            $origin = \App\Models\Origin::where('tenant_id', $tenant->id)
+                ->where('nombre', 'like', "%{$this->origen_id}%")
+                ->first();
+            
+            if ($origin) {
+                $data['origen_id'] = $origin->id;
+            }
+        }
+
+        // Resolver motivo_nulo_id si se proporciona nombre
+        if ($this->has('motivo_nulo_id') && !is_numeric($this->motivo_nulo_id)) {
+            $nullReason = \App\Models\NullReason::where('tenant_id', $tenant->id)
+                ->where('nombre', 'like', "%{$this->motivo_nulo_id}%")
+                ->first();
+            
+            if ($nullReason) {
+                $data['motivo_nulo_id'] = $nullReason->id;
+            }
+        }
+
+        if (!empty($data)) {
+            $this->merge($data);
         }
     }
 }

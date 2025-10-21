@@ -6,6 +6,7 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Get;
 use Filament\Schemas\Schema;
 
 class ContactForm
@@ -41,11 +42,31 @@ class ContactForm
                     ->label(__('City')),
                 TextInput::make('codigo_postal')
                     ->label(__('Postal Code')),
-                Select::make('provincia_id')
-                    ->relationship('province', 'nombre')
+                Select::make('country_id')
+                    ->relationship('country', 'nombre', fn ($query) => $query->where('activo', true))
                     ->searchable()
                     ->preload()
-                    ->label(__('Province')),
+                    ->live()
+                    ->afterStateUpdated(function ($state, $set) {
+                        // Limpiar provincia cuando cambia el país
+                        $set('provincia_id', null);
+                    })
+                    ->label(__('Country')),
+                Select::make('provincia_id')
+                    ->relationship(
+                        'province',
+                        'nombre',
+                        fn ($query, $get) => $query
+                            ->where('activo', true)
+                            ->when(
+                                $get('country_id'),
+                                fn ($q, $countryId) => $q->where('country_id', $countryId)
+                            )
+                    )
+                    ->searchable()
+                    ->preload()
+                    ->label(__('Province / State')
+                    ),
                 DatePicker::make('fecha_nacimiento')
                     ->label(__('Birth Date')),
                 TextInput::make('dni_nie')

@@ -27,29 +27,29 @@ class FollowUpReminderNotification extends Notification implements ShouldQueue
     public function toMail($notifiable): MailMessage
     {
         $mail = (new MailMessage)
-            ->subject('⏰ Recordatorio de Seguimiento - ' . $this->lead->nombre)
-            ->greeting('Hola ' . $notifiable->name)
-            ->line('Tienes un seguimiento pendiente:')
-            ->line('**Nombre:** ' . $this->lead->nombre . ' ' . ($this->lead->apellidos ?? ''))
-            ->line('**Email:** ' . ($this->lead->email ?? 'No proporcionado'))
-            ->line('**Teléfono:** ' . ($this->lead->telefono ?? 'No proporcionado'))
-            ->line('**Estado:** ' . ucfirst($this->lead->estado));
+            ->subject(__('⏰ Follow-up Reminder - :name', ['name' => $this->lead->nombre]))
+            ->greeting(__('Hello :name', ['name' => $notifiable->name]))
+            ->line(__('You have a pending follow-up:'))
+            ->line('**' . __('Name') . ':** ' . $this->lead->nombre . ' ' . ($this->lead->apellidos ?? ''))
+            ->line('**' . __('Email') . ':** ' . ($this->lead->email ?? __('Not provided')))
+            ->line('**' . __('Phone') . ':** ' . ($this->lead->telefono ?? __('Not provided')))
+            ->line('**' . __('Status') . ':** ' . ucfirst($this->lead->estado));
 
         if ($this->event) {
-            $mail->line('**Acción programada:** ' . $this->event->titulo)
-                ->line('**Descripción:** ' . ($this->event->descripcion ?? 'Sin descripción'))
-                ->line('**Fecha programada:** ' . $this->event->fecha_programada->format('d/m/Y H:i'));
+            $mail->line('**' . __('Scheduled action') . ':** ' . $this->event->titulo)
+                ->line('**' . __('Description') . ':** ' . ($this->event->descripcion ?? __('No description')))
+                ->line('**' . __('Scheduled date') . ':** ' . $this->event->fecha_programada->format('d/m/Y H:i'));
         } else {
             $daysSinceCreated = (int) $this->lead->created_at->diffInDays(now());
-            $mail->line('**Días sin seguimiento:** ' . $daysSinceCreated . ' días');
+            $mail->line('**' . __('Days without follow-up') . ':** ' . $daysSinceCreated . ' ' . __('days'));
         }
 
         // Construir URL correcta con tenant
         $leadUrl = url('/dashboard/' . $this->lead->tenant->uuid . '/leads/' . $this->lead->id . '/edit');
 
-        return $mail->action('Ver Lead', $leadUrl)
-            ->line('¡No dejes pasar esta oportunidad!')
-            ->salutation('Saludos, ' . config('app.name'));
+        return $mail->action(__('View Lead'), $leadUrl)
+            ->line(__('Don\'t miss this opportunity!'))
+            ->salutation(__('Regards') . ', ' . config('app.name'));
     }
 
     public function toDatabase($notifiable): array
@@ -58,8 +58,8 @@ class FollowUpReminderNotification extends Notification implements ShouldQueue
         $actionUrl = '/dashboard/' . $this->lead->tenant->uuid . '/leads/' . $this->lead->id . '/edit';
         
         return [
-            'title' => '⏰ Recordatorio de Seguimiento',
-            'message' => 'Seguimiento pendiente para: ' . $this->lead->nombre,
+            'title' => __('⏰ Follow-up Reminder'),
+            'message' => __('Pending follow-up for: :name', ['name' => $this->lead->nombre]),
             'lead_id' => $this->lead->id,
             'lead_name' => $this->lead->nombre,
             'lead_state' => $this->lead->estado,
@@ -72,14 +72,14 @@ class FollowUpReminderNotification extends Notification implements ShouldQueue
 
     public function toFilament($notifiable): FilamentNotification
     {
-        $body = 'Seguimiento pendiente para: ' . $this->lead->nombre;
+        $body = __('Pending follow-up for: :name', ['name' => $this->lead->nombre]);
         
         if ($this->event) {
             $body .= ' - ' . $this->event->titulo;
         }
 
         return FilamentNotification::make()
-            ->title('⏰ Recordatorio de Seguimiento')
+            ->title(__('⏰ Follow-up Reminder'))
             ->body($body)
             ->icon('heroicon-o-clock')
             ->iconColor('warning')

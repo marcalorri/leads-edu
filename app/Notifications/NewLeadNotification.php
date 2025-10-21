@@ -24,22 +24,22 @@ class NewLeadNotification extends Notification implements ShouldQueue
 
     public function toMail($notifiable): MailMessage
     {
-        $tenantName = $this->lead->tenant->name ?? 'tu organización';
+        $tenantName = $this->lead->tenant->name ?? __('your organization');
         
         // Construir URL correcta con tenant
         $leadUrl = url('/dashboard/' . $this->lead->tenant->uuid . '/leads/' . $this->lead->id . '/edit');
         
         return (new MailMessage)
-            ->subject('🎉 Nuevo lead para ' . $tenantName)
-            ->greeting('¡Hola ' . $notifiable->name . '!')
-            ->line('Se te ha asignado un nuevo lead:')
-            ->line('**Nombre:** ' . $this->lead->nombre . ' ' . ($this->lead->apellidos ?? ''))
-            ->line('**Email:** ' . ($this->lead->email ?? 'No proporcionado'))
-            ->line('**Teléfono:** ' . ($this->lead->telefono ?? 'No proporcionado'))
-            ->line('**Curso:** ' . ($this->lead->course?->titulacion ?? 'No asignado'))
-            ->action('Ver Lead', $leadUrl)
-            ->line('¡No olvides hacer seguimiento pronto!')
-            ->salutation('Saludos, ' . config('app.name'));
+            ->subject(__('🎉 New lead for :tenant', ['tenant' => $tenantName]))
+            ->greeting(__('Hello :name!', ['name' => $notifiable->name]))
+            ->line(__('You have been assigned a new lead:'))
+            ->line('**' . __('Name') . ':** ' . $this->lead->nombre . ' ' . ($this->lead->apellidos ?? ''))
+            ->line('**' . __('Email') . ':** ' . ($this->lead->email ?? __('Not provided')))
+            ->line('**' . __('Phone') . ':** ' . ($this->lead->telefono ?? __('Not provided')))
+            ->line('**' . __('Course') . ':** ' . ($this->lead->course?->titulacion ?? __('Not assigned')))
+            ->action(__('View Lead'), $leadUrl)
+            ->line(__('Don\'t forget to follow up soon!'))
+            ->salutation(__('Regards') . ', ' . config('app.name'));
     }
 
     public function toDatabase($notifiable): array
@@ -48,8 +48,8 @@ class NewLeadNotification extends Notification implements ShouldQueue
         $actionUrl = '/dashboard/' . $this->lead->tenant->uuid . '/leads/' . $this->lead->id . '/edit';
         
         return [
-            'title' => 'Nuevo Lead Asignado',
-            'message' => 'Se te ha asignado el lead: ' . $this->lead->nombre,
+            'title' => __('New Lead Assigned'),
+            'message' => __('You have been assigned the lead: :name', ['name' => $this->lead->nombre]),
             'lead_id' => $this->lead->id,
             'lead_name' => $this->lead->nombre,
             'lead_email' => $this->lead->email,
@@ -61,8 +61,8 @@ class NewLeadNotification extends Notification implements ShouldQueue
     public function toFilament($notifiable): FilamentNotification
     {
         return FilamentNotification::make()
-            ->title('Nuevo Lead Asignado')
-            ->body('Se te ha asignado el lead: ' . $this->lead->nombre . ' ' . ($this->lead->apellidos ?? ''))
+            ->title(__('New Lead Assigned'))
+            ->body(__('You have been assigned the lead: :name', ['name' => $this->lead->nombre . ' ' . ($this->lead->apellidos ?? '')]))
             ->icon('heroicon-o-user-plus')
             ->iconColor('success')
             ->persistent();

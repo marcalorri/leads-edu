@@ -5,6 +5,7 @@ namespace App\Filament\Dashboard\Resources\Leads\Schemas;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Forms\Get;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Schema;
@@ -43,35 +44,35 @@ class LeadForm
                                             ->required()
                                             ->maxLength(255)
                                             ->label(__('Email')),
-                                        TextInput::make('pais')
-                                            ->maxLength(100)
-                                            ->label(__('Country')),
-                                        Select::make('provincia_id')
-                                            ->relationship('province', 'nombre')
+                                        Select::make('country_id')
+                                            ->relationship('country', 'nombre', fn ($query) => $query->where('activo', true))
                                             ->searchable()
                                             ->preload()
-                                            ->createOptionForm([
-                                                TextInput::make('codigo')
-                                                    ->required()
-                                                    ->maxLength(10)
-                                                    ->label(__('Code')),
-                                                TextInput::make('nombre')
-                                                    ->required()
-                                                    ->maxLength(100)
-                                                    ->label(__('Name')),
-                                                TextInput::make('codigo_ine')
-                                                    ->maxLength(5)
-                                                    ->label(__('INE Code')),
-                                                TextInput::make('comunidad_autonoma')
-                                                    ->maxLength(100)
-                                                    ->label(__('Autonomous Community')),
-                                            ])
-                                            ->createOptionUsing(function ($data) {
-                                                $data['tenant_id'] = filament()->getTenant()->id;
-                                                $data['activo'] = true;
-                                                return \App\Models\Province::create($data)->id;
+                                            ->live()
+                                            ->afterStateUpdated(function ($state, $set) {
+                                                // Limpiar provincia cuando cambia el país
+                                                $set('provincia_id', null);
                                             })
-                                            ->label(__('Province')),
+                                            ->label(__('Country'))
+                                            ->helperText(__('Select country first to filter provinces')),
+                                        Select::make('provincia_id')
+                                            ->relationship(
+                                                'province',
+                                                'nombre',
+                                                fn ($query, $get) => $query
+                                                    ->where('activo', true)
+                                                    ->when(
+                                                        $get('country_id'),
+                                                        fn ($q, $countryId) => $q->where('country_id', $countryId)
+                                                    )
+                                            )
+                                            ->searchable()
+                                            ->preload()
+                                            ->label(__('Province / State'))
+                                            ->helperText(fn ($get) => !$get('country_id') 
+                                                ? __('Select a country first') 
+                                                : __('Provinces filtered by selected country')
+                                            ),
                                     ])->columns(3),
                                 
                                 Section::make(__('Academic Information'))
