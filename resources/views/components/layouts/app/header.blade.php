@@ -19,7 +19,8 @@
                 <x-layouts.app.navigation-links></x-layouts.app.navigation-links>
             </x-nav>
         </div>
-        <div class="navbar-end">
+        <div class="navbar-end gap-2">
+            <x-language-switcher />
             @auth
                 <x-layouts.app.user-menu></x-layouts.app.user-menu>
             @else

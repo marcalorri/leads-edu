@@ -9,9 +9,12 @@ class Configuration extends Cluster
 {
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-cog-6-tooth';
 
-    protected static ?string $navigationLabel = 'Configuración';
-
     protected static ?int $navigationSort = 9999;
+
+    public static function getNavigationLabel(): string
+    {
+        return __('Configuration');
+    }
 
     protected static bool $shouldRegisterNavigation = true;
 

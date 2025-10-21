@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\OAuthController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\PaymentProviders\PaddleController;
 use App\Http\Controllers\RoadmapController;
 use App\Services\SessionService;
@@ -32,6 +33,9 @@ Route::get('/', function () {
 Route::get('/dashboard', function (UserDashboardService $dashboardService) {
     return redirect($dashboardService->getUserDashboardUrl(Auth::user()));
 })->name('dashboard')->middleware('auth');
+
+// Locale routes
+Route::get('/locale/{locale}', [LocaleController::class, 'change'])->name('locale.change');
 
 Auth::routes();
 

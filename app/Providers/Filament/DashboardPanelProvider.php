@@ -6,6 +6,7 @@ use App\Constants\AnnouncementPlacement;
 use App\Constants\TenancyPermissionConstants;
 use App\Filament\Dashboard\Pages\TenantSettings;
 use App\Filament\Dashboard\Pages\TwoFactorAuth\TwoFactorAuth;
+use App\Http\Middleware\SetLocaleFromBrowser;
 use App\Http\Middleware\UpdateUserLastSeenAt;
 use App\Livewire\AddressForm;
 use App\Livewire\AvatarForm;
@@ -101,6 +102,7 @@ class DashboardPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+                SetLocaleFromBrowser::class,
                 UpdateUserLastSeenAt::class,
             ])
             ->renderHook('panels::head.start', function () {
@@ -113,7 +115,25 @@ class DashboardPanelProvider extends PanelProvider
                 fn (): string => Blade::render("@include('components.crm-subscription-banner')")
             )
             ->renderHook(PanelsRenderHook::GLOBAL_SEARCH_AFTER,
-                fn (): string => Blade::render("@livewire('lead-limit-indicator')")
+                fn (): string => Blade::render("
+                    @livewire('lead-limit-indicator')
+                    <div class='flex items-center gap-1 ms-4'>
+                        @foreach(config('app.available_locales', ['en']) as \$locale)
+                            @if(\$locale === app()->getLocale())
+                                <span class='text-sm font-semibold text-primary-600 dark:text-primary-400'>
+                                    {{ strtoupper(\$locale) }}
+                                </span>
+                            @else
+                                <a href='/locale/{{ \$locale }}' class='text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition'>
+                                    {{ strtoupper(\$locale) }}
+                                </a>
+                            @endif
+                            @if(!\$loop->last)
+                                <span class='text-gray-400 dark:text-gray-600'>|</span>
+                            @endif
+                        @endforeach
+                    </div>
+                ")
             )
             ->navigationGroups([
                 NavigationGroup::make(__('Main CRM'))

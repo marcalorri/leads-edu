@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Http\Middleware\SetLocaleFromBrowser;
 use App\Http\Middleware\UpdateUserLastSeenAt;
 use Filament\Actions\Action;
 use Filament\Http\Middleware\Authenticate;
@@ -11,6 +12,8 @@ use Filament\Navigation\NavigationGroup;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\View\PanelsRenderHook;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -60,11 +63,32 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+                SetLocaleFromBrowser::class,
                 UpdateUserLastSeenAt::class,
             ])
             ->authMiddleware([
                 Authenticate::class,
             ])
+            ->renderHook(PanelsRenderHook::GLOBAL_SEARCH_AFTER,
+                fn (): string => Blade::render("
+                    <div class='flex items-center gap-1 ms-4'>
+                        @foreach(config('app.available_locales', ['en']) as \$locale)
+                            @if(\$locale === app()->getLocale())
+                                <span class='text-sm font-semibold text-primary-600 dark:text-primary-400'>
+                                    {{ strtoupper(\$locale) }}
+                                </span>
+                            @else
+                                <a href='/locale/{{ \$locale }}' class='text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition'>
+                                    {{ strtoupper(\$locale) }}
+                                </a>
+                            @endif
+                            @if(!\$loop->last)
+                                <span class='text-gray-400 dark:text-gray-600'>|</span>
+                            @endif
+                        @endforeach
+                    </div>
+                ")
+            )
             ->navigationGroups([
                 NavigationGroup::make()
                     ->label(fn () => (__('Revenue')))

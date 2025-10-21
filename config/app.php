@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'SaaSykit'),
+    'name' => env('APP_NAME', 'Leads Edu'),
 
     'description' => env('APP_DESCRIPTION', ''),
 
@@ -85,6 +85,18 @@ return [
     */
 
     'locale' => 'en',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Available Locales
+    |--------------------------------------------------------------------------
+    |
+    | List of available locales in the application. This is used by the
+    | SetLocaleFromBrowser middleware to determine which locales are supported.
+    |
+    */
+
+    'available_locales' => ['en', 'es'],
 
     /*
     |--------------------------------------------------------------------------
