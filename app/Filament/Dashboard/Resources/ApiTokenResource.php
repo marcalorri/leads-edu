@@ -104,6 +104,7 @@ class ApiTokenResource extends Resource
             'index' => \App\Filament\Dashboard\Resources\ApiTokenResource\Pages\ListApiTokens::route('/'),
             'create' => \App\Filament\Dashboard\Resources\ApiTokenResource\Pages\CreateApiToken::route('/create'),
             'view' => \App\Filament\Dashboard\Resources\ApiTokenResource\Pages\ViewApiToken::route('/{record}'),
+            'token-created' => \App\Filament\Dashboard\Resources\ApiTokenResource\Pages\TokenCreated::route('/{record}/token-created'),
         ];
     }
 

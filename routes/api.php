@@ -91,6 +91,21 @@ Route::prefix('v1')->middleware(['auth:sanctum', 'tenant.api', 'api.rate_limit:1
             ->middleware('api.permission:leads:admin')
             ->name('api.v1.catalogs.courses.update');
         
+        // Áreas
+        Route::get('/areas', [CatalogApiController::class, 'areas'])
+            ->middleware('api.permission:leads:read')
+            ->name('api.v1.catalogs.areas');
+        
+        // Unidades de Negocio
+        Route::get('/business-units', [CatalogApiController::class, 'businessUnits'])
+            ->middleware('api.permission:leads:read')
+            ->name('api.v1.catalogs.business-units');
+        
+        // Duraciones
+        Route::get('/durations', [CatalogApiController::class, 'durations'])
+            ->middleware('api.permission:leads:read')
+            ->name('api.v1.catalogs.durations');
+        
         // Asesores (solo lectura)
         Route::get('/asesores', [CatalogApiController::class, 'asesores'])
             ->middleware('api.permission:leads:read')

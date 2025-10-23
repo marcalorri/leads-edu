@@ -59,6 +59,90 @@ class CatalogApiController extends Controller
     }
 
     /**
+     * Get all areas for the current tenant.
+     */
+    public function areas(Request $request): JsonResponse
+    {
+        $tenant = $request->current_tenant;
+        
+        $areas = \App\Models\Area::where('tenant_id', $tenant->id)
+            ->where('activo', true)
+            ->get()
+            ->map(function ($area) {
+                return [
+                    'id' => $area->id,
+                    'codigo' => $area->codigo,
+                    'nombre' => $area->nombre,
+                    'descripcion' => $area->descripcion,
+                ];
+            });
+
+        return response()->json([
+            'data' => $areas,
+            'meta' => [
+                'total' => $areas->count(),
+            ],
+        ]);
+    }
+
+    /**
+     * Get all business units for the current tenant.
+     */
+    public function businessUnits(Request $request): JsonResponse
+    {
+        $tenant = $request->current_tenant;
+        
+        $businessUnits = \App\Models\BusinessUnit::where('tenant_id', $tenant->id)
+            ->where('activo', true)
+            ->get()
+            ->map(function ($unit) {
+                return [
+                    'id' => $unit->id,
+                    'codigo' => $unit->codigo,
+                    'nombre' => $unit->nombre,
+                    'descripcion' => $unit->descripcion,
+                    'responsable' => $unit->responsable,
+                ];
+            });
+
+        return response()->json([
+            'data' => $businessUnits,
+            'meta' => [
+                'total' => $businessUnits->count(),
+            ],
+        ]);
+    }
+
+    /**
+     * Get all durations for the current tenant.
+     */
+    public function durations(Request $request): JsonResponse
+    {
+        $tenant = $request->current_tenant;
+        
+        $durations = \App\Models\Duration::where('tenant_id', $tenant->id)
+            ->where('activo', true)
+            ->get()
+            ->map(function ($duration) {
+                return [
+                    'id' => $duration->id,
+                    'nombre' => $duration->nombre,
+                    'descripcion' => $duration->descripcion,
+                    'horas_totales' => $duration->horas_totales,
+                    'tipo' => $duration->tipo,
+                    'valor_numerico' => $duration->valor_numerico,
+                ];
+            });
+
+        return response()->json([
+            'data' => $durations,
+            'meta' => [
+                'total' => $durations->count(),
+            ],
+        ]);
+    }
+
+    /**
      * Get all asesores (users) for the current tenant.
      */
     public function asesores(Request $request): JsonResponse

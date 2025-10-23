@@ -4,10 +4,13 @@ namespace App\Filament\Dashboard\Resources\ApiTokenResource\Pages;
 
 use App\Filament\Dashboard\Resources\ApiTokenResource;
 use App\Models\ApiToken;
+use Filament\Actions;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\BulkActionGroup;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Filament\Actions;
 
 class ListApiTokens extends ListRecords
 {
@@ -29,20 +32,20 @@ class ListApiTokens extends ListRecords
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->label(__('Name'))
-                    ->searchable(),
-                
-                Tables\Columns\TextColumn::make('token')
-                    ->label(__('Token'))
-                    ->formatStateUsing(fn ($state) => substr($state, 0, 20) . '...')
-                    ->copyable()
-                    ->copyableState(fn ($record) => $record->token) // Copia el token completo
-                    ->copyMessage(__('Token copied to clipboard'))
-                    ->tooltip(__('Click to copy token')),
+                    ->searchable()
+                    ->sortable(),
                 
                 Tables\Columns\TextColumn::make('description')
                     ->label(__('Description'))
                     ->limit(50)
-                    ->placeholder(__('No description')),
+                    ->placeholder(__('No description'))
+                    ->wrap(),
+                
+                Tables\Columns\TextColumn::make('abilities')
+                    ->label(__('Permissions'))
+                    ->badge()
+                    ->formatStateUsing(fn ($state) => is_array($state) ? $state : [$state])
+                    ->getStateUsing(fn ($record) => $record->abilities ?? []),
                 
                 Tables\Columns\IconColumn::make('is_active')
                     ->label(__('Status'))
@@ -65,7 +68,14 @@ class ListApiTokens extends ListRecords
                     ->sortable(),
             ])
             ->actions([
-                // Acciones simplificadas para compatibilidad
+                DeleteAction::make()
+                    ->label('')
+                    ->requiresConfirmation(),
+            ])
+            ->bulkActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                ]),
             ]);
     }
 
@@ -89,6 +99,9 @@ class ListApiTokens extends ListRecords
                 ],
                 __('Catalogs - Read') => [
                     ['method' => 'GET', 'path' => '/catalogs/courses', 'description' => __('List tenant courses'), 'scope' => 'leads:read'],
+                    ['method' => 'GET', 'path' => '/catalogs/areas', 'description' => __('List areas'), 'scope' => 'leads:read'],
+                    ['method' => 'GET', 'path' => '/catalogs/business-units', 'description' => __('List business units'), 'scope' => 'leads:read'],
+                    ['method' => 'GET', 'path' => '/catalogs/durations', 'description' => __('List durations'), 'scope' => 'leads:read'],
                     ['method' => 'GET', 'path' => '/catalogs/asesores', 'description' => __('List tenant advisors'), 'scope' => 'leads:read'],
                     ['method' => 'GET', 'path' => '/catalogs/campuses', 'description' => __('List active campuses'), 'scope' => 'leads:read'],
                     ['method' => 'GET', 'path' => '/catalogs/modalities', 'description' => __('List active modalities'), 'scope' => 'leads:read'],
@@ -221,7 +234,7 @@ class ListApiTokens extends ListRecords
                     'url' => url('/api/v1/catalogs/courses'),
                 ],
                 'create_course' => [
-                    'title' => __('Example: Create Course'),
+                    'title' => __('Example: Create Course (with IDs)'),
                     'method' => 'POST',
                     'url' => url('/api/v1/catalogs/courses'),
                     'body' => [
@@ -230,6 +243,18 @@ class ListApiTokens extends ListRecords
                         'area_id' => 1,
                         'unidad_negocio_id' => 2,
                         'duracion_id' => 3,
+                    ],
+                ],
+                'create_course_smart' => [
+                    'title' => __('Example: Create Course (Smart Field Resolution)'),
+                    'method' => 'POST',
+                    'url' => url('/api/v1/catalogs/courses'),
+                    'body' => [
+                        'codigo_curso' => 'WEB-2024-01',
+                        'titulacion' => 'Master en Desarrollo Web',
+                        'area_id' => 'Tecnología',  // Nombre o código
+                        'unidad_negocio_id' => 'Formación Online',  // Nombre o código
+                        'duracion_id' => '12 meses',  // Nombre
                     ],
                 ],
                 'list_campuses' => [
