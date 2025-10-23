@@ -2,15 +2,21 @@
 
 namespace App\Filament\Dashboard\Resources\Leads\Tables;
 
-use Filament\Actions\EditAction;
+use Filament\Actions\BulkAction;
+use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Forms\Components\Select;
+use Filament\Notifications\Notification;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 
 class LeadsTable
 {
@@ -152,6 +158,136 @@ class LeadsTable
                 'tenant' => filament()->getTenant(),
                 'record' => $record
             ]))
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make()
+                        ->label(__('Delete selected'))
+                        ->requiresConfirmation()
+                        ->modalHeading(__('Delete selected leads'))
+                        ->modalDescription(__('Are you sure you want to delete the selected leads? This action cannot be undone.'))
+                        ->modalSubmitActionLabel(__('Delete'))
+                        ->successNotificationTitle(__('Leads deleted successfully')),
+                    
+                    BulkAction::make('updateStatus')
+                        ->label(__('Update status'))
+                        ->icon('heroicon-o-pencil-square')
+                        ->form([
+                            Select::make('estado')
+                                ->label(__('Status'))
+                                ->options([
+                                    'abierto' => __('Open'),
+                                    'ganado' => __('Won'),
+                                    'perdido' => __('Lost'),
+                                ])
+                                ->required()
+                                ->live(),
+                            Select::make('motivo_nulo_id')
+                                ->label(__('Null Reason'))
+                                ->relationship('nullReason', 'nombre')
+                                ->searchable()
+                                ->preload()
+                                ->visible(fn (callable $get) => $get('estado') === 'perdido')
+                                ->required(fn (callable $get) => $get('estado') === 'perdido'),
+                        ])
+                        ->action(function (Collection $records, array $data): void {
+                            $now = now();
+                            
+                            foreach ($records as $record) {
+                                $updateData = ['estado' => $data['estado']];
+                                
+                                if ($data['estado'] === 'ganado') {
+                                    $updateData['fecha_ganado'] = $now;
+                                    $updateData['fecha_perdido'] = null;
+                                    $updateData['motivo_nulo_id'] = null;
+                                } elseif ($data['estado'] === 'perdido') {
+                                    $updateData['fecha_perdido'] = $now;
+                                    $updateData['fecha_ganado'] = null;
+                                    $updateData['motivo_nulo_id'] = $data['motivo_nulo_id'] ?? null;
+                                } else {
+                                    $updateData['fecha_ganado'] = null;
+                                    $updateData['fecha_perdido'] = null;
+                                    $updateData['motivo_nulo_id'] = null;
+                                }
+                                
+                                $record->update($updateData);
+                            }
+                            
+                            Notification::make()
+                                ->success()
+                                ->title(__('Status updated'))
+                                ->body(__('Status updated for :count leads', ['count' => $records->count()]))
+                                ->send();
+                        })
+                        ->deselectRecordsAfterCompletion(),
+                    
+                    BulkAction::make('updateSalesPhase')
+                        ->label(__('Update sales phase'))
+                        ->icon('heroicon-o-arrow-path')
+                        ->form([
+                            Select::make('fase_venta_id')
+                                ->label(__('Sales Phase'))
+                                ->relationship('salesPhase', 'nombre')
+                                ->searchable()
+                                ->preload()
+                                ->required(),
+                        ])
+                        ->action(function (Collection $records, array $data): void {
+                            $records->each->update(['fase_venta_id' => $data['fase_venta_id']]);
+                            
+                            Notification::make()
+                                ->success()
+                                ->title(__('Sales phase updated'))
+                                ->body(__('Sales phase updated for :count leads', ['count' => $records->count()]))
+                                ->send();
+                        })
+                        ->deselectRecordsAfterCompletion(),
+                    
+                    BulkAction::make('assignAdvisor')
+                        ->label(__('Assign advisor'))
+                        ->icon('heroicon-o-user-plus')
+                        ->form([
+                            Select::make('asesor_id')
+                                ->label(__('Advisor'))
+                                ->relationship('asesor', 'name')
+                                ->searchable()
+                                ->preload()
+                                ->required(),
+                        ])
+                        ->action(function (Collection $records, array $data): void {
+                            $records->each->update(['asesor_id' => $data['asesor_id']]);
+                            
+                            Notification::make()
+                                ->success()
+                                ->title(__('Advisor assigned'))
+                                ->body(__('Advisor assigned to :count leads', ['count' => $records->count()]))
+                                ->send();
+                        })
+                        ->deselectRecordsAfterCompletion(),
+                    
+                    BulkAction::make('updateCourse')
+                        ->label(__('Update course'))
+                        ->icon('heroicon-o-academic-cap')
+                        ->form([
+                            Select::make('curso_id')
+                                ->label(__('Course'))
+                                ->relationship('course', 'titulacion')
+                                ->searchable()
+                                ->preload()
+                                ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->codigo_curso} - {$record->titulacion}")
+                                ->required(),
+                        ])
+                        ->action(function (Collection $records, array $data): void {
+                            $records->each->update(['curso_id' => $data['curso_id']]);
+                            
+                            Notification::make()
+                                ->success()
+                                ->title(__('Course updated'))
+                                ->body(__('Course updated for :count leads', ['count' => $records->count()]))
+                                ->send();
+                        })
+                        ->deselectRecordsAfterCompletion(),
+                ]),
+            ])
             ->defaultSort('created_at', 'desc');
     }
 }

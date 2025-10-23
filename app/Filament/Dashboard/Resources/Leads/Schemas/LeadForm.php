@@ -2,6 +2,7 @@
 
 namespace App\Filament\Dashboard\Resources\Leads\Schemas;
 
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -242,9 +243,9 @@ class LeadForm
                             ->live()
                             ->afterStateUpdated(function ($state, $set) {
                                 if ($state === 'perdido') {
-                                    $set('fecha_perdido', now()->format('Y-m-d\TH:i'));
+                                    $set('fecha_perdido', now());
                                 } elseif ($state === 'ganado') {
-                                    $set('fecha_ganado', now()->format('Y-m-d\TH:i'));
+                                    $set('fecha_ganado', now());
                                 }
                             })
                             ->label(__('Status')),
@@ -266,15 +267,15 @@ class LeadForm
                             ->label(__('Null Reason'))
                             ->helperText(__('Required when status is "Lost"'))
                             ->visible(fn ($get) => $get('estado') === 'perdido'),
-                        TextInput::make('fecha_ganado')
-                            ->type('datetime-local')
+                        DateTimePicker::make('fecha_ganado')
                             ->label(__('Won Date'))
                             ->helperText(__('Set automatically when marked as won'))
+                            ->seconds(false)
                             ->visible(fn ($get) => $get('estado') === 'ganado'),
-                        TextInput::make('fecha_perdido')
-                            ->type('datetime-local')
+                        DateTimePicker::make('fecha_perdido')
                             ->label(__('Lost Date'))
                             ->helperText(__('Set automatically when marked as lost'))
+                            ->seconds(false)
                             ->visible(fn ($get) => $get('estado') === 'perdido'),
                     ])->columns(1),
             ]);
