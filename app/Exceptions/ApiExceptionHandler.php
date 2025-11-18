@@ -216,7 +216,12 @@ class ApiExceptionHandler
             
             $errorCode = 'UNKNOWN_FIELD';
             $userMessage = __('Unknown field: :field', ['field' => $column]);
-            $details = ['field' => $column];
+            $details = [
+                'field' => $column,
+                'hint' => $column === 'tenant_id' 
+                    ? 'Database migrations may not be up to date. Run: php artisan migrate'
+                    : 'This field does not exist in the database table',
+            ];
         }
 
         // Log completo del error

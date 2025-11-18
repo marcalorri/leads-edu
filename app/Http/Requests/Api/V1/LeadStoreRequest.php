@@ -37,9 +37,6 @@ class LeadStoreRequest extends FormRequest
                 'required',
                 'email',
                 'max:255',
-                Rule::unique('leads')->where(function ($query) use ($tenant) {
-                    return $query->where('tenant_id', $tenant->id);
-                })
             ],
             'telefono' => ['required', 'string', 'max:20'],
             'pais' => ['nullable', 'string', 'max:100'],

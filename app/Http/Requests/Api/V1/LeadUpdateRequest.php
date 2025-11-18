@@ -31,9 +31,6 @@ class LeadUpdateRequest extends FormRequest
                 'required',
                 'email',
                 'max:255',
-                Rule::unique('leads')->where(function ($query) use ($tenant) {
-                    return $query->where('tenant_id', $tenant->id);
-                })->ignore($leadId)
             ],
             'telefono' => ['sometimes', 'required', 'string', 'max:20'],
             'pais' => ['sometimes', 'nullable', 'string', 'max:100'],
