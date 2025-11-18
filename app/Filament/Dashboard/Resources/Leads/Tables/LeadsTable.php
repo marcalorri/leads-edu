@@ -116,7 +116,13 @@ class LeadsTable
             ])
             ->filters([
                 SelectFilter::make('asesor')
-                    ->relationship('asesor', 'name')
+                    ->relationship(
+                        'asesor',
+                        'name',
+                        fn ($query) => $query->whereHas('tenants', function ($q) {
+                            $q->where('tenant_id', filament()->getTenant()->id);
+                        })
+                    )
                     ->searchable()
                     ->preload()
                     ->label(__('Advisor')),
@@ -183,7 +189,11 @@ class LeadsTable
                                 ->live(),
                             Select::make('motivo_nulo_id')
                                 ->label(__('Null Reason'))
-                                ->relationship('nullReason', 'nombre')
+                                ->relationship(
+                                    'nullReason',
+                                    'nombre',
+                                    fn ($query) => $query->where('tenant_id', filament()->getTenant()->id)
+                                )
                                 ->searchable()
                                 ->preload()
                                 ->visible(fn (callable $get) => $get('estado') === 'perdido')
@@ -226,7 +236,11 @@ class LeadsTable
                         ->form([
                             Select::make('fase_venta_id')
                                 ->label(__('Sales Phase'))
-                                ->relationship('salesPhase', 'nombre')
+                                ->relationship(
+                                    'salesPhase',
+                                    'nombre',
+                                    fn ($query) => $query->where('tenant_id', filament()->getTenant()->id)
+                                )
                                 ->searchable()
                                 ->preload()
                                 ->required(),
@@ -248,7 +262,13 @@ class LeadsTable
                         ->form([
                             Select::make('asesor_id')
                                 ->label(__('Advisor'))
-                                ->relationship('asesor', 'name')
+                                ->relationship(
+                                    'asesor',
+                                    'name',
+                                    fn ($query) => $query->whereHas('tenants', function ($q) {
+                                        $q->where('tenant_id', filament()->getTenant()->id);
+                                    })
+                                )
                                 ->searchable()
                                 ->preload()
                                 ->required(),
@@ -270,7 +290,11 @@ class LeadsTable
                         ->form([
                             Select::make('curso_id')
                                 ->label(__('Course'))
-                                ->relationship('course', 'titulacion')
+                                ->relationship(
+                                    'course',
+                                    'titulacion',
+                                    fn ($query) => $query->where('tenant_id', filament()->getTenant()->id)
+                                )
                                 ->searchable()
                                 ->preload()
                                 ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->codigo_curso} - {$record->titulacion}")

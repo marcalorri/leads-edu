@@ -79,7 +79,11 @@ class LeadForm
                                 Section::make(__('Academic Information'))
                                     ->schema([
                                         Select::make('curso_id')
-                                            ->relationship('course', 'titulacion')
+                                            ->relationship(
+                                                'course',
+                                                'titulacion',
+                                                fn ($query) => $query->where('tenant_id', filament()->getTenant()->id)
+                                            )
                                             ->searchable()
                                             ->preload()
                                             ->createOptionForm([
@@ -117,7 +121,11 @@ class LeadForm
                                             ->label(__('Course'))
                                             ->columnSpanFull(),
                                         Select::make('sede_id')
-                                            ->relationship('campus', 'nombre')
+                                            ->relationship(
+                                                'campus',
+                                                'nombre',
+                                                fn ($query) => $query->where('tenant_id', filament()->getTenant()->id)
+                                            )
                                             ->searchable()
                                             ->preload()
                                             ->createOptionForm([
@@ -144,7 +152,11 @@ class LeadForm
                                             })
                                             ->label(__('Campus')),
                                         Select::make('modalidad_id')
-                                            ->relationship('modality', 'nombre')
+                                            ->relationship(
+                                                'modality',
+                                                'nombre',
+                                                fn ($query) => $query->where('tenant_id', filament()->getTenant()->id)
+                                            )
                                             ->searchable()
                                             ->preload()
                                             ->createOptionForm([
@@ -181,7 +193,11 @@ class LeadForm
                                 Section::make(__('Associated Contact'))
                                     ->schema([
                                         Select::make('contact_id')
-                                            ->relationship('contact', 'nombre_completo')
+                                            ->relationship(
+                                                'contact',
+                                                'nombre_completo',
+                                                fn ($query) => $query->where('tenant_id', filament()->getTenant()->id)
+                                            )
                                             ->searchable()
                                             ->preload()
                                             ->label(__('Contact'))
@@ -211,7 +227,11 @@ class LeadForm
                                 Section::make(__('Lead Origin'))
                                     ->schema([
                                         Select::make('origen_id')
-                                            ->relationship('origin', 'nombre')
+                                            ->relationship(
+                                                'origin',
+                                                'nombre',
+                                                fn ($query) => $query->where('tenant_id', filament()->getTenant()->id)
+                                            )
                                             ->searchable()
                                             ->preload()
                                             ->label(__('Origin')),
@@ -250,17 +270,31 @@ class LeadForm
                             })
                             ->label(__('Status')),
                         Select::make('fase_venta_id')
-                            ->relationship('salesPhase', 'nombre')
+                            ->relationship(
+                                'salesPhase',
+                                'nombre',
+                                fn ($query) => $query->where('tenant_id', filament()->getTenant()->id)
+                            )
                             ->searchable()
                             ->preload()
                             ->label(__('Sales Phase')),
                         Select::make('asesor_id')
-                            ->relationship('asesor', 'name')
+                            ->relationship(
+                                'asesor',
+                                'name',
+                                fn ($query) => $query->whereHas('tenants', function ($q) {
+                                    $q->where('tenant_id', filament()->getTenant()->id);
+                                })
+                            )
                             ->searchable()
                             ->preload()
                             ->label(__('Assigned Advisor')),
                         Select::make('motivo_nulo_id')
-                            ->relationship('nullReason', 'nombre')
+                            ->relationship(
+                                'nullReason',
+                                'nombre',
+                                fn ($query) => $query->where('tenant_id', filament()->getTenant()->id)
+                            )
                             ->searchable()
                             ->preload()
                             ->required(fn ($get) => $get('estado') === 'perdido')
