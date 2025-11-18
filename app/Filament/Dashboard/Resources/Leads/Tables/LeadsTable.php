@@ -127,27 +127,47 @@ class LeadsTable
                     ->preload()
                     ->label(__('Advisor')),
                 SelectFilter::make('course')
-                    ->relationship('course', 'titulacion')
+                    ->relationship(
+                        'course',
+                        'titulacion',
+                        fn ($query) => $query->where('tenant_id', filament()->getTenant()->id)
+                    )
                     ->searchable()
                     ->preload()
                     ->label(__('Course')),
                 SelectFilter::make('salesPhase')
-                    ->relationship('salesPhase', 'nombre')
+                    ->relationship(
+                        'salesPhase',
+                        'nombre',
+                        fn ($query) => $query->where('tenant_id', filament()->getTenant()->id)
+                    )
                     ->searchable()
                     ->preload()
                     ->label(__('Sales Phase')),
                 SelectFilter::make('nullReason')
-                    ->relationship('nullReason', 'nombre')
+                    ->relationship(
+                        'nullReason',
+                        'nombre',
+                        fn ($query) => $query->where('tenant_id', filament()->getTenant()->id)
+                    )
                     ->searchable()
                     ->preload()
                     ->label(__('Null Reason')),
                 SelectFilter::make('campus')
-                    ->relationship('campus', 'nombre')
+                    ->relationship(
+                        'campus',
+                        'nombre',
+                        fn ($query) => $query->where('tenant_id', filament()->getTenant()->id)
+                    )
                     ->searchable()
                     ->preload()
                     ->label(__('Campus')),
                 SelectFilter::make('modality')
-                    ->relationship('modality', 'nombre')
+                    ->relationship(
+                        'modality',
+                        'nombre',
+                        fn ($query) => $query->where('tenant_id', filament()->getTenant()->id)
+                    )
                     ->searchable()
                     ->preload()
                     ->label(__('Modality')),
