@@ -101,7 +101,7 @@ class LeadUpdateRequest extends FormRequest
             ],
             
             // Campos opcionales
-            'estado' => ['sometimes', 'required', 'string', Rule::in(['nuevo', 'contactado', 'interesado', 'matriculado', 'perdido'])],
+            'estado' => ['sometimes', 'required', 'string', Rule::in(['abierto', 'ganado', 'perdido'])],
             'convocatoria' => ['sometimes', 'nullable', 'string', 'max:100'],
             'horario' => ['sometimes', 'nullable', 'string', 'max:100'],
             
@@ -159,8 +159,8 @@ class LeadUpdateRequest extends FormRequest
                 $validator->errors()->add('motivo_nulo_id', 'El motivo nulo es obligatorio cuando el estado es "perdido".');
             }
             
-            // Si estado cambia a 'matriculado', establecer fecha_ganado automáticamente
-            if ($this->input('estado') === 'matriculado' && !$this->has('fecha_ganado')) {
+            // Si estado cambia a 'ganado', establecer fecha_ganado automáticamente
+            if ($this->input('estado') === 'ganado' && !$this->has('fecha_ganado')) {
                 $this->merge(['fecha_ganado' => now()]);
             }
             

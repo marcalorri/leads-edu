@@ -92,7 +92,7 @@ class LeadStoreRequest extends FormRequest
             ],
             
             // Campos opcionales
-            'estado' => ['nullable', 'string', Rule::in(['nuevo', 'contactado', 'interesado', 'matriculado', 'perdido'])],
+            'estado' => ['nullable', 'string', Rule::in(['abierto', 'ganado', 'perdido'])],
             'convocatoria' => ['nullable', 'string', 'max:100'],
             'horario' => ['nullable', 'string', 'max:100'],
             
@@ -144,7 +144,7 @@ class LeadStoreRequest extends FormRequest
 
         // Establecer valores por defecto
         if (!$this->has('estado')) {
-            $data['estado'] = 'nuevo';
+            $data['estado'] = 'abierto';
         }
 
         // Resolver curso_id si se proporciona código o nombre
@@ -200,7 +200,8 @@ class LeadStoreRequest extends FormRequest
         // Resolver provincia_id si se proporciona nombre (con normalización inteligente)
         if ($this->has('provincia_id') && !is_numeric($this->provincia_id)) {
             $normalizer = app(\App\Services\LocationNormalizerService::class);
-            $province = $normalizer->resolveProvince($this->provincia_id, $tenant);
+            // El normalizador trabaja con catálogo global; opcionalmente se puede filtrar por country_id si existe en el tenant
+            $province = $normalizer->resolveProvince($this->provincia_id, null);
             
             if ($province) {
                 $data['provincia_id'] = $province->id;

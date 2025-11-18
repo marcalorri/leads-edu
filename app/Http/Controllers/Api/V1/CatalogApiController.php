@@ -309,10 +309,8 @@ class CatalogApiController extends Controller
     public function estados(Request $request): JsonResponse
     {
         $estados = [
-            ['value' => 'nuevo', 'label' => __('New')],
-            ['value' => 'contactado', 'label' => __('Contacted')],
-            ['value' => 'interesado', 'label' => __('Interested')],
-            ['value' => 'matriculado', 'label' => __('Enrolled')],
+            ['value' => 'abierto', 'label' => __('Open')],
+            ['value' => 'ganado', 'label' => __('Won')],
             ['value' => 'perdido', 'label' => __('Lost')],
         ];
 
