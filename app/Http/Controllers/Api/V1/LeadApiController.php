@@ -107,8 +107,16 @@ class LeadApiController extends Controller
             $leadData['tenant_id'] = $tenant->id;
 
             // Si no se especifica asesor, asignar al usuario actual
-            if (!isset($leadData['asesor_id'])) {
+            if (!isset($leadData['asesor_id']) || $leadData['asesor_id'] === null) {
                 $leadData['asesor_id'] = $request->user()->id;
+                
+                Log::info('Lead assigned to API token user', [
+                    'lead_email' => $leadData['email'],
+                    'assigned_to_user_id' => $request->user()->id,
+                    'assigned_to_user_name' => $request->user()->name,
+                    'tenant_id' => $tenant->id,
+                    'reason' => !isset($leadData['asesor_id']) ? 'not_provided' : 'not_found',
+                ]);
             }
 
             $lead = Lead::create($leadData);

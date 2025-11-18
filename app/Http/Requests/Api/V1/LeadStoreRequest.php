@@ -23,6 +23,14 @@ class LeadStoreRequest extends FormRequest
         $tenant = $this->current_tenant;
 
         return [
+            // Campos prohibidos (se establecen automáticamente)
+            'tenant_id' => ['prohibited'],
+            'id' => ['prohibited'],
+            'created_at' => ['prohibited'],
+            'updated_at' => ['prohibited'],
+            'deleted_at' => ['prohibited'],
+            
+            // Campos requeridos
             'nombre' => ['required', 'string', 'max:100'],
             'apellidos' => ['required', 'string', 'max:150'],
             'email' => [
@@ -121,6 +129,11 @@ class LeadStoreRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'tenant_id.prohibited' => 'El campo tenant_id no debe enviarse. Se establece automáticamente según tu token API.',
+            'id.prohibited' => 'El campo id se genera automáticamente.',
+            'created_at.prohibited' => 'El campo created_at se establece automáticamente.',
+            'updated_at.prohibited' => 'El campo updated_at se establece automáticamente.',
+            'deleted_at.prohibited' => 'El campo deleted_at se establece automáticamente.',
             'email.unique' => 'Ya existe un lead con este email en el tenant.',
             'curso_id.exists' => 'El curso seleccionado no existe o no pertenece a tu organización.',
             'sede_id.exists' => 'La sede seleccionada no existe o no pertenece a tu organización.',
@@ -141,6 +154,14 @@ class LeadStoreRequest extends FormRequest
     {
         $tenant = $this->current_tenant;
         $data = [];
+
+        // Limpiar campos vacíos (n8n a veces envía strings vacíos)
+        $fieldsToClean = ['provincia_id', 'fase_venta_id', 'asesor_id', 'convocatoria', 'horario', 'pais'];
+        foreach ($fieldsToClean as $field) {
+            if ($this->has($field) && ($this->input($field) === '' || $this->input($field) === null)) {
+                $data[$field] = null;
+            }
+        }
 
         // Establecer valores por defecto
         if (!$this->has('estado')) {
@@ -211,20 +232,31 @@ class LeadStoreRequest extends FormRequest
 
         // Resolver asesor_id si se proporciona email o nombre
         if ($this->has('asesor_id') && !is_numeric($this->asesor_id)) {
+            $asesorIdentifier = $this->asesor_id;
+            
             // Buscar por email exacto
             $user = \App\Models\User::whereHas('tenants', function($query) use ($tenant) {
                 $query->where('tenant_id', $tenant->id);
-            })->where('email', $this->asesor_id)->first();
+            })->where('email', $asesorIdentifier)->first();
             
             // Si no se encuentra, buscar por nombre
             if (!$user) {
                 $user = \App\Models\User::whereHas('tenants', function($query) use ($tenant) {
                     $query->where('tenant_id', $tenant->id);
-                })->where('name', 'like', "%{$this->asesor_id}%")->first();
+                })->where('name', 'like', "%{$asesorIdentifier}%")->first();
             }
             
             if ($user) {
                 $data['asesor_id'] = $user->id;
+            } else {
+                // Si no se encuentra el asesor, establecer como null
+                // El controlador lo asignará al usuario del token API
+                \Illuminate\Support\Facades\Log::warning('Asesor no encontrado en API', [
+                    'identifier' => $asesorIdentifier,
+                    'tenant_id' => $tenant->id,
+                    'will_assign_to_token_user' => true,
+                ]);
+                $data['asesor_id'] = null;
             }
         }
 
