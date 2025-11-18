@@ -27,4 +27,8 @@ return Illuminate\Foundation\Application::configure(basePath: dirname(__DIR__))
             'api.rate_limit' => \App\Http\Middleware\ApiRateLimitMiddleware::class,
         ]);
     })
-    ->withExceptions(function (Exceptions $exceptions) {})->create();
+    ->withExceptions(function (Exceptions $exceptions) {
+        $exceptions->render(function (Throwable $e, $request) {
+            return \App\Exceptions\ApiExceptionHandler::render($request, $e);
+        });
+    })->create();

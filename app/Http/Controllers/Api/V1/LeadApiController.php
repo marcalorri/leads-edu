@@ -100,23 +100,52 @@ class LeadApiController extends Controller
      */
     public function store(LeadStoreRequest $request): JsonResponse
     {
-        $tenant = $request->current_tenant;
-        
-        $leadData = $request->validated();
-        $leadData['tenant_id'] = $tenant->id;
+        try {
+            $tenant = $request->current_tenant;
+            
+            $leadData = $request->validated();
+            $leadData['tenant_id'] = $tenant->id;
 
-        // Si no se especifica asesor, asignar al usuario actual
-        if (!isset($leadData['asesor_id'])) {
-            $leadData['asesor_id'] = $request->user()->id;
+            // Si no se especifica asesor, asignar al usuario actual
+            if (!isset($leadData['asesor_id'])) {
+                $leadData['asesor_id'] = $request->user()->id;
+            }
+
+            $lead = Lead::create($leadData);
+            $lead->load(['course', 'asesor', 'campus', 'modality', 'province', 'salesPhase', 'origin']);
+
+            return response()->json([
+                'message' => __('Lead created successfully'),
+                'data' => new LeadResource($lead)
+            ], 201);
+        } catch (\Illuminate\Database\QueryException $e) {
+            Log::error('Database error creating lead', [
+                'error' => $e->getMessage(),
+                'tenant_id' => $tenant->id ?? null,
+                'data' => $request->all(),
+            ]);
+
+            return response()->json([
+                'error' => [
+                    'code' => 'DATABASE_ERROR',
+                    'message' => __('Error creating lead. Please check the provided data.'),
+                    'details' => config('app.debug') ? $e->getMessage() : null,
+                ]
+            ], 422);
+        } catch (\Exception $e) {
+            Log::error('Error creating lead', [
+                'error' => $e->getMessage(),
+                'tenant_id' => $tenant->id ?? null,
+            ]);
+
+            return response()->json([
+                'error' => [
+                    'code' => 'INTERNAL_ERROR',
+                    'message' => __('An error occurred while creating the lead'),
+                    'details' => config('app.debug') ? $e->getMessage() : null,
+                ]
+            ], 500);
         }
-
-        $lead = Lead::create($leadData);
-        $lead->load(['course', 'asesor', 'campus', 'modality', 'province', 'salesPhase', 'origin']);
-
-        return response()->json([
-            'message' => __('Lead created successfully'),
-            'data' => new LeadResource($lead)
-        ], 201);
     }
 
     /**
@@ -207,10 +236,8 @@ class LeadApiController extends Controller
 
         $filters = [
             'estados' => [
-                'nuevo' => __('New'),
-                'contactado' => __('Contacted'), 
-                'interesado' => __('Interested'),
-                'matriculado' => __('Enrolled'),
+                'abierto' => __('Open'),
+                'ganado' => __('Won'),
                 'perdido' => __('Lost')
             ],
             'cursos' => $tenant->courses()->select('id', 'codigo_curso', 'titulacion')->get(),

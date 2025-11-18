@@ -4,10 +4,12 @@ namespace App\Exceptions;
 
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
+use PDOException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -62,6 +64,10 @@ class ApiExceptionHandler
                     ]),
                     'status' => 422
                 ];
+
+            case $e instanceof QueryException:
+            case $e instanceof PDOException:
+                return self::handleDatabaseException($e, $request, $baseResponse);
 
             case $e instanceof AuthenticationException:
                 return [
@@ -167,6 +173,78 @@ class ApiExceptionHandler
         }
         
         return 'Resource';
+    }
+
+    /**
+     * Handle database exceptions
+     */
+    private static function handleDatabaseException(Throwable $e, Request $request, array $baseResponse): array
+    {
+        $errorMessage = $e->getMessage();
+        $errorCode = 'DATABASE_ERROR';
+        $userMessage = __('Database error occurred');
+        $details = null;
+
+        // Detectar tipos específicos de errores de base de datos
+        if (str_contains($errorMessage, 'Data truncated for column')) {
+            preg_match("/Data truncated for column '(\w+)'/", $errorMessage, $matches);
+            $column = $matches[1] ?? 'unknown';
+            
+            $errorCode = 'INVALID_ENUM_VALUE';
+            $userMessage = __('Invalid value for field: :field', ['field' => $column]);
+            $details = [
+                'field' => $column,
+                'hint' => __('Please check the allowed values for this field'),
+            ];
+        } elseif (str_contains($errorMessage, 'Duplicate entry')) {
+            preg_match("/Duplicate entry '(.+?)' for key '(.+?)'/", $errorMessage, $matches);
+            $value = $matches[1] ?? '';
+            $key = $matches[2] ?? '';
+            
+            $errorCode = 'DUPLICATE_ENTRY';
+            $userMessage = __('A record with this value already exists');
+            $details = [
+                'value' => $value,
+                'constraint' => $key,
+            ];
+        } elseif (str_contains($errorMessage, 'foreign key constraint fails')) {
+            $errorCode = 'FOREIGN_KEY_VIOLATION';
+            $userMessage = __('Referenced record does not exist or cannot be deleted');
+        } elseif (str_contains($errorMessage, 'Unknown column')) {
+            preg_match("/Unknown column '(\w+)'/", $errorMessage, $matches);
+            $column = $matches[1] ?? 'unknown';
+            
+            $errorCode = 'UNKNOWN_FIELD';
+            $userMessage = __('Unknown field: :field', ['field' => $column]);
+            $details = ['field' => $column];
+        }
+
+        // Log completo del error
+        Log::error('API Database Error', [
+            'exception' => get_class($e),
+            'message' => $errorMessage,
+            'code' => $errorCode,
+            'tenant' => $request->current_tenant?->id,
+            'user' => $request->user()?->id,
+            'endpoint' => $request->getPathInfo(),
+            'data' => $request->all(),
+        ]);
+
+        return [
+            'data' => array_merge($baseResponse, [
+                'error' => [
+                    'code' => $errorCode,
+                    'message' => $userMessage,
+                    'details' => $details,
+                    'debug' => config('app.debug') ? [
+                        'sql_error' => $errorMessage,
+                        'file' => $e->getFile(),
+                        'line' => $e->getLine(),
+                    ] : null,
+                ]
+            ]),
+            'status' => 422
+        ];
     }
 
     /**
