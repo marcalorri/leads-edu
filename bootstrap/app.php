@@ -28,7 +28,15 @@ return Illuminate\Foundation\Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
+        // Solo manejar excepciones de API con el ApiExceptionHandler
         $exceptions->render(function (Throwable $e, $request) {
-            return \App\Exceptions\ApiExceptionHandler::render($request, $e);
+            // Solo aplicar para rutas de API
+            if ($request->is('api/*')) {
+                return \App\Exceptions\ApiExceptionHandler::render($request, $e);
+            }
+            
+            // Para rutas web, dejar que Laravel maneje las excepciones normalmente
+            // Esto incluye redirigir al login cuando no está autenticado
+            return null;
         });
     })->create();

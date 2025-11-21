@@ -63,6 +63,7 @@ class User extends Authenticatable implements FilamentUser, HasTenants, MustVeri
     protected $casts = [
         'email_verified_at' => 'datetime',
         'phone_number_verified_at' => 'datetime',
+        'password' => 'hashed',
         'last_seen_at' => 'datetime',
     ];
 
