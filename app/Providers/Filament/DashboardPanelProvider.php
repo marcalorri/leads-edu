@@ -10,6 +10,7 @@ use App\Http\Middleware\SetLocaleFromBrowser;
 use App\Http\Middleware\UpdateUserLastSeenAt;
 use App\Livewire\AddressForm;
 use App\Livewire\AvatarForm;
+use App\Livewire\NotificationPreferencesForm;
 use App\Models\Tenant;
 use App\Services\TenantPermissionService;
 use Filament\Actions\Action;
@@ -158,6 +159,7 @@ class DashboardPanelProvider extends PanelProvider
                     ->myProfileComponents([
                         AvatarForm::class,
                         AddressForm::class,
+                        NotificationPreferencesForm::class,
                     ]),
             ])
             ->tenantMenu()

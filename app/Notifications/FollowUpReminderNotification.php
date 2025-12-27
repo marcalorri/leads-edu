@@ -21,7 +21,17 @@ class FollowUpReminderNotification extends Notification implements ShouldQueue
 
     public function via($notifiable): array
     {
-        return ['mail', 'database'];
+        $channels = [];
+        
+        if ($notifiable->shouldReceiveNotification('follow_up_reminder', 'email')) {
+            $channels[] = 'mail';
+        }
+        
+        if ($notifiable->shouldReceiveNotification('follow_up_reminder', 'database')) {
+            $channels[] = 'database';
+        }
+        
+        return $channels;
     }
 
     public function toMail($notifiable): MailMessage

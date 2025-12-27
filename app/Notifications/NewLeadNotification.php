@@ -19,7 +19,17 @@ class NewLeadNotification extends Notification implements ShouldQueue
 
     public function via($notifiable): array
     {
-        return ['mail', 'database'];
+        $channels = [];
+        
+        if ($notifiable->shouldReceiveNotification('new_lead', 'email')) {
+            $channels[] = 'mail';
+        }
+        
+        if ($notifiable->shouldReceiveNotification('new_lead', 'database')) {
+            $channels[] = 'database';
+        }
+        
+        return $channels;
     }
 
     public function toMail($notifiable): MailMessage

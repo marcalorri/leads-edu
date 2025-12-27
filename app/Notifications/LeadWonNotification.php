@@ -19,7 +19,17 @@ class LeadWonNotification extends Notification implements ShouldQueue
 
     public function via($notifiable): array
     {
-        return ['mail', 'database'];
+        $channels = [];
+        
+        if ($notifiable->shouldReceiveNotification('lead_won', 'email')) {
+            $channels[] = 'mail';
+        }
+        
+        if ($notifiable->shouldReceiveNotification('lead_won', 'database')) {
+            $channels[] = 'database';
+        }
+        
+        return $channels;
     }
 
     public function toMail($notifiable): MailMessage

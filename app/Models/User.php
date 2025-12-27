@@ -21,10 +21,11 @@ use Laragear\TwoFactor\Contracts\TwoFactorAuthenticatable;
 use Laragear\TwoFactor\TwoFactorAuthentication;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use App\Traits\HasNotificationPreferences;
 
 class User extends Authenticatable implements FilamentUser, HasTenants, MustVerifyEmail, TwoFactorAuthenticatable
 {
-    use HasApiTokens, HasFactory, HasRoles, Notifiable, TwoFactorAuthentication;
+    use HasApiTokens, HasFactory, HasRoles, Notifiable, TwoFactorAuthentication, HasNotificationPreferences;
 
     /**
      * The attributes that are mass assignable.
@@ -40,6 +41,7 @@ class User extends Authenticatable implements FilamentUser, HasTenants, MustVeri
         'public_name',
         'is_blocked',
         'notes',
+        'notification_preferences',
         'phone_number',
         'phone_number_verified_at',
         'last_seen_at',
@@ -65,6 +67,7 @@ class User extends Authenticatable implements FilamentUser, HasTenants, MustVeri
         'phone_number_verified_at' => 'datetime',
         'password' => 'hashed',
         'last_seen_at' => 'datetime',
+        'notification_preferences' => 'array',
     ];
 
     public function roadmapItems(): HasMany
