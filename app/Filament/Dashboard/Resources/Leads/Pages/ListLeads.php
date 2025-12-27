@@ -43,7 +43,7 @@ class ListLeads extends ListRecords
                 ->actions([
                     Action::make('upgrade')
                         ->label(__('Upgrade Plan'))
-                        ->url(route('filament.dashboard.pages.subscriptions', ['tenant' => $tenant]))
+                        ->url(fn () => "/dashboard/{$tenant->uuid}/subscriptions")
                         ->button(),
                 ])
                 ->send();

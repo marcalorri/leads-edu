@@ -34,7 +34,7 @@ class CreateLead extends CreateRecord
                 ->actions([
                     Action::make('upgrade')
                         ->label('Ver Planes')
-                        ->url(route('filament.dashboard.pages.subscriptions', ['tenant' => $tenant]))
+                        ->url(fn () => "/dashboard/{$tenant->uuid}/subscriptions")
                         ->button(),
                 ])
                 ->send();
